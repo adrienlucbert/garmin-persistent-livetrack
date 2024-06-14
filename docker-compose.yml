@@ -1,0 +1,18 @@
+services:
+  smtp-proxy:
+    build: smtp-proxy/
+    command: ["./entrypoint.sh"]
+    ports:
+      - "25:25"
+    volumes:
+      - ./smtp-proxy:/app
+    restart: 'unless-stopped'
+
+  trackme:
+    build: trackme/
+    command: ["uvicorn", "--host", "0.0.0.0", "--port", "80", "main:app"]
+    ports:
+      - "80:80"
+    volumes:
+      - ./trackme:/app
+    restart: 'unless-stopped'
