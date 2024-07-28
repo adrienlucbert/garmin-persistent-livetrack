@@ -15,7 +15,7 @@ services:
       - ./trackme:/app
       - sqlite-data:/sqlite
     environment:
-      - DB_PATH=/sqlite/data.db
+      - SQLITE_DB_PATH=/sqlite/data.db
     restart: 'unless-stopped'
 
 volumes:
