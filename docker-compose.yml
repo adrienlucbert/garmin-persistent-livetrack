@@ -12,7 +12,6 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./trackme:/app
       - sqlite-data:/sqlite
     environment:
       - SQLITE_DB_PATH=/sqlite/data.db
