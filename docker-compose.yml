@@ -1,7 +1,6 @@
 services:
   smtp-proxy:
     build: smtp-proxy/
-    command: ["./entrypoint.sh"]
     ports:
       - "25:25"
     volumes:
@@ -10,9 +9,14 @@ services:
 
   trackme:
     build: trackme/
-    command: ["uvicorn", "--host", "0.0.0.0", "--port", "80", "main:app"]
     ports:
-      - "80:80"
+      - "3000:3000"
     volumes:
       - ./trackme:/app
+      - sqlite-data:/sqlite
+    environment:
+      - DB_PATH=/sqlite/data.db
     restart: 'unless-stopped'
+
+volumes:
+  sqlite-data:
