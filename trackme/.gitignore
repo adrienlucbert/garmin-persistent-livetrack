@@ -6,6 +6,7 @@ node_modules
 /.svelte-kit
 /build
 *.log
+yarn.lock
 
 # OS
 .DS_Store

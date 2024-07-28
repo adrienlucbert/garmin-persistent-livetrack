@@ -24,5 +24,5 @@ export let data: LiveTrackSession
 </svelte:head>
 
 <div id="content">
-		<iframe width="100%" height="100%" frameborder="0" src="{data.link}"></iframe>
+		<iframe title="Garmin livetrack session" width="100%" height="100%" frameborder="0" src="{data.link}"></iframe>
 </div>

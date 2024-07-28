@@ -17,6 +17,7 @@ FROM node:22-alpine as runner
 WORKDIR /app
 
 COPY --from=builder /app/build/ /app/build/
+COPY --from=builder /app/node_modules/ /app/node_modules/
 COPY --from=builder /app/package.json /app
 
 ENV NODE_ENV=production
