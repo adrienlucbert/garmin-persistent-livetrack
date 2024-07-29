@@ -17,8 +17,8 @@ def extract_livetrack_session(content: str) -> str:
 def NEW_ACTIVITY(message, session_uuid: str, host: str) -> None:
     try:
         session_link = extract_livetrack_session(message.body())
-        requests.post(
-                url=f"https://trackme.lucbert.dev/{session_uuid}/update",
+        requests.put(
+                url=f"https://trackme.lucbert.dev/api/sessions/{session_uuid}",
                 json={ "link": session_link }
             )
     except Exception as e:
