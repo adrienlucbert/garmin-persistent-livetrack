@@ -12,10 +12,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - sqlite-data:/sqlite
+      - ./trackme/data:/data
     environment:
-      - SQLITE_DB_PATH=/sqlite/data.db
+      - SQLITE_DB_PATH=/data/sqlite.db
     restart: 'unless-stopped'
-
-volumes:
-  sqlite-data:
