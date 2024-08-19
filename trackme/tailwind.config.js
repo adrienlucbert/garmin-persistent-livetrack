@@ -1,4 +1,5 @@
 import flowbitePlugin from 'flowbite/plugin'
+import daisyuiPlugin from 'daisyui'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -6,7 +7,7 @@ export default {
   darkMode: 'selector',
 	theme: {
 		extend: {
-      colors: {
+			colors: {
         // flowbite-svelte
         primary: {
           50: '#FFF5F2',
@@ -20,9 +21,65 @@ export default {
           800: '#CC4522',
           900: '#A5371B'
         }
-      }
-    }
+			}
+		},
+		fontFamily: {
+			'body': [
+				'Inter',
+				'ui-sans-serif',
+				'system-ui',
+				'-apple-system',
+				'system-ui',
+				'Segoe UI',
+				'Roboto',
+				'Helvetica Neue',
+				'Arial',
+				'Noto Sans',
+				'sans-serif',
+				'Apple Color Emoji',
+				'Segoe UI Emoji',
+				'Segoe UI Symbol',
+				'Noto Color Emoji'
+			],
+			'sans': [
+				'Inter',
+				'ui-sans-serif',
+				'system-ui',
+				'-apple-system',
+				'system-ui',
+				'Segoe UI',
+				'Roboto',
+				'Helvetica Neue',
+				'Arial',
+				'Noto Sans',
+				'sans-serif',
+				'Apple Color Emoji',
+				'Segoe UI Emoji',
+				'Segoe UI Symbol',
+				'Noto Color Emoji'
+			]
+		}
 	},
-	plugins: [flowbitePlugin]
+	plugins: [
+		daisyuiPlugin,
+		flowbitePlugin,
+	],
+  daisyui: {
+    themes: [
+      {
+        // saasstartertheme: {
+        //   "primary": "#ad0263",
+        //   "primary-content": "#fefbf6",
+        //   "neutral-content": "#fefbf6",
+        //   "secondary": "#ff80b0",
+        //   "accent": "#fa00c8",
+        //   "neutral": "#fefbf6",
+        //   "base-content": "#f7f7f7",
+        //   "base-surface": "#262626",
+        //   "base-100": "#1a1a1a",
+        // },
+      }
+    ],
+  },
 }
 
