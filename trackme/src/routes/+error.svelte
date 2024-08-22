@@ -1,10 +1,10 @@
 <script>
-  import "../app.css"
-  import { page } from "$app/stores"
+import "../app.css"
+import { page } from "$app/stores"
 
-  import { Section, HeroHeader } from 'flowbite-svelte-blocks';
-  import { Button } from 'flowbite-svelte';
-  import { ArrowRightOutline } from 'flowbite-svelte-icons';
+import { Section, HeroHeader } from 'flowbite-svelte-blocks';
+import { Button } from 'flowbite-svelte';
+import { ArrowRightOutline } from 'flowbite-svelte-icons';
 </script>
 
 <div class="grid w-full place-items-center mt-24">

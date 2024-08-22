@@ -6,3 +6,7 @@ body {
 	@apply flex flex-col;
 	min-height: 100vh;
 }
+
+.link {
+	@apply cursor-pointer hover:underline;
+}
