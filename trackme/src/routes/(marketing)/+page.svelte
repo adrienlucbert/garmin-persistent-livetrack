@@ -21,7 +21,8 @@ import { Alert, Button } from 'flowbite-svelte'
 				style="line-height: 1.2;"
 			>
 				<span class="title-highlight">
-					One Tracking Link
+					<span class="text-orange-500">One</span>
+					Tracking Link
 				</span>
 				, Share, Notify, Ride
 				<span class="title-highlight">

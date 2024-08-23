@@ -8,20 +8,22 @@
 	import { UserCircleSolid, MoonSolid, SunSolid } from 'flowbite-svelte-icons'
 </script>
 
-<div class="flex items-center p-2 min-h-16 container mx-auto">
-	<div class="flex-1">
-		<a class="font-semibold text-xl px-4" href="/">Garmin Persistent Livetrack</a>
-	</div>
-	<div class="flex-none">
-		<ul class="p-2 flex-wrap inline-flex flex-row space-x-1 font-bold text-lg ">
-			<a href="/signup" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5">
-				<UserCircleSolid size="lg"/>
-			</a>
-			<DarkMode size="lg" btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-xl p-2">
-				<MoonSolid size="lg" slot="darkIcon" />
-				<SunSolid size="lg" slot="lightIcon" />
-			</DarkMode>
-		</ul>
+<div class="bg-white dark:bg-neutral-800 flex items-center">
+	<div class="flex items-center p-2 min-h-16 container mx-auto">
+		<div class="flex-1">
+			<a class="font-semibold text-xl px-4" href="/">Garmin Persistent Livetrack</a>
+		</div>
+		<div class="flex-none">
+			<ul class="p-2 flex-wrap inline-flex flex-row space-x-1 font-bold text-lg ">
+				<a href="/auth" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5">
+					<UserCircleSolid size="lg"/>
+				</a>
+				<DarkMode size="lg" btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-xl p-2">
+					<MoonSolid size="lg" slot="darkIcon" />
+					<SunSolid size="lg" slot="lightIcon" />
+				</DarkMode>
+			</ul>
+		</div>
 	</div>
 </div>
 {#if $navigating}
@@ -47,7 +49,7 @@
 <div class="">
 	<div class="border-t max-w-[1000px] mx-auto"></div>
 	<footer
-		class="grid w-full grid-flow-row place-items-start sm:grid-flow-col sm:gap-y-10 p-10 gap-x-48 lg:gap-x-64 xl:gap-x-96 place-content-center text-base"
+		class="bg-white dark:bg-neutral-800 grid w-full grid-flow-row place-items-start sm:grid-flow-col sm:gap-y-10 p-10 gap-x-48 lg:gap-x-64 xl:gap-x-96 place-content-center text-base"
 	>
 		<nav class="grid place-items-start gap-2">
 			<span class="mb-2 font-bold uppercase opacity-80">Explore</span>
