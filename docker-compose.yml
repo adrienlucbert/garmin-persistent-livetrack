@@ -6,15 +6,48 @@ services:
       - "25:25"
     volumes:
       - ./smtp-proxy:/app
+    environment:
+      - API_HOST= # TODO: use docker network
     restart: 'unless-stopped'
+    depends_on:
+      - trackme
+    networks:
+      - trackme
 
   trackme:
     build:
       context: trackme
     ports:
       - "3000:3000"
-    volumes:
-      - ./trackme/data:/data
     environment:
-      - SQLITE_DB_PATH=/data/sqlite.db
+      - DSN=postgres://postgres:postgres@postgres:5432/trackme?sslmode=disable&max_conns=20&max_idle_conns=4
     restart: 'unless-stopped'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - trackme
+
+  postgres:
+    container_name: postgres
+    image: postgres:15.2
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    networks:
+      - trackme
+
+networks:
+  trackme:
+
+volumes:
+  postgres-data:

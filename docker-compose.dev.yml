@@ -10,5 +10,9 @@ services:
       - exclude:/app/node_modules
     restart: 'unless-stopped'
 
+  postgres:
+    ports:
+      - 5432:5432
+
 volumes:
   exclude:

@@ -47,7 +47,6 @@
 
 <div class="flex-grow"></div>
 <div class="">
-	<div class="border-t max-w-[1000px] mx-auto"></div>
 	<footer
 		class="bg-white dark:bg-neutral-800 grid w-full grid-flow-row place-items-start sm:grid-flow-col sm:gap-y-10 p-10 gap-x-48 lg:gap-x-64 xl:gap-x-96 place-content-center text-base"
 	>

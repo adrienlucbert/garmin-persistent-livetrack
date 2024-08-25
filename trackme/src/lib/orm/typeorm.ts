@@ -1,14 +1,14 @@
 import type { DataSource } from "typeorm"
-import { SqliteDatabase } from "./data-sources/sqlite"
+import { AppDataSource } from "./datasource"
 
 export class TypeOrm {
 	private static datasource: Promise<DataSource> | null = null
 
-	private constructor() {}
+	private constructor() { }
 
 	public static db(): Promise<DataSource> {
 		if (TypeOrm.datasource === null) {
-			TypeOrm.datasource = SqliteDatabase.initialize()
+			TypeOrm.datasource = AppDataSource().initialize()
 
 			TypeOrm.datasource
 				.then(() => {
@@ -18,6 +18,6 @@ export class TypeOrm {
 					console.error("Error during data initialization", err)
 				})
 		}
-			return TypeOrm.datasource
+		return TypeOrm.datasource
 	}
 }

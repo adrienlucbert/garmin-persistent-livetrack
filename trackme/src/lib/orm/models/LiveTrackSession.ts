@@ -8,6 +8,6 @@ export class LiveTrackSession extends BaseEntity {
 	@Column({ type: 'varchar', nullable: true })
 	link: string | null
 
-	@UpdateDateColumn({ type: 'datetime' })
+	@UpdateDateColumn({ type: 'timestamp with time zone' })
 	updated_at: Date
 }
