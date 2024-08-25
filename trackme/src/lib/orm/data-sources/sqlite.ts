@@ -4,9 +4,9 @@ import { SQLITE_DB_PATH } from '$env/static/private'
 import { dev } from '$app/environment'
 
 export const SqliteDatabase = new DataSource({
-  type: 'sqlite',
-  database: SQLITE_DB_PATH || '/data/sqlite.db',
-  entities: [ LiveTrackSession ],
-  logging: dev,
+	type: 'better-sqlite3',
+	database: SQLITE_DB_PATH || '/data/sqlite.db',
+	entities: [LiveTrackSession],
+	logging: dev,
 	synchronize: true,
 })

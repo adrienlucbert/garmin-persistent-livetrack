@@ -1,6 +1,7 @@
 services:
   smtp-proxy:
-    build: smtp-proxy/
+    build:
+      context: smtp-proxy
     ports:
       - "25:25"
     volumes:
@@ -8,7 +9,8 @@ services:
     restart: 'unless-stopped'
 
   trackme:
-    build: trackme/
+    build:
+      context: trackme
     ports:
       - "3000:3000"
     volumes:
