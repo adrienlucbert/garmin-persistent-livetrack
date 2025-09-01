@@ -1,63 +1,72 @@
 {
-  "id": "c6ffaa90-84a9-475e-83ac-80050737c776",
+  "id": "14a35ed6-e95a-4d8b-905c-ca3a9ff2da3a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.action_tokens": {
-      "name": "action_tokens",
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
-        "user_uuid": {
-          "name": "user_uuid",
+        "id": {
+          "name": "id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "token": {
-          "name": "token",
+        "email": {
+          "name": "email",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "action": {
-          "name": "action",
-          "type": "actionn",
-          "typeSchema": "public",
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp with time zone",
+        "is_email_verified": {
+          "name": "is_email_verified",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {
-        "action_tokens_user_uuid_users_id_fk": {
-          "name": "action_tokens_user_uuid_users_id_fk",
-          "tableFrom": "action_tokens",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_uuid"
+      "indexes": {
+        "emailUniqueIndex": {
+          "name": "emailUniqueIndex",
+          "columns": [
+            {
+              "expression": "lower(\"email\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
           ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "action_tokens_user_uuid_action_unique": {
-          "name": "action_tokens_user_uuid_action_unique",
+        "users_id_unique": {
+          "name": "users_id_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "user_uuid",
-            "action"
+            "id"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
           ]
         }
       },
@@ -110,62 +119,60 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.users": {
-      "name": "users",
+    "public.action_tokens": {
+      "name": "action_tokens",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
+        "user_uuid": {
+          "name": "user_uuid",
           "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "primaryKey": false,
+          "notNull": true
         },
-        "email": {
-          "name": "email",
+        "token": {
+          "name": "token",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "password_hash": {
-          "name": "password_hash",
-          "type": "text",
+        "action": {
+          "name": "action",
+          "type": "actionn",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "indexes": {
-        "emailUniqueIndex": {
-          "name": "emailUniqueIndex",
-          "columns": [
-            {
-              "expression": "lower(\"email\")",
-              "asc": true,
-              "isExpression": true,
-              "nulls": "last"
-            }
+      "indexes": {},
+      "foreignKeys": {
+        "action_tokens_user_uuid_users_id_fk": {
+          "name": "action_tokens_user_uuid_users_id_fk",
+          "tableFrom": "action_tokens",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_uuid"
           ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_id_unique": {
-          "name": "users_id_unique",
+        "action_tokens_user_uuid_action_unique": {
+          "name": "action_tokens_user_uuid_action_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "id"
-          ]
-        },
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
+            "user_uuid",
+            "action"
           ]
         }
       },
@@ -179,7 +186,8 @@
       "name": "actionn",
       "schema": "public",
       "values": [
-        "recover_password"
+        "recover_password",
+        "verify_email"
       ]
     }
   },

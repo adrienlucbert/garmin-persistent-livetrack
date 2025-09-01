@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { sessions } from '../db/schema';
+import { sessions, type Sessions, type Users } from '../db/schema';
 import { JWT_TOKEN_SECRET } from '$env/static/private';
 import { encodeHexLowerCase } from '@oslojs/encoding';
 import { sha256 } from '@oslojs/crypto/sha2';
@@ -24,25 +24,27 @@ export function createToken(payload: JWTContent, expiresIn?: string): string {
 	);
 }
 
-export async function validateSessionToken(token: string): Promise<any> {
+export async function validateSessionToken(token: string): Promise<Sessions & { user: Omit<Users, 'passwordHash'> }> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const result = await db.query.sessions.findFirst({
+	const sess = await db.query.sessions.findFirst({
 		with: {
-			user: true
+			user: {
+				columns: {
+					passwordHash: false
+				}
+			}
 		},
 		where: eq(sessions.id, sessionId)
 	});
 
-	if (!result) {
-		return { session: null, user: null };
+	if (!sess) {
+		return Promise.reject('Token is invalid or has expired')
 	}
-
-	const { user, ...sess } = result;
 
 	if (new Date() >= sess.expiresAt) {
 		await invalidateSession(sessionId)
-		return { session: null, user: null };
+		return Promise.reject('Token has expired')
 	}
 
-	return { session: sess, user: user };
+	return sess;
 }

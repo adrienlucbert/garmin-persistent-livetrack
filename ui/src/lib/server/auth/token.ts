@@ -10,18 +10,16 @@ export function generateSessionToken(): string {
 	return token;
 }
 
-export async function createActionToken(userUUID: string, action: Action, expiresIn?: number): Promise<ActionTokens> {
+export async function createActionToken(userUUID: string, action: Action, expiresIn: number | null = null): Promise<ActionTokens> {
 	const bytes = new Uint8Array(32);
 	crypto.getRandomValues(bytes);
 	const token = encodeBase32LowerCaseNoPadding(bytes);
-
-	expiresIn = expiresIn ?? 1000 * 60 * 30; // 30 minutes
 
 	const actionToken: ActionTokens = {
 		userUUID,
 		token,
 		action,
-		expiresAt: new Date(Date.now() + expiresIn),
+		expiresAt: expiresIn ? new Date(Date.now() + expiresIn) : null,
 	};
 
 	await db
@@ -38,13 +36,28 @@ export async function createActionToken(userUUID: string, action: Action, expire
 	return actionToken;
 }
 
-export async function getActionToken(token: string): Promise<ActionTokens & { user: Users } | undefined> {
-	return await db.query.actionTokens.findFirst({
+export async function validateActionToken(token: string): Promise<ActionTokens & { user: Omit<Users, 'passwordHash'> }> {
+	const actionToken = await db.query.actionTokens.findFirst({
 		with: {
-			user: true
+			user: {
+				columns: {
+					passwordHash: false
+				}
+			}
 		},
 		where: eq(actionTokens.token, token)
 	})
+
+	if (!actionToken) {
+		return Promise.reject('Token is invalid or has expired')
+	}
+
+	if (actionToken.expiresAt && new Date() >= actionToken.expiresAt) {
+		await invalidateActionToken(token)
+		return Promise.reject('Token has expired')
+	}
+
+	return actionToken
 }
 
 export async function invalidateActionToken(userUUID: string, action: Action): Promise<void>;

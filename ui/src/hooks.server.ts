@@ -1,8 +1,20 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { validateSessionToken } from '$lib/server/auth/jwt';
 import { setSessionTokenCookie, deleteSessionTokenCookie, SESSION_COOKIE_NAME } from '$lib/server/auth/session';
-import type { Handle } from '@sveltejs/kit';
+import { error, type Handle } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
+import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
+
+const handleFeatureFlags: Handle = ({ event, resolve }) => {
+	if (!flags.ENABLE_RECOVER_PASSWORD && event.url.pathname.startsWith('/auth/recover')) {
+		throw error(404)
+	}
+	if (!flags.ENABLE_VERIFY_EMAIL && event.url.pathname.startsWith('/auth/verify')) {
+		throw error(404)
+	}
+
+	return resolve(event)
+}
 
 const handleParaglide: Handle = ({ event, resolve }) => paraglideMiddleware(event.request, ({ request, locale }) => {
 	event.request = request;
@@ -21,17 +33,16 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
-	const { session, user } = await validateSessionToken(sessionToken);
-
-	if (session) {
+	try {
+		const { user, ...session } = await validateSessionToken(sessionToken);
 		setSessionTokenCookie(event, sessionToken, session.expiresAt);
-	} else {
+		event.locals.user = user;
+		event.locals.session = session;
+	} catch {
 		deleteSessionTokenCookie(event);
 	}
 
-	event.locals.user = user;
-	event.locals.session = session;
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(handleParaglide, handleAuth);
+export const handle: Handle = sequence(handleFeatureFlags, handleParaglide, handleAuth);

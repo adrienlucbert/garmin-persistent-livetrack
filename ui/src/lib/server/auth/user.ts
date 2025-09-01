@@ -22,6 +22,12 @@ export async function getUserByEmail(email: string): Promise<Users | undefined> 
 	})
 }
 
+export async function setUserEmailVerified(userUUID: UUID): Promise<void> {
+	await db.update(users)
+		.set({ isEmailVerified: true })
+		.where(eq(users.uuid, userUUID))
+}
+
 export async function updateUserPassword(userUUID: UUID, password: string): Promise<void> {
 	await db.update(users)
 		.set({ passwordHash: await hashPassword(password) })

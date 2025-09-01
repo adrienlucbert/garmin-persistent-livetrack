@@ -3,18 +3,19 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { recoverPassword, resetPassword } from '$lib/server/auth/flows';
 import { setSessionTokenCookie } from '$lib/server/auth/session';
+import type { PageServerLoad } from "./$types";
 
 export const actions: Actions = {
 	recoverPassword: async (event) => {
 		const formData = await event.request.formData()
-		const identifier = formData.get('identifier')
+		const email = formData.get('email')
 
-		if (!validateEmail(identifier)) {
+		if (!validateEmail(email)) {
 			return fail(400, { message: 'Invalid email address' });
 		}
 
 		try {
-			await recoverPassword(identifier)
+			await recoverPassword(email)
 		} catch (message) {
 			return fail(400, { message })
 		}
@@ -44,3 +45,10 @@ export const actions: Actions = {
 		return redirect(302, '/');
 	}
 }
+
+export const load: PageServerLoad = async (event) => {
+	if (event.locals.user) {
+		return redirect(302, '/');
+	}
+	return {};
+};

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Button, Card, Container, Heading, inline, Paragraph } from '@uraniadev/emailer';
+	import { Button, Container, Heading, Paragraph } from '@uraniadev/emailer';
 
 	interface Props {
 		expiresIn: string;
-		recoverURL: string;
-		resetURL: string;
+		resendURL: string;
+		callbackURL: string;
 	}
-	const { expiresIn, recoverURL, resetURL }: Props = $props();
+	const { expiresIn, resendURL: recoverURL, callbackURL: resetURL }: Props = $props();
 </script>
 
 <Container>
