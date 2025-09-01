@@ -1,7 +1,6 @@
-
 import { db } from '$lib/server/db';
 import { eq } from "drizzle-orm";
-import { users, type User } from '../db/schema';
+import { users, type Users } from '../db/schema';
 import type { UUID } from 'crypto';
 import { hashPassword } from './password';
 
@@ -12,12 +11,12 @@ export async function createUser(email: string, password: string): Promise<UUID>
 		uuid: userUUID,
 		email,
 		passwordHash: await hashPassword(password)
-	} as User);
+	} as Users);
 
 	return userUUID;
 }
 
-export async function getUserByEmail(email: string): Promise<User | undefined> {
+export async function getUserByEmail(email: string): Promise<Users | undefined> {
 	return await db.query.users.findFirst({
 		where: eq(users.email, email)
 	})

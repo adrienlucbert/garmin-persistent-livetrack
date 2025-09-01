@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+	import type { FeatureFlags } from '$lib/featureFlags/index';
 
-	let { form }: { form: ActionData } = $props();
+	let { form, data } = $props();
+	let { flags }: { flags: FeatureFlags } = data;
 </script>
 
 <h1>Sign-in</h1>
@@ -30,4 +31,8 @@
 	>
 </form>
 <p style="color: red">{form?.message ?? ''}</p>
+{#if flags.ENABLE_RECOVER_PASSWORD}
+	<a href="/auth/recover">Forgot your password?</a>
+	<br />
+{/if}
 Or&nbsp;<a href="/auth/signup">sign-up</a>

@@ -4,16 +4,22 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import type { RequestEvent } from "@sveltejs/kit";
 import { dev } from '$app/environment';
 import { eq } from "drizzle-orm";
-import { sessions, type Session } from '../db/schema';
+import { sessions, type Sessions } from '../db/schema';
+import { createToken } from './jwt';
 
 export const SESSION_COOKIE_NAME = 'auth_token'
 
-export type SessionWithToken = Session & {
+export type SessionWithToken = Sessions & {
 	token: string
 }
 
+export async function createSessionForUser({ uuid, email }: { uuid: string, email: string }): Promise<SessionWithToken> {
+	const token = createToken({ user: { uuid: uuid, email: email } })
+	return await createSession(token, uuid)
+}
+
 export async function createSession(token: string, userUUID: string): Promise<SessionWithToken> {
-	const sess: Session = {
+	const sess: Sessions = {
 		id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
 		userUUID,
 		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
