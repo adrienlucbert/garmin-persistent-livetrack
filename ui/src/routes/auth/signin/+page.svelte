@@ -29,10 +29,14 @@
 	<button class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
 		>Sign-in</button
 	>
-	<br />
-	<a href="/auth/signin/github">Sign in with Github</a>
-	<br />
-	<a href="/auth/signin/google">Sign in with Google</a>
+	{#if flags.ENABLE_OAUTH_GITHUB}
+		<br />
+		<a href="/auth/signin/github">Sign in with Github</a>
+	{/if}
+	{#if flags.ENABLE_OAUTH_GOOGLE}
+		<br />
+		<a href="/auth/signin/google">Sign in with Google</a>
+	{/if}
 </form>
 <p style="color: red">{form?.message ?? ''}</p>
 {#if flags.ENABLE_RECOVER_PASSWORD}

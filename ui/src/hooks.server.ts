@@ -12,6 +12,12 @@ const handleFeatureFlags: Handle = ({ event, resolve }) => {
 	if (!flags.ENABLE_VERIFY_EMAIL && event.url.pathname.startsWith('/auth/verify')) {
 		throw error(404)
 	}
+	if (!flags.ENABLE_OAUTH_GITHUB && event.url.pathname.startsWith('/auth/signin/github')) {
+		throw error(404)
+	}
+	if (!flags.ENABLE_OAUTH_GOOGLE && event.url.pathname.startsWith('/auth/signin/google')) {
+		throw error(404)
+	}
 
 	return resolve(event)
 }
