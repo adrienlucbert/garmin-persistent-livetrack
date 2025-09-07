@@ -1,5 +1,5 @@
 {
-  "id": "cfe66b5c-3b20-4177-856f-69ab35219757",
+  "id": "a66d1b2f-c8b7-4d69-9613-0d731a255dbf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -224,14 +224,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "github_id": {
-          "name": "github_id",
+        "userid": {
+          "name": "userid",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "gtihub_username": {
-          "name": "gtihub_username",
+        "username": {
+          "name": "username",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -255,18 +255,18 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "github_traits_github_id_unique": {
-          "name": "github_traits_github_id_unique",
+        "github_traits_userid_unique": {
+          "name": "github_traits_userid_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "github_id"
+            "userid"
           ]
         },
-        "github_traits_gtihub_username_unique": {
-          "name": "github_traits_gtihub_username_unique",
+        "github_traits_username_unique": {
+          "name": "github_traits_username_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "gtihub_username"
+            "username"
           ]
         }
       },
@@ -280,7 +280,7 @@
       "name": "actionn",
       "schema": "public",
       "values": [
-        "recover_password",
+        "reset_password",
         "verify_email"
       ]
     }

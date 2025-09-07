@@ -4,8 +4,8 @@ import { users } from '../users';
 
 export const githubTraits = pgTable('github_traits', {
 	userUUID: uuid('user_uuid').primaryKey().references(() => users.uuid, { onDelete: 'cascade' }),
-	githubId: integer('github_id').unique(),
-	githubUserName: text('gtihub_username').unique(),
+	userId: integer('userid').unique(),
+	username: text('username').unique(),
 });
 
 export const githubTraitsRelations = relations(githubTraits, ({ one }) => ({

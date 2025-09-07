@@ -1,4 +1,4 @@
 import { GitHub } from "arctic";
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/dynamic/private'
+import { env } from '$env/dynamic/private'
 
-export const github = new GitHub(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, null)
+export const github = new GitHub(env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET, null)

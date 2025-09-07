@@ -1,4 +1,4 @@
-CREATE TYPE "public"."actionn" AS ENUM('recover_password', 'verify_email');--> statement-breakpoint
+CREATE TYPE "public"."actionn" AS ENUM('reset_password', 'verify_email');--> statement-breakpoint
 CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	CONSTRAINT "users_id_unique" UNIQUE("id")
@@ -28,10 +28,10 @@ CREATE TABLE "password_traits" (
 --> statement-breakpoint
 CREATE TABLE "github_traits" (
 	"user_uuid" uuid PRIMARY KEY NOT NULL,
-	"github_id" integer,
-	"gtihub_username" text,
-	CONSTRAINT "github_traits_github_id_unique" UNIQUE("github_id"),
-	CONSTRAINT "github_traits_gtihub_username_unique" UNIQUE("gtihub_username")
+	"userid" integer,
+	"username" text,
+	CONSTRAINT "github_traits_userid_unique" UNIQUE("userid"),
+	CONSTRAINT "github_traits_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_uuid_users_id_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

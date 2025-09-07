@@ -10,7 +10,7 @@ export enum AuthMethod {
 	Github = 'github',
 }
 
-export async function createUser(method: AuthMethod.Github, githubId: number, githubUsername: string): Promise<UUID>;
+export async function createUser(method: AuthMethod.Github, userId: number, username: string): Promise<UUID>;
 export async function createUser(method: AuthMethod.Password, email: string, password: string): Promise<UUID>;
 export async function createUser(method: AuthMethod, ...args: any): Promise<UUID> {
 	const userUUID = crypto.randomUUID()
@@ -27,11 +27,11 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 				break
 			}
 			case AuthMethod.Github: {
-				const [githubId, githubUsername]: [githubId: number, githubUsername: string] = args
+				const [userId, username]: [userId: number, username: string] = args
 				await tx.insert(githubTraits).values({
 					userUUID: userUUID,
-					githubId: githubId,
-					githubUserName: githubUsername,
+					userId: userId,
+					username: username,
 				})
 				break
 			}
@@ -41,7 +41,7 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 }
 
 export async function getUser(method: AuthMethod.Password, email: string): Promise<Users & { traits: PasswordTraits } | undefined>;
-export async function getUser(method: AuthMethod.Github, githubId: number): Promise<Users & { traits: GithubTraits } | undefined>;
+export async function getUser(method: AuthMethod.Github, userid: number): Promise<Users & { traits: GithubTraits } | undefined>;
 export async function getUser(method: AuthMethod, ...args: any): Promise<Users & { traits: PasswordTraits | GithubTraits } | undefined> {
 	switch (method) {
 		case AuthMethod.Password: {
@@ -56,14 +56,14 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 				.limit(1))[0]
 		}
 		case AuthMethod.Github: {
-			const [githubId]: [githubId: number] = args
+			const [userid]: [userid: number] = args
 			return (await db.select({
 				uuid: users.uuid,
 				traits: githubTraits
 			})
 				.from(githubTraits)
 				.innerJoin(users, eq(users.uuid, githubTraits.userUUID))
-				.where(eq(githubTraits.githubId, githubId))
+				.where(eq(githubTraits.userId, userid))
 				.limit(1))[0]
 		}
 	}
