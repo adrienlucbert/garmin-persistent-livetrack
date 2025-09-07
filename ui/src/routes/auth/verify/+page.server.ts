@@ -10,7 +10,7 @@ export const load: PageServerLoad = async (event) => {
 	try {
 		await verifyEmail(token)
 	} catch (message) {
-		return { success: false, message: message }
+		return { success: false, message: String(message) }
 	}
 	return { success: true }
 };

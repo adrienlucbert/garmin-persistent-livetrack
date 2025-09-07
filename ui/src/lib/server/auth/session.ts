@@ -13,8 +13,8 @@ export type SessionWithToken = Sessions & {
 	token: string
 }
 
-export async function createSessionForUser({ uuid, email }: { uuid: string, email: string }): Promise<SessionWithToken> {
-	const token = createToken({ user: { uuid: uuid, email: email } })
+export async function createSessionForUser({ uuid }: { uuid: string }): Promise<SessionWithToken> {
+	const token = createToken({ user: { uuid: uuid } })
 	return await createSession(token, uuid)
 }
 

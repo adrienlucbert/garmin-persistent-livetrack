@@ -23,7 +23,7 @@ export const actions: Actions = {
 			const session = await signup(email, password)
 			setSessionTokenCookie(event, session.token, session.expiresAt)
 		} catch (message) {
-			return fail(400, { message });
+			return fail(400, { message: String(message) });
 		}
 
 		return redirect(302, '/');

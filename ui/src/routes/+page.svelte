@@ -19,10 +19,12 @@
 	}
 </script>
 
-<h1>Hi, {data.user.email}!</h1>
+{#if data.user.passwordTrait}
+	<h1>Hi, {data.user.passwordTrait.email}!</h1>
+{/if}
 <p>Your user ID is {data.user.uuid}.</p>
 {#if flags.ENABLE_VERIFY_EMAIL}
-	{#if !data.user.isEmailVerified}
+	{#if data.user.passwordTrait && !data.user.passwordTrait.isEmailVerified}
 		{#if !success}
 			<form onsubmit={askVerify}>
 				<button>Verify email</button>

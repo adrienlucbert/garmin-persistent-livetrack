@@ -4,14 +4,14 @@ import { users } from './users';
 import { enumToPgEnum } from '../utils';
 
 export enum Action {
-	RECOVER_PASSWORD = 'recover_password',
+	RESET_PASSWORD = 'reset_password',
 	VERIFY_EMAIL = 'verify_email',
 }
 
 export const action = pgEnum('actionn', enumToPgEnum(Action))
 
 export const actionTokens = pgTable('action_tokens', {
-	userUUID: uuid('user_uuid').notNull().references(() => users.uuid),
+	userUUID: uuid('user_uuid').notNull().references(() => users.uuid, { onDelete: 'cascade' }),
 	token: text('token').notNull(),
 	action: action().notNull(),
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' })

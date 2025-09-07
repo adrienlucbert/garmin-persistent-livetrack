@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { sessions, type Sessions, type Users } from '../db/schema';
+import { sessions, type PublicUserWithTraits, type Sessions, type Users } from '../db/schema';
 import { JWT_TOKEN_SECRET } from '$env/static/private';
 import { encodeHexLowerCase } from '@oslojs/encoding';
 import { sha256 } from '@oslojs/crypto/sha2';
@@ -10,7 +10,6 @@ import { invalidateSession } from './session';
 type JWTContent = {
 	user: {
 		uuid: string,
-		email: string
 	}
 }
 
@@ -24,13 +23,18 @@ export function createToken(payload: JWTContent, expiresIn?: string): string {
 	);
 }
 
-export async function validateSessionToken(token: string): Promise<Sessions & { user: Omit<Users, 'passwordHash'> }> {
+export async function validateSessionToken(token: string): Promise<Sessions & { user: PublicUserWithTraits }> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const sess = await db.query.sessions.findFirst({
 		with: {
 			user: {
-				columns: {
-					passwordHash: false
+				with: {
+					passwordTrait: {
+						columns: {
+							passwordHash: false
+						}
+					},
+					githubTrait: true,
 				}
 			}
 		},

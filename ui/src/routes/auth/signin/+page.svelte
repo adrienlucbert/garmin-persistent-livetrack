@@ -29,6 +29,8 @@
 	<button class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
 		>Sign-in</button
 	>
+	<br />
+	<a href="/auth/signin/github">Sign in with Github</a>
 </form>
 <p style="color: red">{form?.message ?? ''}</p>
 {#if flags.ENABLE_RECOVER_PASSWORD}

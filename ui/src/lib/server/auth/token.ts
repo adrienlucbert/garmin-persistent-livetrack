@@ -1,7 +1,7 @@
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
-import { Action, actionTokens, type ActionTokens, type Users } from "../db/schema";
+import { Action, actionTokens, type ActionTokens, type PublicUserWithTraits, type Users } from "../db/schema";
 import { db } from "../db";
-import { eq, and, sql, gt, lt } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 export function generateSessionToken(): string {
 	const bytes = new Uint8Array(20);
@@ -36,12 +36,17 @@ export async function createActionToken(userUUID: string, action: Action, expire
 	return actionToken;
 }
 
-export async function validateActionToken(token: string): Promise<ActionTokens & { user: Omit<Users, 'passwordHash'> }> {
+export async function validateActionToken(token: string, action: Action): Promise<ActionTokens & { user: PublicUserWithTraits }> {
 	const actionToken = await db.query.actionTokens.findFirst({
 		with: {
 			user: {
-				columns: {
-					passwordHash: false
+				with: {
+					passwordTrait: {
+						columns: {
+							passwordHash: false
+						}
+					},
+					githubTrait: true,
 				}
 			}
 		},
@@ -50,6 +55,10 @@ export async function validateActionToken(token: string): Promise<ActionTokens &
 
 	if (!actionToken) {
 		return Promise.reject('Token is invalid or has expired')
+	}
+
+	if (actionToken.action != action) {
+		return Promise.reject('Token does not allow this action')
 	}
 
 	if (actionToken.expiresAt && new Date() >= actionToken.expiresAt) {

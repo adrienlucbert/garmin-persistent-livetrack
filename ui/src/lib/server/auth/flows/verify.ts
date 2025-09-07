@@ -16,7 +16,7 @@ export async function askVerifyEmail({ uuid, email }: { uuid: string, email: str
 }
 
 export async function verifyEmail(token: string): Promise<void> {
-	const actionToken = await validateActionToken(token)
-	await setUserEmailVerified(actionToken.user.uuid as UUID)
+	const { user } = await validateActionToken(token, Action.VERIFY_EMAIL)
+	await setUserEmailVerified(user.uuid as UUID)
 	await invalidateActionToken(token)
 }
