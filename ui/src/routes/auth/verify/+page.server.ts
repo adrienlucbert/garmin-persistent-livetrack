@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { verifyEmail } from '$lib/server/auth/flows/verify';
+import { verifyEmail } from '$lib/server/auth/flows';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {

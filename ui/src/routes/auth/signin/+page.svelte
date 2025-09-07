@@ -31,11 +31,11 @@
 	>
 	{#if flags.ENABLE_OAUTH_GITHUB}
 		<br />
-		<a href="/auth/signin/github">Sign in with Github</a>
+		<a href="/auth/oauth/github">Sign in with Github</a>
 	{/if}
 	{#if flags.ENABLE_OAUTH_GOOGLE}
 		<br />
-		<a href="/auth/signin/google">Sign in with Google</a>
+		<a href="/auth/oauth/google">Sign in with Google</a>
 	{/if}
 </form>
 <p style="color: red">{form?.message ?? ''}</p>

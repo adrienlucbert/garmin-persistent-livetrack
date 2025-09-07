@@ -1,5 +1,5 @@
 import { verifyPasswordHash } from "$lib/server/auth/password"
-import { createSessionForUser, type SessionWithToken } from "$lib/server/auth/session"
+import { createSession, type SessionWithToken } from "$lib/server/auth/session"
 import { AuthMethod, getUser } from "$lib/server/auth/user"
 
 export async function signin(email: string, password: string): Promise<SessionWithToken> {
@@ -13,6 +13,6 @@ export async function signin(email: string, password: string): Promise<SessionWi
 		return Promise.reject('Invalid username or password')
 	}
 
-	return await createSessionForUser(user)
+	return await createSession(user)
 }
 

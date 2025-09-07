@@ -3,7 +3,7 @@ import { invalidateSession, deleteSessionTokenCookie } from '$lib/server/auth/se
 
 export const POST = async (event) => {
 	if (!event.locals.session) {
-		return error(401);
+		throw error(401);
 	}
 
 	await invalidateSession(event.locals.session.id);

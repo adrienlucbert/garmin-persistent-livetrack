@@ -36,8 +36,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			const session = await resetPassword(token, password)
-			setSessionTokenCookie(event, session.token, session.expiresAt)
+			(await resetPassword(token, password)).persist(event)
 		} catch (message) {
 			return fail(400, { message: String(message) })
 		}

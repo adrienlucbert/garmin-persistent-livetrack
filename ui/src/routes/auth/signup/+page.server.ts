@@ -1,7 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { signup } from '$lib/server/auth/flows';
-import { setSessionTokenCookie } from '$lib/server/auth/session';
 import { validateEmail, validatePassword } from '$lib/validators';
 import type { PageServerLoad } from "./$types";
 
@@ -20,8 +19,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			const session = await signup(email, password)
-			setSessionTokenCookie(event, session.token, session.expiresAt)
+			(await signup(email, password)).persist(event)
 		} catch (message) {
 			return fail(400, { message: String(message) });
 		}

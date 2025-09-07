@@ -1,12 +1,12 @@
-import { askVerifyEmail } from '$lib/server/auth/flows/verify.js';
+import { askVerifyEmail } from '$lib/server/auth/flows';
 import { error, json } from '@sveltejs/kit';
 
 export const POST = async ({ locals }) => {
 	if (!locals.user) {
-		return error(401, 'User is not logged in')
+		throw error(401, 'User is not logged in')
 	}
 	if (!locals.user.passwordTrait) {
-		return error(401, 'User email address is not set')
+		throw error(401, 'User email address is not set')
 	}
 
 	await askVerifyEmail({ uuid: locals.user.uuid, email: locals.user.passwordTrait.email })

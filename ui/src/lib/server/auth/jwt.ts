@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { sessions, type PublicUserWithTraits, type Sessions, type Users } from '../db/schema';
+import { sessions, type PublicUserWithTraits, type Sessions } from '../db/schema';
 import { JWT_TOKEN_SECRET } from '$env/static/private';
 import { encodeHexLowerCase } from '@oslojs/encoding';
 import { sha256 } from '@oslojs/crypto/sha2';

@@ -1,5 +1,5 @@
 import type { UUID } from "crypto";
-import { createSessionForUser, type SessionWithToken } from "$lib/server/auth/session";
+import { createSession, type SessionWithToken } from "$lib/server/auth/session";
 import { createActionToken, validateActionToken, invalidateActionToken } from "$lib/server/auth/token";
 import { AuthMethod, getUser, updateUserPassword } from "$lib/server/auth/user";
 import { Action } from "$lib/server/db/schema";
@@ -8,7 +8,7 @@ import { RecoverPassword } from "$lib/server/email/templates";
 import { formatDuration } from "$lib/time";
 import { env } from "$env/dynamic/public";
 import { FeatureFlagsConfig as flags } from "$lib/featureFlags/config";
-import { askVerifyEmail } from "./verify";
+import { askVerifyEmail } from "$lib/server/auth/flows"
 
 export async function recoverPassword(email: string): Promise<void> {
 	const user = await getUser(AuthMethod.Password, email)
@@ -35,5 +35,5 @@ export async function resetPassword(token: string, password: string): Promise<Se
 	const actionToken = await validateActionToken(token, Action.RESET_PASSWORD)
 	await updateUserPassword(actionToken.userUUID as UUID, password)
 	await invalidateActionToken(token)
-	return await createSessionForUser(actionToken.user)
+	return await createSession(actionToken.user)
 }

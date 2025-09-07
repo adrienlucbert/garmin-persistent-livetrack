@@ -4,30 +4,32 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import type { RequestEvent } from "@sveltejs/kit";
 import { dev } from '$app/environment';
 import { eq } from "drizzle-orm";
-import { sessions, type Sessions } from '../db/schema';
-import { createToken } from './jwt';
+import { sessions, type Sessions } from '$lib/server/db/schema';
+import { createToken } from '$lib/server/auth/jwt';
 
 export const SESSION_COOKIE_NAME = 'auth_token'
 
 export type SessionWithToken = Sessions & {
 	token: string
+} & {
+	persist(event: RequestEvent): void
 }
 
-export async function createSessionForUser({ uuid }: { uuid: string }): Promise<SessionWithToken> {
+export async function createSession({ uuid }: { uuid: string }): Promise<SessionWithToken> {
 	const token = createToken({ user: { uuid: uuid } })
-	return await createSession(token, uuid)
-}
-
-export async function createSession(token: string, userUUID: string): Promise<SessionWithToken> {
 	const sess: Sessions = {
 		id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
-		userUUID,
+		userUUID: uuid,
 		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
 	};
 
 	await db.insert(sessions).values(sess);
 
-	return { ...sess, token };
+	return {
+		...sess,
+		token,
+		persist: (event: RequestEvent) => setSessionTokenCookie(event, token, sess.expiresAt)
+	};
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): void {
