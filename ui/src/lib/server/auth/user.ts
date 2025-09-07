@@ -3,15 +3,17 @@ import { eq } from "drizzle-orm";
 import { users, type Users } from '../db/schema';
 import type { UUID } from 'crypto';
 import { hashPassword } from './password';
-import { githubTraits, passwordTraits, type GithubTraits, type PasswordTraits } from '$lib/server/db/schema/traits';
+import { githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema/traits';
 
 export enum AuthMethod {
 	Password = 'password',
 	Github = 'github',
+	Google = 'google',
 }
 
-export async function createUser(method: AuthMethod.Github, userId: number, username: string): Promise<UUID>;
 export async function createUser(method: AuthMethod.Password, email: string, password: string): Promise<UUID>;
+export async function createUser(method: AuthMethod.Github, userId: number, username: string): Promise<UUID>;
+export async function createUser(method: AuthMethod.Google, userId: string, username: string): Promise<UUID>;
 export async function createUser(method: AuthMethod, ...args: any): Promise<UUID> {
 	const userUUID = crypto.randomUUID()
 	return await db.transaction(async (tx) => {
@@ -35,6 +37,15 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 				})
 				break
 			}
+			case AuthMethod.Google: {
+				const [userId, username]: [userId: string, username: string] = args
+				await tx.insert(googleTraits).values({
+					userUUID: userUUID,
+					userId: userId,
+					username: username,
+				})
+				break
+			}
 		}
 		return userUUID;
 	})
@@ -42,7 +53,8 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 
 export async function getUser(method: AuthMethod.Password, email: string): Promise<Users & { traits: PasswordTraits } | undefined>;
 export async function getUser(method: AuthMethod.Github, userid: number): Promise<Users & { traits: GithubTraits } | undefined>;
-export async function getUser(method: AuthMethod, ...args: any): Promise<Users & { traits: PasswordTraits | GithubTraits } | undefined> {
+export async function getUser(method: AuthMethod.Google, userid: string): Promise<Users & { traits: GoogleTraits } | undefined>;
+export async function getUser(method: AuthMethod, ...args: any): Promise<Users & { traits: Traits } | undefined> {
 	switch (method) {
 		case AuthMethod.Password: {
 			const [email]: [email: string] = args
@@ -64,6 +76,17 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 				.from(githubTraits)
 				.innerJoin(users, eq(users.uuid, githubTraits.userUUID))
 				.where(eq(githubTraits.userId, userid))
+				.limit(1))[0]
+		}
+		case AuthMethod.Google: {
+			const [userid]: [userid: string] = args
+			return (await db.select({
+				uuid: users.uuid,
+				traits: googleTraits
+			})
+				.from(googleTraits)
+				.innerJoin(users, eq(users.uuid, googleTraits.userUUID))
+				.where(eq(googleTraits.userId, userid))
 				.limit(1))[0]
 		}
 	}

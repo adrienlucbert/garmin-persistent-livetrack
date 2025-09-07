@@ -35,6 +35,7 @@ export async function validateSessionToken(token: string): Promise<Sessions & { 
 						}
 					},
 					githubTrait: true,
+					googleTrait: true,
 				}
 			}
 		},

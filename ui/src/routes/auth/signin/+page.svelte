@@ -31,6 +31,8 @@
 	>
 	<br />
 	<a href="/auth/signin/github">Sign in with Github</a>
+	<br />
+	<a href="/auth/signin/google">Sign in with Google</a>
 </form>
 <p style="color: red">{form?.message ?? ''}</p>
 {#if flags.ENABLE_RECOVER_PASSWORD}

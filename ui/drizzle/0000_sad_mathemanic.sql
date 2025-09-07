@@ -28,14 +28,23 @@ CREATE TABLE "password_traits" (
 --> statement-breakpoint
 CREATE TABLE "github_traits" (
 	"user_uuid" uuid PRIMARY KEY NOT NULL,
-	"userid" integer,
+	"user_id" integer,
 	"username" text,
-	CONSTRAINT "github_traits_userid_unique" UNIQUE("userid"),
+	CONSTRAINT "github_traits_user_id_unique" UNIQUE("user_id"),
 	CONSTRAINT "github_traits_username_unique" UNIQUE("username")
+);
+--> statement-breakpoint
+CREATE TABLE "google_traits" (
+	"user_uuid" uuid PRIMARY KEY NOT NULL,
+	"user_id" text,
+	"username" text,
+	CONSTRAINT "google_traits_user_id_unique" UNIQUE("user_id"),
+	CONSTRAINT "google_traits_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_uuid_users_id_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "action_tokens" ADD CONSTRAINT "action_tokens_user_uuid_users_id_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "password_traits" ADD CONSTRAINT "password_traits_user_uuid_users_id_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "github_traits" ADD CONSTRAINT "github_traits_user_uuid_users_id_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "google_traits" ADD CONSTRAINT "google_traits_user_uuid_users_id_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "emailUniqueIndex" ON "password_traits" USING btree (lower("email"));

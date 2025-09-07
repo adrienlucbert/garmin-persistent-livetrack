@@ -1,5 +1,5 @@
 {
-  "id": "a66d1b2f-c8b7-4d69-9613-0d731a255dbf",
+  "id": "38e3341f-5f93-4f84-98c7-61fe2f424892",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -224,8 +224,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "userid": {
-          "name": "userid",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -255,15 +255,75 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "github_traits_userid_unique": {
-          "name": "github_traits_userid_unique",
+        "github_traits_user_id_unique": {
+          "name": "github_traits_user_id_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "userid"
+            "user_id"
           ]
         },
         "github_traits_username_unique": {
           "name": "github_traits_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.google_traits": {
+      "name": "google_traits",
+      "schema": "",
+      "columns": {
+        "user_uuid": {
+          "name": "user_uuid",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "google_traits_user_uuid_users_id_fk": {
+          "name": "google_traits_user_uuid_users_id_fk",
+          "tableFrom": "google_traits",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_uuid"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "google_traits_user_id_unique": {
+          "name": "google_traits_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        },
+        "google_traits_username_unique": {
+          "name": "google_traits_username_unique",
           "nullsNotDistinct": false,
           "columns": [
             "username"

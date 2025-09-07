@@ -25,6 +25,9 @@
 {#if data.user.githubTrait}
 	<h1>Hi, {data.user.githubTrait.username}!</h1>
 {/if}
+{#if data.user.googleTrait}
+	<h1>Hi, {data.user.googleTrait.username}!</h1>
+{/if}
 <p>Your user ID is {data.user.uuid}.</p>
 {#if flags.ENABLE_VERIFY_EMAIL}
 	{#if data.user.passwordTrait && !data.user.passwordTrait.isEmailVerified}

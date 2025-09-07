@@ -47,6 +47,7 @@ export async function validateActionToken(token: string, action: Action): Promis
 						}
 					},
 					githubTrait: true,
+					googleTrait: true,
 				}
 			}
 		},

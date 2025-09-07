@@ -2,17 +2,17 @@ import { relations } from 'drizzle-orm'
 import { pgTable, text, uuid, integer } from 'drizzle-orm/pg-core';
 import { users } from '../users';
 
-export const githubTraits = pgTable('github_traits', {
+export const googleTraits = pgTable('google_traits', {
 	userUUID: uuid('user_uuid').primaryKey().references(() => users.uuid, { onDelete: 'cascade' }),
-	userId: integer('user_id').unique(),
+	userId: text('user_id').unique(),
 	username: text('username').unique(),
 });
 
-export const githubTraitsRelations = relations(githubTraits, ({ one }) => ({
+export const googleTraitsRelations = relations(googleTraits, ({ one }) => ({
 	user: one(users, {
-		fields: [githubTraits.userUUID],
+		fields: [googleTraits.userUUID],
 		references: [users.uuid],
 	})
 }))
 
-export type GithubTraits = typeof githubTraits.$inferSelect;
+export type GoogleTraits = typeof googleTraits.$inferSelect;
