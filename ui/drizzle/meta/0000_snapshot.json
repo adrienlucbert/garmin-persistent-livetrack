@@ -1,5 +1,5 @@
 {
-  "id": "9828a41c-f1e5-4866-a27c-217d929b7242",
+  "id": "5a0ac0cc-12eb-49ff-8172-6045dd6aa957",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -8,8 +8,8 @@
       "name": "users",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
+        "uuid": {
+          "name": "uuid",
           "type": "uuid",
           "primaryKey": true,
           "notNull": true,
@@ -20,11 +20,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_id_unique": {
-          "name": "users_id_unique",
+        "users_uuid_unique": {
+          "name": "users_uuid_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "id"
+            "uuid"
           ]
         }
       },
@@ -57,15 +57,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "sessions_user_uuid_users_id_fk": {
-          "name": "sessions_user_uuid_users_id_fk",
+        "sessions_user_uuid_users_uuid_fk": {
+          "name": "sessions_user_uuid_users_uuid_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
           ],
           "columnsTo": [
-            "id"
+            "uuid"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -109,15 +109,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "action_tokens_user_uuid_users_id_fk": {
-          "name": "action_tokens_user_uuid_users_id_fk",
+        "action_tokens_user_uuid_users_uuid_fk": {
+          "name": "action_tokens_user_uuid_users_uuid_fk",
           "tableFrom": "action_tokens",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
           ],
           "columnsTo": [
-            "id"
+            "uuid"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -186,15 +186,15 @@
         }
       },
       "foreignKeys": {
-        "password_traits_user_uuid_users_id_fk": {
-          "name": "password_traits_user_uuid_users_id_fk",
+        "password_traits_user_uuid_users_uuid_fk": {
+          "name": "password_traits_user_uuid_users_uuid_fk",
           "tableFrom": "password_traits",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
           ],
           "columnsTo": [
-            "id"
+            "uuid"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -239,15 +239,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "github_traits_user_uuid_users_id_fk": {
-          "name": "github_traits_user_uuid_users_id_fk",
+        "github_traits_user_uuid_users_uuid_fk": {
+          "name": "github_traits_user_uuid_users_uuid_fk",
           "tableFrom": "github_traits",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
           ],
           "columnsTo": [
-            "id"
+            "uuid"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -299,15 +299,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "google_traits_user_uuid_users_id_fk": {
-          "name": "google_traits_user_uuid_users_id_fk",
+        "google_traits_user_uuid_users_uuid_fk": {
+          "name": "google_traits_user_uuid_users_uuid_fk",
           "tableFrom": "google_traits",
           "tableTo": "users",
           "columnsFrom": [
             "user_uuid"
           ],
           "columnsTo": [
-            "id"
+            "uuid"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -327,6 +327,66 @@
           "nullsNotDistinct": false,
           "columns": [
             "username"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.live_track_sessions": {
+      "name": "live_track_sessions",
+      "schema": "",
+      "columns": {
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_uuid": {
+          "name": "user_uuid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "link": {
+          "name": "link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "live_track_sessions_user_uuid_users_uuid_fk": {
+          "name": "live_track_sessions_user_uuid_users_uuid_fk",
+          "tableFrom": "live_track_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_uuid"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "live_track_sessions_uuid_unique": {
+          "name": "live_track_sessions_uuid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "uuid"
           ]
         }
       },

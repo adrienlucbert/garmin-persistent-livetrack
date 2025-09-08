@@ -1,9 +1,8 @@
 import { db } from '$lib/server/db';
 import { eq } from "drizzle-orm";
-import { users, type Users } from '../db/schema';
 import type { UUID } from 'crypto';
-import { hashPassword } from './password';
-import { githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema/traits';
+import { hashPassword } from '$lib/server/auth/password';
+import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema';
 
 export enum AuthMethod {
 	Password = 'password',

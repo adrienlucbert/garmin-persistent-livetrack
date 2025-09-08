@@ -1,6 +1,6 @@
 import { generateState, GitHub } from "arctic";
 import { env } from '$env/dynamic/private'
-import { type OAuthProvider } from "./provider";
+import { type OAuthProvider } from "$lib/server/auth/oauth/provider";
 import type { URL } from "url";
 import type { OAuth2Tokens } from "arctic";
 import type { Cookies } from "@sveltejs/kit";

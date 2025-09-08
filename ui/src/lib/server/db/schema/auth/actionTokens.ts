@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm'
 import { pgEnum, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users';
-import { enumToPgEnum } from '../utils';
+import { enumToPgEnum } from '../../utils';
 
 export enum Action {
 	RESET_PASSWORD = 'reset_password',

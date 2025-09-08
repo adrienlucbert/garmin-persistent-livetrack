@@ -3,7 +3,7 @@ import { pgTable, uuid } from 'drizzle-orm/pg-core';
 import { githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits } from './traits';
 
 export const users = pgTable('users', {
-	uuid: uuid('id').primaryKey().defaultRandom().unique(),
+	uuid: uuid('uuid').primaryKey().defaultRandom().unique(),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({

@@ -1,7 +1,7 @@
 import { decodeIdToken, generateCodeVerifier, generateState, Google, OAuth2Tokens } from "arctic";
 import { env as privEnv } from '$env/dynamic/private'
 import { env as pubEnv } from '$env/dynamic/public'
-import { type OAuthProvider } from "./provider";
+import { type OAuthProvider } from "$lib/server/auth/oauth/provider";
 import type { Cookies } from "@sveltejs/kit";
 import type { URL } from "url";
 import { type UUID } from "crypto";
