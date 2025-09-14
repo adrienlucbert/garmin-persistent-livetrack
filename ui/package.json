@@ -23,6 +23,7 @@
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
+		"@internationalized/date": "^3.8.1",
 		"@lucide/svelte": "^0.543.0",
 		"@sveltejs/adapter-auto": "^6.0.0",
 		"@sveltejs/kit": "^2.22.0",
@@ -33,6 +34,7 @@
 		"@types/node": "^22",
 		"@types/nodemailer": "^7.0.1",
 		"@vitest/browser": "^3.2.3",
+		"bits-ui": "^2.8.6",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.30.2",
 		"eslint": "^9.18.0",
