@@ -5,11 +5,14 @@
 	import CircleUserRound from '@lucide/svelte/icons/circle-user-round';
 
 	import { ModeWatcher } from 'mode-watcher';
-	import { navigating } from '$app/stores';
+	import { navigating } from '$app/state';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import { toggleMode } from 'mode-watcher';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+
+	let { data } = $props();
 </script>
 
 <ModeWatcher />
@@ -23,9 +26,27 @@
 		</div>
 		<div class="flex-none">
 			<ul class="inline-flex flex-row flex-wrap space-x-1 p-2 text-lg font-bold">
-				<Button variant="ghost" size="icon" href="/auth">
-					<CircleUserRound />
-				</Button>
+				{#if data.session}
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger>
+							<Button variant="ghost" size="icon">
+								<CircleUserRound />
+							</Button>
+						</DropdownMenu.Trigger>
+						<DropdownMenu.Content>
+							<a href="/account" class="no-underline">
+								<DropdownMenu.Item>Account</DropdownMenu.Item>
+							</a>
+							<a href="/auth/signout" class="no-underline">
+								<DropdownMenu.Item>Sign out</DropdownMenu.Item>
+							</a>
+						</DropdownMenu.Content>
+					</DropdownMenu.Root>
+				{:else}
+					<Button variant="ghost" size="icon" href="/auth">
+						<CircleUserRound />
+					</Button>
+				{/if}
 				<Button onclick={toggleMode} variant="ghost" size="icon">
 					<SunIcon class="scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90" />
 					<MoonIcon
@@ -38,7 +59,7 @@
 	</div>
 </div>
 
-{#if $navigating}
+{#if navigating}
 	<!--
 		Loading animation for next page since svelte doesn't show any indicator.
 		 - delay 100ms because most page loads are instant, and we don't want to flash

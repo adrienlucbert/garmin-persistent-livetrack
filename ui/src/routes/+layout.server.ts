@@ -1,7 +1,10 @@
 import { FeatureFlagsConfig } from "$lib/featureFlags/config";
+import type { PublicUserWithTraits, Sessions } from "$lib/server/db/schema";
 
-export const load = () => {
+export const load = ({ locals }) => {
 	return {
 		flags: FeatureFlagsConfig,
+		user: locals.user as PublicUserWithTraits | undefined,
+		session: locals.session as Sessions | undefined,
 	};
 };
