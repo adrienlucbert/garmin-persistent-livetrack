@@ -11,13 +11,13 @@ export async function createBlankLiveTrackSession(userUUID: UUID): Promise<UUID>
 		link: null,
 		updatedAt: new Date(),
 	}
-	await db.insert(liveTrackSessions).values(blankSession)
+	await db().insert(liveTrackSessions).values(blankSession)
 
 	return sessionUUID
 }
 
 export async function getLiveTrackSession(sessionUUID: UUID): Promise<LiveTrackSessions & { user: PublicUserWithTraits }> {
-	const liveTrackSession = db.query.liveTrackSessions.findFirst({
+	const liveTrackSession = db().query.liveTrackSessions.findFirst({
 		with: {
 			user: {
 				with: {
@@ -42,7 +42,7 @@ export async function getLiveTrackSession(sessionUUID: UUID): Promise<LiveTrackS
 }
 
 export async function updateLiveTrackSessionLink(sessionUUID: UUID, link: string): Promise<void> {
-	const updatedRows = await db.update(liveTrackSessions)
+	const updatedRows = await db().update(liveTrackSessions)
 		.set({
 			link: link,
 			updatedAt: new Date(),

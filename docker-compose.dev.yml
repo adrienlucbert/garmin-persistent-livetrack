@@ -16,6 +16,8 @@ services:
     build:
       context: ui
       dockerfile: Dockerfile.dev
+    depends_on:
+      - postgres # faster but less safe startup
     command: ["yarn", "db:push"]
 
   ui:

@@ -15,7 +15,7 @@ export async function createUser(method: AuthMethod.Github, userId: number, user
 export async function createUser(method: AuthMethod.Google, userId: string, username: string): Promise<UUID>;
 export async function createUser(method: AuthMethod, ...args: any): Promise<UUID> {
 	const userUUID = crypto.randomUUID()
-	return await db.transaction(async (tx) => {
+	return await db().transaction(async (tx) => {
 		await tx.insert(users).values({ uuid: userUUID })
 		switch (method) {
 			case AuthMethod.Password: {
@@ -57,7 +57,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 	switch (method) {
 		case AuthMethod.Password: {
 			const [email]: [email: string] = args
-			return (await db.select({
+			return (await db().select({
 				uuid: users.uuid,
 				traits: passwordTraits
 			})
@@ -68,7 +68,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 		}
 		case AuthMethod.Github: {
 			const [userid]: [userid: number] = args
-			return (await db.select({
+			return (await db().select({
 				uuid: users.uuid,
 				traits: githubTraits
 			})
@@ -79,7 +79,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 		}
 		case AuthMethod.Google: {
 			const [userid]: [userid: string] = args
-			return (await db.select({
+			return (await db().select({
 				uuid: users.uuid,
 				traits: googleTraits
 			})
@@ -92,19 +92,19 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 }
 
 export async function setUserEmailVerified(userUUID: UUID): Promise<void> {
-	await db.update(passwordTraits)
+	await db().update(passwordTraits)
 		.set({ isEmailVerified: true })
 		.where(eq(passwordTraits.userUUID, userUUID))
 }
 
 export async function updateUserPassword(userUUID: UUID, password: string): Promise<void> {
-	await db.update(passwordTraits)
+	await db().update(passwordTraits)
 		.set({ passwordHash: await hashPassword(password) })
 		.where(eq(passwordTraits.userUUID, userUUID))
 }
 
 export async function deleteUser(userUUID: UUID): Promise<void> {
-	await db
+	await db()
 		.delete(users)
 		.where(eq(users.uuid, userUUID))
 }

@@ -25,7 +25,7 @@ export function createToken(payload: JWTContent, expiresIn?: string): string {
 
 export async function validateSessionToken(token: string): Promise<Sessions & { user: PublicUserWithTraits }> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const sess = await db.query.sessions.findFirst({
+	const sess = await db().query.sessions.findFirst({
 		with: {
 			user: {
 				with: {

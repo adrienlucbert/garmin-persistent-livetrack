@@ -22,7 +22,7 @@ export async function createActionToken(userUUID: string, action: Action, expire
 		expiresAt: expiresIn ? new Date(Date.now() + expiresIn) : null,
 	};
 
-	await db
+	await db()
 		.insert(actionTokens)
 		.values(actionToken)
 		.onConflictDoUpdate({
@@ -37,7 +37,7 @@ export async function createActionToken(userUUID: string, action: Action, expire
 }
 
 export async function validateActionToken(token: string, action: Action): Promise<ActionTokens & { user: PublicUserWithTraits }> {
-	const actionToken = await db.query.actionTokens.findFirst({
+	const actionToken = await db().query.actionTokens.findFirst({
 		with: {
 			user: {
 				with: {
@@ -75,14 +75,14 @@ export async function invalidateActionToken(token: string): Promise<void>;
 export async function invalidateActionToken(tokenOrUserUUID: string, action?: Action): Promise<void> {
 	if (action) {
 		const userUUID = tokenOrUserUUID
-		await db.delete(actionTokens)
+		await db().delete(actionTokens)
 			.where(and(
 				eq(actionTokens.userUUID, userUUID),
 				eq(actionTokens.action, action)
 			));
 	} else {
 		const token = tokenOrUserUUID
-		await db.delete(actionTokens)
+		await db().delete(actionTokens)
 			.where(eq(actionTokens.token, token));
 	}
 }

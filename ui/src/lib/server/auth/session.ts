@@ -23,7 +23,7 @@ export async function createSession({ uuid }: { uuid: string }): Promise<Session
 		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
 	};
 
-	await db.insert(sessions).values(sess);
+	await db().insert(sessions).values(sess);
 
 	return {
 		...sess,
@@ -53,5 +53,5 @@ export function deleteSessionTokenCookie(event: RequestEvent): void {
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-	await db.delete(sessions).where(eq(sessions.id, sessionId));
+	await db().delete(sessions).where(eq(sessions.id, sessionId));
 }

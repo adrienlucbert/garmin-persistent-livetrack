@@ -5,7 +5,14 @@ import type { Component, ComponentProps } from 'svelte';
 import type { EmailTemplate } from './templates';
 import { parseEnv } from '$lib/server/env';
 
-const transporter = nodemailer.createTransport(env.SMTP_CONNECTION_URI)
+let _transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
+
+function transporter() {
+	if (_transporter) return _transporter
+
+	_transporter = nodemailer.createTransport(env.SMTP_CONNECTION_URI)
+	return _transporter
+}
 
 export async function send<T extends Component<ComponentProps<T>, any, any>>(
 	template: EmailTemplate<T>,
@@ -16,7 +23,7 @@ export async function send<T extends Component<ComponentProps<T>, any, any>>(
 	const html = emailer.render(template.template, args)
 	const from = parseEnv<string>(env.SMTP_FROM) ?? 'sender@example.com'
 
-	return await transporter.sendMail({
+	return await transporter().sendMail({
 		from, html, subject: template.subject, to,
 	})
 }

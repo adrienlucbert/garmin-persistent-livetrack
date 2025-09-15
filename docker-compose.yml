@@ -3,7 +3,7 @@ services:
     build:
       context: smtp-proxy
     ports:
-      - "25:25"
+      - 25:25
     volumes:
       - ./smtp-proxy:/app
     environment:
@@ -21,23 +21,14 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
     command: ["yarn", "db:migrate"]
     depends_on:
-      - postgres
-      # postgres:
-      #   condition: service_healthy
+      postgres:
+        condition: service_healthy
     volumes:
       - ./ui:/app
       - /app/node_modules
     networks:
       - garmin-persistent-livetrack-network
 
-  maildev:
-    image: maildev/maildev:latest
-    container_name: maildev
-    ports:
-      - "1080:1080" # UI
-    restart: unless-stopped
-    networks:
-      - garmin-persistent-livetrack-network
   ui:
     build:
       context: ui
@@ -46,6 +37,8 @@ services:
     restart: "unless-stopped"
     env_file:
       - ./ui/.env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
     depends_on:
       - migrate
     networks:
