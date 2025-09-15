@@ -9,5 +9,16 @@ export const POST = async (event) => {
 	await invalidateSession(event.locals.session.id);
 	deleteSessionTokenCookie(event);
 
-	throw redirect(302, '/auth/signin');
+	throw redirect(302, '/auth');
+};
+
+export const GET = async (event) => {
+	if (!event.locals.session) {
+		throw error(401);
+	}
+
+	await invalidateSession(event.locals.session.id);
+	deleteSessionTokenCookie(event);
+
+	throw redirect(302, '/auth');
 };

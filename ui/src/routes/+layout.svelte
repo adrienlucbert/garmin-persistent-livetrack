@@ -18,12 +18,12 @@
 	<div class="container mx-auto flex min-h-16 items-center p-2">
 		<div class="flex-1">
 			<a class="px-4 text-xl font-semibold no-underline" href="/">
-				<span class="hidden sm:inline">Garmin Persistent </span>Livetrack
+				<span class="hidden sm:inline">Garmin Persistent</span> Livetrack
 			</a>
 		</div>
 		<div class="flex-none">
 			<ul class="inline-flex flex-row flex-wrap space-x-1 p-2 text-lg font-bold">
-				<Button variant="ghost" size="icon" href="/auth/signin">
+				<Button variant="ghost" size="icon" href="/auth">
 					<CircleUserRound />
 				</Button>
 				<Button onclick={toggleMode} variant="ghost" size="icon">

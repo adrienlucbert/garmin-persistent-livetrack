@@ -6,12 +6,6 @@ import { paraglideMiddleware } from '$lib/paraglide/server';
 import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 
 const handleFeatureFlags: Handle = ({ event, resolve }) => {
-	if (!flags.ENABLE_RECOVER_PASSWORD && event.url.pathname.startsWith('/auth/recover')) {
-		throw error(404)
-	}
-	if (!flags.ENABLE_VERIFY_EMAIL && event.url.pathname.startsWith('/auth/verify')) {
-		throw error(404)
-	}
 	if (!flags.ENABLE_OAUTH_GITHUB && event.url.pathname.startsWith('/auth/oauth/github')) {
 		throw error(404)
 	}

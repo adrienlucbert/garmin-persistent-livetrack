@@ -11,7 +11,7 @@ export async function askVerifyEmail({ uuid, email }: { uuid: string, email: str
 
 	send(AskVerifyEmail(), {
 		email: email,
-		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth/verify?token=${verifyToken.token}`,
+		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?tab=verify&token=${verifyToken.token}`,
 	}, email)
 }
 

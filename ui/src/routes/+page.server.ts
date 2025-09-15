@@ -11,7 +11,7 @@ function requireLogin() {
 	const { locals } = getRequestEvent();
 
 	if (!locals.user) {
-		return redirect(302, "/auth/signin");
+		return redirect(302, "/auth");
 	}
 
 	return locals.user;

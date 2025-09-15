@@ -26,8 +26,8 @@ export async function recoverPassword(email: string): Promise<void> {
 
 	send(RecoverPassword(), {
 		expiresIn: formatDuration(expiresIn),
-		resendURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth/recover`,
-		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth/recover?token=${recoverToken.token}`,
+		resendURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?tab=reset`,
+		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?tab=reset&token=${recoverToken.token}`,
 	}, email)
 }
 
