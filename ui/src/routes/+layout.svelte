@@ -12,7 +12,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 
-	let { data } = $props();
+	let { data, children } = $props();
 </script>
 
 <ModeWatcher />
@@ -74,7 +74,7 @@
 {/if}
 
 <div class="">
-	<slot />
+	{@render children()}
 </div>
 
 <div class="flex-grow"></div>
@@ -84,8 +84,8 @@
 	>
 		<nav class="grid place-items-start gap-2">
 			<span class="mb-2 font-bold uppercase opacity-80">Explore</span>
-			<a class="mb-1" href="#">How it works</a>
-			<a class="mb-1" href="#">Self-Host</a>
+			<a class="mb-1" href="#how-it-works">How it works</a>
+			<a class="mb-1" href="#self-host">Self-Host</a>
 			<a class="my-1" href="https://github.com/adrienlucbert/garmin-persistent-livetrack/">Github</a
 			>
 		</nav>

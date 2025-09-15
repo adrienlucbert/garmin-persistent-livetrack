@@ -8,25 +8,48 @@ services:
       - ./smtp-proxy:/app
     environment:
       - API_HOST= # TODO: use docker network
-    restart: 'unless-stopped'
+    restart: "unless-stopped"
     depends_on:
-      - trackme
+      - ui
     networks:
-      - trackme
+      - garmin-persistent-livetrack-network
 
-  trackme:
+  migrate:
     build:
-      context: trackme
-    ports:
-      - "3000:3000"
+      context: ui
     environment:
-      - DSN=postgres://postgres:postgres@postgres:5432/trackme?sslmode=disable&max_conns=20&max_idle_conns=4
-    restart: 'unless-stopped'
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
+    command: ["yarn", "db:migrate"]
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
+      # postgres:
+      #   condition: service_healthy
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
     networks:
-      - trackme
+      - garmin-persistent-livetrack-network
+
+  maildev:
+    image: maildev/maildev:latest
+    container_name: maildev
+    ports:
+      - "1080:1080" # UI
+    restart: unless-stopped
+    networks:
+      - garmin-persistent-livetrack-network
+  ui:
+    build:
+      context: ui
+    ports:
+      - 3000:3000
+    restart: "unless-stopped"
+    env_file:
+      - ./ui/.env
+    depends_on:
+      - migrate
+    networks:
+      - garmin-persistent-livetrack-network
 
   postgres:
     container_name: postgres
@@ -35,7 +58,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./postgres:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,10 +67,10 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
     networks:
-      - trackme
+      - garmin-persistent-livetrack-network
 
 networks:
-  trackme:
+  garmin-persistent-livetrack-network:
 
 volumes:
   postgres-data:
