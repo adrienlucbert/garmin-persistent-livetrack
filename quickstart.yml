@@ -14,36 +14,6 @@ services:
     networks:
       - garmin-persistent-livetrack-network
 
-  migrate:
-    build:
-      context: ui
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
-    command: ["yarn", "db:migrate"]
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./ui:/app
-      - /app/node_modules
-    networks:
-      - garmin-persistent-livetrack-network
-
-  ui:
-    build:
-      context: ui
-    ports:
-      - 3000:3000
-    restart: "unless-stopped"
-    env_file:
-      - ./ui/.env
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
-    depends_on:
-      - migrate
-    networks:
-      - garmin-persistent-livetrack-network
-
   postgres:
     container_name: postgres
     image: postgres:15.2
@@ -59,6 +29,31 @@ services:
       POSTGRES_DB: "postgres"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
+    networks:
+      - garmin-persistent-livetrack-network
+
+  migrate:
+    build:
+      context: ui
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - garmin-persistent-livetrack-network
+    command: ["yarn", "db:migrate"]
+
+  ui:
+    build:
+      context: ui
+    restart: "unless-stopped"
+    env_file:
+      - ./ui/.env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
+    depends_on:
+      - migrate
     networks:
       - garmin-persistent-livetrack-network
 

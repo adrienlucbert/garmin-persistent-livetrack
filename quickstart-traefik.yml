@@ -1,0 +1,24 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--providers.docker.exposedbydefault=false"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - garmin-persistent-livetrack-network
+
+  ui:
+    environment:
+      PUBLIC_URL: http://garmin-persistent-livetrack.localhost
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.garmin-persistent-livetrack.entrypoints=web"
+      - "traefik.http.routers.garmin-persistent-livetrack.rule=Host(`garmin-persistent-livetrack.localhost`)"
+      - "traefik.http.services.garmin-persistent-livetrack.loadbalancer.server.port=3000"
+    networks:
+      - garmin-persistent-livetrack-network

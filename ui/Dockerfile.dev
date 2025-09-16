@@ -3,4 +3,4 @@ WORKDIR /app
 COPY package*.json *.lock ./
 RUN yarn install --production=false --frozen-lockfile
 ENV NODE_ENV=development
-CMD ["yarn", "dev", "--host", "0.0.0.0"]
+CMD ["yarn", "dev", "--host", "0.0.0.0", "--port", "3000"]

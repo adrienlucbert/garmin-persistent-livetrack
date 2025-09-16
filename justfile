@@ -1,8 +1,17 @@
 # Run the app for production
 run:
-	docker-compose build && docker-compose up
+	just --justfile {{justfile()}} build-up quickstart.yml quickstart-traefik.yml
+
+run-local:
+	just --justfile {{justfile()}} build-up quickstart.yml quickstart-local.yml
 
 # Run the app for development
 dev:
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build && \
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+	just --justfile {{justfile()}} build-up quickstart.yml quickstart-dev.yml quickstart-local.yml
+
+dev-traefik:
+	just --justfile {{justfile()}} build-up quickstart.yml quickstart-dev.yml quickstart-traefik.yml
+
+build-up *configs:
+	docker-compose $(for f in {{configs}}; do printf -- "-f %s " "$f"; done) build && \
+	docker-compose $(for f in {{configs}}; do printf -- "-f %s " "$f"; done) up
