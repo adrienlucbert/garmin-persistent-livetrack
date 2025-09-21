@@ -6,5 +6,6 @@ export const load = ({ locals }) => {
 		flags: FeatureFlagsConfig,
 		user: locals.user as PublicUserWithTraits | undefined,
 		session: locals.session as Sessions | undefined,
+		hideSidebar: !Boolean(locals.session),
 	};
 };
