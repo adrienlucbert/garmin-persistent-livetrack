@@ -120,10 +120,6 @@
     @apply bg-background text-foreground flex flex-col min-h-screen;
 		min-height: 100vh;
   }
-
-	a {
-		@apply hover:underline underline-offset-4;
-	}
 }
 
 @layer components {

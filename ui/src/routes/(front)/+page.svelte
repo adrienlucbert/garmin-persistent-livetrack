@@ -25,7 +25,7 @@
 				<b>friends and family</b>.
 			</div>
 			<div class="mt-6 flex justify-center gap-4 md:mt-4">
-				<Button>Create my link</Button>
+				<Button href="/link">Create my link</Button>
 				<Button variant="outline">How it works</Button>
 			</div>
 		</div>

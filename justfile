@@ -12,6 +12,9 @@ dev:
 dev-traefik:
 	just --justfile {{justfile()}} build-up quickstart.yml quickstart-dev.yml quickstart-traefik.yml
 
+yarn *cmd:
+	docker-compose -f quickstart.yml -f quickstart-dev.yml exec ui yarn {{cmd}}
+
 build-up *configs:
 	docker-compose $(for f in {{configs}}; do printf -- "-f %s " "$f"; done) build && \
 	docker-compose $(for f in {{configs}}; do printf -- "-f %s " "$f"; done) up

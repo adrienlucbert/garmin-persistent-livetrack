@@ -72,7 +72,7 @@
 	</Card.Content>
 	<Card.Footer class="flex-col gap-2">
 		{#if withGoogle}
-			<Button variant="outline" class="w-full no-underline" href="/auth/oauth/google">
+			<Button variant="outline" class="w-full" href="/auth/oauth/google">
 				<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 					<title>Google</title>
 					<path
@@ -83,7 +83,7 @@
 			>
 		{/if}
 		{#if withGithub}
-			<Button variant="outline" class="w-full no-underline" href="/auth/oauth/github">
+			<Button variant="outline" class="w-full" href="/auth/oauth/github">
 				<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 					<title>GitHub</title>
 					<path

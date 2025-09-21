@@ -26,7 +26,7 @@
 	{/if}
 	<div class="container mx-auto flex min-h-16 items-center p-2">
 		<div class="flex-1">
-			<a class="px-4 text-xl font-semibold no-underline" href="/">
+			<a class="px-4 text-xl font-semibold" href="/">
 				<span class="hidden sm:inline">Garmin Persistent</span> Livetrack
 			</a>
 		</div>
@@ -40,10 +40,10 @@
 							</Button>
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content>
-							<a href="/account" class="no-underline">
+							<a href="/account">
 								<DropdownMenu.Item>Account</DropdownMenu.Item>
 							</a>
-							<a href="/auth/signout" class="no-underline">
+							<a href="/auth/signout">
 								<DropdownMenu.Item>Sign out</DropdownMenu.Item>
 							</a>
 						</DropdownMenu.Content>

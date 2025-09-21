@@ -33,6 +33,7 @@
 		"@tailwindcss/vite": "^4.0.0",
 		"@types/node": "^22",
 		"@types/nodemailer": "^7.0.1",
+		"@types/qrcode": "^1.5.5",
 		"@vitest/browser": "^3.2.3",
 		"bits-ui": "^2.8.6",
 		"clsx": "^2.1.1",
@@ -68,6 +69,8 @@
 		"jsonwebtoken": "^9.0.2",
 		"mode-watcher": "^1.1.0",
 		"nodemailer": "^7.0.6",
-		"postgres": "^3.4.5"
+		"postgres": "^3.4.5",
+		"qrcode": "^1.5.4",
+		"vcards-js": "^2.10.0"
 	}
 }
