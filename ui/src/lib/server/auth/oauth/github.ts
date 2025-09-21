@@ -1,19 +1,20 @@
-import { generateState, GitHub, OAuth2Tokens } from "arctic";
+import { GitHub, OAuth2Tokens } from "arctic";
 import { env } from '$env/dynamic/private'
-import { type OAuthProvider } from "$lib/server/auth/oauth/provider";
+import type { OAuthProvider, OAuthTokensWithState } from "$lib/server/auth/oauth/provider";
 import type { URL } from "url";
 import type { Cookies } from "@sveltejs/kit";
 import { type UUID } from "crypto";
 import { AuthMethod, createUser, getUser } from "$lib/server/auth/user";
+import { generateCustomState, validateState } from "./state";
 
 export const github = new GitHub(env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET, null)
 
 export const GithubOAuthProvider: OAuthProvider = {
-	createAuthorizationURL(cookies: Cookies): URL {
-		const state = generateState();
+	createAuthorizationURL(cookies: Cookies, followURL: string | null): URL {
+		const { state, csrf } = generateCustomState(followURL);
 		const url = github.createAuthorizationURL(state, []);
 
-		cookies.set("github_oauth_state", state, {
+		cookies.set("github_oauth_csrf", csrf, {
 			path: "/",
 			httpOnly: true,
 			maxAge: 60 * 10,
@@ -22,22 +23,20 @@ export const GithubOAuthProvider: OAuthProvider = {
 		return url;
 	},
 
-	async validateAuthorizationCode(cookies: Cookies, urlSearchParams: URLSearchParams): Promise<OAuth2Tokens> {
+	async validateAuthorizationCode(cookies: Cookies, urlSearchParams: URLSearchParams): Promise<OAuthTokensWithState> {
 		const code = urlSearchParams.get("code");
 		const state = urlSearchParams.get("state");
 		if (code === null || state === null) {
 			return Promise.reject('Missing state cookies');
 		}
-		const storedState = cookies.get("github_oauth_state") ?? null;
-		if (storedState === null) {
-			return Promise.reject('Missing callback URL parameters');
-		}
-		if (state !== storedState) {
-			return Promise.reject('OAuth state is invalid or has expired')
-		}
+		const stateData = await validateState(state, cookies.get("github_oauth_csrf") ?? null)
 
 		try {
-			return await github.validateAuthorizationCode(code);
+			const tokens = await github.validateAuthorizationCode(code);
+			return {
+				tokens,
+				state: stateData,
+			}
 		} catch (e) {
 			return Promise.reject(String(e))
 		}

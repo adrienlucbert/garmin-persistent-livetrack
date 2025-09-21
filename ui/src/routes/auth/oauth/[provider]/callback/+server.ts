@@ -3,12 +3,12 @@ import { resolveOAuth } from "$lib/server/auth/flows";
 
 export async function GET(event: RequestEvent): Promise<Response> {
 	try {
-		await resolveOAuth(event.params.provider || '', event)
+		const { followURL } = await resolveOAuth(event.params.provider || '', event)
 
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: "/"
+				Location: followURL ?? "/"
 			}
 		});
 	} catch (message) {

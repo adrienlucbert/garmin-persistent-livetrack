@@ -1,23 +1,25 @@
 <script lang="ts">
 	import type { FeatureFlags } from '$lib/featureFlags/index';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { SigninForm } from '$lib/components/ui/forms/signin';
-	import { SignupForm } from '$lib/components/ui/forms/signup';
-	import { RecoverPasswordForm } from '$lib/components/ui/forms/recoverPassword';
-	import { ResetPasswordForm } from '$lib/components/ui/forms/resetPassword';
-	import { VerifyEmailForm } from '$lib/components/ui/forms/verifyEmail';
+	import { SigninForm } from '$lib/components/forms/signin';
+	import { SignupForm } from '$lib/components/forms/signup';
+	import { RecoverPasswordForm } from '$lib/components/forms/recoverPassword';
+	import { ResetPasswordForm } from '$lib/components/forms/resetPassword';
+	import { VerifyEmailForm } from '$lib/components/forms/verifyEmail';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
 	type Tab = 'signin' | 'signup' | 'reset';
 	let tab = $derived((page.url.searchParams.get('tab') as Tab) ?? 'signin');
 	let token = $derived(page.url.searchParams.get('token'));
+	let followURL = $derived(page.url.searchParams.get('follow'));
 
 	let { form, data } = $props();
 	let { flags }: { flags: FeatureFlags } = data;
 
 	function navigate(next: Tab) {
-		goto(`?tab=${next}`, { replaceState: true });
+		page.url.searchParams.set('tab', next);
+		goto(`?${page.url.searchParams.toString()}`, { replaceState: true });
 	}
 
 	let success = $state(data.success);
@@ -44,6 +46,7 @@
 				method="post"
 				action="?/signin"
 				{navigate}
+				{followURL}
 				message={form?.message}
 				withRecoverPassword={flags.ENABLE_RECOVER_PASSWORD}
 				withGoogle={flags.ENABLE_OAUTH_GOOGLE}
@@ -55,6 +58,7 @@
 				method="post"
 				action="?/signup"
 				{navigate}
+				{followURL}
 				message={form?.message}
 				withGoogle={flags.ENABLE_OAUTH_GOOGLE}
 				withGithub={flags.ENABLE_OAUTH_GITHUB}
@@ -67,6 +71,7 @@
 						method="post"
 						action="?/recoverPassword"
 						{navigate}
+						{followURL}
 						message={form?.message}
 					/>
 				{:else}
@@ -74,6 +79,7 @@
 						method="post"
 						action="?/resetPassword"
 						{navigate}
+						{followURL}
 						message={form?.message}
 						{token}
 					/>

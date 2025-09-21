@@ -10,7 +10,7 @@ import { env } from "$env/dynamic/public";
 import { FeatureFlagsConfig as flags } from "$lib/featureFlags/config";
 import { askVerifyEmail } from "$lib/server/auth/flows"
 
-export async function recoverPassword(email: string): Promise<void> {
+export async function recoverPassword(email: string, followURL: string | null): Promise<void> {
 	const user = await getUser(AuthMethod.Password, email)
 	if (!user) {
 		return
@@ -24,10 +24,19 @@ export async function recoverPassword(email: string): Promise<void> {
 	const expiresIn = 1000 * 60 * 30 // 30 minutes
 	const recoverToken = await createActionToken(user.uuid, Action.RESET_PASSWORD, expiresIn)
 
+	const qp = new URLSearchParams()
+	qp.set('tab', 'reset')
+	if (followURL) {
+		qp.set('follow', followURL)
+	}
+	const resendURL = `${env.PUBLIC_URL ?? 'http://localhost'}/auth?${qp.toString()}`
+	qp.set('token', recoverToken.token)
+	const callbackURL = `${env.PUBLIC_URL ?? 'http://localhost'}/auth?${qp.toString()}`
+
 	send(RecoverPassword(), {
 		expiresIn: formatDuration(expiresIn),
-		resendURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?tab=reset`,
-		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?tab=reset&token=${recoverToken.token}`,
+		resendURL,
+		callbackURL,
 	}, email)
 }
 

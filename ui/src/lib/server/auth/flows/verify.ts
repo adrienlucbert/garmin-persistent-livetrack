@@ -9,9 +9,12 @@ import type { UUID } from "crypto";
 export async function askVerifyEmail({ uuid, email }: { uuid: string, email: string }): Promise<void> {
 	const verifyToken = await createActionToken(uuid, Action.VERIFY_EMAIL)
 
+	const qp = new URLSearchParams()
+	qp.set('tab', 'verify')
+	qp.set('token', verifyToken.token)
 	send(AskVerifyEmail(), {
 		email: email,
-		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?tab=verify&token=${verifyToken.token}`,
+		callbackURL: `${env.PUBLIC_URL ?? 'http://localhost'}/auth?${qp.toString()}`,
 	}, email)
 }
 

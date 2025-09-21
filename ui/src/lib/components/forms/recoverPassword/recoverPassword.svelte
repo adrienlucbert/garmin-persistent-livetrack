@@ -8,22 +8,24 @@
 	let {
 		method,
 		action,
+		followURL,
 		message,
-		token,
 		navigate
 	}: {
 		method?: 'dialog' | 'get' | 'post' | 'DIALOG' | 'GET' | 'POST';
 		action: string;
+		followURL: string | null;
 		message?: string;
-		token: string;
 		navigate: (tab: 'signin') => void;
 	} = $props();
 </script>
 
 <Card.Root class="sm:mx-auto sm:w-full sm:max-w-md">
 	<Card.Header>
-		<Card.Title>Reset your password</Card.Title>
-		<Card.Description>Create a new pasword for your account</Card.Description>
+		<Card.Title>Recover your account</Card.Title>
+		<Card.Description
+			>Enter your email below and we will send you an email to reset your password</Card.Description
+		>
 		<Card.Action>
 			<Button onclick={() => navigate('signin')} variant="link">Sign in</Button>
 		</Card.Action>
@@ -31,29 +33,19 @@
 	<Card.Content>
 		<form {method} {action} use:enhance>
 			<div class="flex flex-col gap-6">
-				<Input name="token" type="hidden" value={token} />
+				<Input name="follow" type="hidden" value={followURL} />
 				<div class="grid gap-2">
-					<Label for="password">New password</Label>
+					<Label for="email">Email</Label>
 					<Input
-						id="password"
-						name="password"
-						type="password"
-						placeholder="Enter your new password"
+						id="email"
+						name="email"
+						type="email"
+						placeholder="Enter your email address"
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
-					<Label for="confirm_password">Confirm your new password</Label>
-					<Input
-						id="confirm_password"
-						name="confirm_password"
-						type="password"
-						placeholder="Re-enter your new password"
-						required
-					/>
-				</div>
-				<div class="grid gap-2">
-					<Button type="submit" class="w-full">Reset password</Button>
+					<Button type="submit" class="w-full">Send email</Button>
 					<p style="color: red">{message ?? ''}</p>
 				</div>
 			</div>

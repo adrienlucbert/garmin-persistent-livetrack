@@ -6,6 +6,7 @@ import type { PageServerLoad, Actions } from "./$types";
 export const actions: Actions = {
 	signin: async (event) => {
 		const formData = await event.request.formData()
+		const followURL = formData.get('follow') as string | null
 		const email = formData.get('email')
 		const password = formData.get('password')
 
@@ -22,11 +23,12 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) })
 		}
 
-		return redirect(302, '/');
+		return redirect(302, followURL ?? '/');
 	},
 
 	signup: async (event) => {
 		const formData = await event.request.formData()
+		const followURL = formData.get('follow') as string | null
 		const email = formData.get('email')
 		const password = formData.get('password')
 		const confirmPassword = formData.get('confirm_password')
@@ -49,11 +51,12 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) });
 		}
 
-		return redirect(302, '/');
+		return redirect(302, followURL ?? '/');
 	},
 
 	recoverPassword: async (event) => {
 		const formData = await event.request.formData()
+		const followURL = formData.get('follow') as string | null
 		const email = formData.get('email')
 
 		if (!validateEmail(email)) {
@@ -61,7 +64,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			await recoverPassword(email)
+			await recoverPassword(email, followURL)
 		} catch (message) {
 			return fail(400, { message: String(message) })
 		}
@@ -69,6 +72,7 @@ export const actions: Actions = {
 
 	resetPassword: async (event) => {
 		const formData = await event.request.formData()
+		const followURL = formData.get('follow') as string | null
 		const token = formData.get('token') as string
 		const password = formData.get('password')
 		const confirmPassword = formData.get('confirm_password')
@@ -87,7 +91,7 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) })
 		}
 
-		return redirect(302, '/');
+		return redirect(302, followURL ?? '/');
 	}
 }
 
@@ -95,7 +99,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	if (url.searchParams.get('tab') === 'verify') {
 		const token = url.searchParams.get('token')
 		if (!token) {
-			return redirect(302, "/auth");
+			return redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
 		}
 
 		try {
