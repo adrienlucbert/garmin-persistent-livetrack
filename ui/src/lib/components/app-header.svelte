@@ -18,13 +18,13 @@
 </script>
 
 <div
-	class="flex h-14 w-full shrink-0 items-center gap-2 border-b bg-white px-2 dark:bg-neutral-800"
+	class="sticky top-0 z-50 flex h-[var(--header-height)] w-full shrink-0 items-center gap-2 border-b bg-white px-2 dark:bg-neutral-800"
 >
 	{#if page.data.hideSidebar !== true}
 		<Sidebar.Trigger class="h-10 w-10"></Sidebar.Trigger>
 		<Separator orientation="vertical" />
 	{/if}
-	<div class="container mx-auto flex min-h-16 items-center p-2">
+	<div class="container flex min-h-16 items-center p-2">
 		<div class="flex-1">
 			<a class="px-4 text-xl font-semibold" href="/">
 				<span class="hidden sm:inline">Garmin Persistent</span> Livetrack

@@ -5,6 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+	--header-height: 3.5rem;
   --radius: 0.65rem;
   --background: var(--color-neutral-100);
   --foreground: var(--color-neutral-900);
@@ -20,7 +21,10 @@
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: var(--color-red-600);
+  --info: var(--color-blue-500);
+  --warning: var(--color-amber-600);
+	--success: var(--color-emerald-600);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.68 0.21 37.7);
@@ -54,7 +58,10 @@
   --muted-foreground: oklch(0.705 0.015 286.067);
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: var(--color-red-400);
+  --info: var(--color-blue-400);
+  --warning: var(--color-amber-500);
+	--success: var(--color-emerald-500);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.68 0.21 37.7);
@@ -93,6 +100,9 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-info: var(--info);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -113,13 +123,19 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 scroll-smooth scroll-mt-[var(--header-height)];
   }
 
   body {
     @apply bg-background text-foreground flex flex-col min-h-screen;
 		min-height: 100vh;
   }
+
+	/* Typography */
+	h1 { @apply scroll-m-20 text-balance text-4xl font-extrabold tracking-tight; }
+	h2 { @apply mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0; }
+	h3 { @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight; }
+	p { @apply leading-7 [&:not(:first-child)]:mt-6; }
 }
 
 @layer components {

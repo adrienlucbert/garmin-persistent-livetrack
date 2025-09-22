@@ -3,7 +3,7 @@
 >
 	<nav class="grid place-items-start gap-2">
 		<span class="mb-2 font-bold uppercase opacity-80">Explore</span>
-		<a class="mb-1 underline-offset-4 hover:underline" href="#how-it-works">How it works</a>
+		<a class="mb-1 underline-offset-4 hover:underline" href="/#how-it-works">How it works</a>
 		<a class="mb-1 underline-offset-4 hover:underline" href="#self-host">Self-Host</a>
 		<a
 			class="mb-1 underline-offset-4 hover:underline"

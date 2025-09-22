@@ -20,13 +20,13 @@
 </script>
 
 {#if user.passwordTrait}
-	<h1>Hi, {user.passwordTrait.email}!</h1>
+	<h3>Hi, {user.passwordTrait.email}!</h3>
 {/if}
 {#if user.githubTrait}
-	<h1>Hi, {user.githubTrait.username}!</h1>
+	<h3>Hi, {user.githubTrait.username}!</h3>
 {/if}
 {#if user.googleTrait}
-	<h1>Hi, {user.googleTrait.username}!</h1>
+	<h3>Hi, {user.googleTrait.username}!</h3>
 {/if}
 <p>Your user ID is {user.uuid}.</p>
 {#if flags.ENABLE_VERIFY_EMAIL}

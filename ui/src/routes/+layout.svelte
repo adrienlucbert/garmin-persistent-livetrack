@@ -20,11 +20,14 @@
 	{#if page.data.hideSidebar !== true}
 		<AppSidebar />
 	{/if}
-	<main class="flex w-full flex-col">
+
+	<main class="relative flex w-full flex-col">
 		<AppHeader userSession={data.session} />
-		<main class="p-4">
+
+		<main>
 			{@render children?.()}
 		</main>
+
 		<div class="flex-grow"></div>
 		{#if page.data.hideFooter !== true}
 			<AppFooter />

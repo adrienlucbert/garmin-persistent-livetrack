@@ -10,6 +10,19 @@
 				default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
 				destructive:
 					'bg-destructive shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 text-white',
+				'destructive-outline':
+					'shadow-xs text-destructive bg-background border border-destructive hover:bg-destructive hover:text-white',
+				info: 'bg-info shadow-xs hover:bg-info/90 focus-visible:ring-info/20 dark:focus-visible:ring-info/40 dark:bg-info/60 text-white',
+				'info-outline':
+					'shadow-xs text-info bg-background border border-info hover:bg-info hover:text-white',
+				warning:
+					'bg-warning shadow-xs hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40 dark:bg-warning/60 text-white',
+				'warning-outline':
+					'shadow-xs text-warning bg-background border border-warning hover:bg-warning hover:text-white',
+				success:
+					'bg-success shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60 text-white',
+				'success-outline':
+					'shadow-xs text-success bg-background border border-success hover:bg-success hover:text-white',
 				outline:
 					'shadow-xs text-primary bg-background border border-primary hover:bg-primary hover:text-primary-foreground',
 				secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
