@@ -7,7 +7,7 @@ services:
     volumes:
       - ./smtp-proxy:/app
     environment:
-      - API_HOST= # TODO: use docker network
+      - API_HOST=http://ui
     restart: "unless-stopped"
     depends_on:
       - ui

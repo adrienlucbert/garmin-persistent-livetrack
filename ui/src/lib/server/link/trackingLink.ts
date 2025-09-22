@@ -32,7 +32,7 @@ export async function updateTrackingLink(userUUID: UUID, link: string): Promise<
 		.where(eq(trackingLinks.userUUID, userUUID))
 		.returning()
 
-	if (!updatedRows) {
+	if (updatedRows.length === 0) {
 		return Promise.reject('Livetrack session is invalid')
 	}
 }
