@@ -7,7 +7,7 @@ services:
     volumes:
       - ./smtp-proxy:/app
     environment:
-      - API_HOST=http://ui
+      - API_HOST=http://ui:3000
     restart: "unless-stopped"
     depends_on:
       - ui
