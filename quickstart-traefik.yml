@@ -11,6 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - garmin-persistent-livetrack-network
+      - proxy
 
   ui:
     environment:
@@ -20,5 +21,10 @@ services:
       - "traefik.http.routers.garmin-persistent-livetrack.entrypoints=web"
       - "traefik.http.routers.garmin-persistent-livetrack.rule=Host(`garmin-persistent-livetrack.localhost`)"
       - "traefik.http.services.garmin-persistent-livetrack.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
     networks:
+      - proxy
       - garmin-persistent-livetrack-network
+
+networks:
+  proxy:

@@ -14,4 +14,6 @@ COPY --from=builder /app/build ./build
 COPY --from=builder /app/drizzle.config.* ./
 COPY --from=builder /app/drizzle ./drizzle
 ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=3000
 CMD ["node", "build"]
