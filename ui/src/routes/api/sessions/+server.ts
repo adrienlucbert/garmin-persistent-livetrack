@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit'
-import { createBlankLiveTrackSession } from '$lib/server/liveTrackSession'
+import { createBlankTrackingLink as createBlankTrackingLink } from '$lib/server/link/trackingLink'
 import type { RequestEvent } from './$types'
 
 export async function POST(event: RequestEvent) {
@@ -7,6 +7,6 @@ export async function POST(event: RequestEvent) {
 		throw error(401);
 	}
 
-	const sessionUUID = createBlankLiveTrackSession(event.locals.user.uuid)
+	const sessionUUID = createBlankTrackingLink(event.locals.user.uuid)
 	return json(sessionUUID)
 }

@@ -1,10 +1,10 @@
 import { error, json } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
-import { getLiveTrackSession, updateLiveTrackSessionLink } from '$lib/server/liveTrackSession'
+import { getTrackingLink, updateTrackingLink } from '$lib/server/link/trackingLink'
 import type { UUID } from 'crypto'
 
 export async function GET({ params }: RequestEvent) {
-	const session = await getLiveTrackSession(params.session_uuid as UUID)
+	const session = await getTrackingLink(params.session_uuid as UUID)
 
 	if (!session) {
 		error(404)
@@ -20,7 +20,7 @@ export async function PUT({ params, request }: RequestEvent) {
 	}
 
 	try {
-		await updateLiveTrackSessionLink(params.session_uuid as UUID, body.link)
+		await updateTrackingLink(params.session_uuid as UUID, body.link)
 	} catch {
 		error(404)
 	}

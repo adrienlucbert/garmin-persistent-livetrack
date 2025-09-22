@@ -1,4 +1,5 @@
 <script lang="ts">
+	import HomeIcon from '@lucide/svelte/icons/house';
 	import UsersIcon from '@lucide/svelte/icons/users';
 	import LinkIcon from '@lucide/svelte/icons/link';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
@@ -13,7 +14,13 @@
 		visible?: boolean;
 		isActive?: boolean;
 	};
-	const items: MenuItem[] = [
+	const items: MenuItem[] = $derived([
+		{
+			title: 'Home',
+			url: '/',
+			icon: HomeIcon,
+			isActive: page.url.pathname === '/'
+		},
 		{
 			title: 'Account',
 			url: '/account',
@@ -31,7 +38,7 @@
 			url: '#',
 			icon: UsersIcon
 		}
-	];
+	]);
 </script>
 
 <Sidebar.Root>

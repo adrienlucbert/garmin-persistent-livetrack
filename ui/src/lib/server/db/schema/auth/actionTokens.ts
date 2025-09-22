@@ -8,7 +8,7 @@ export enum Action {
 	VERIFY_EMAIL = 'verify_email',
 }
 
-export const action = pgEnum('actionn', enumToPgEnum(Action))
+export const action = pgEnum('action', enumToPgEnum(Action))
 
 export const actionTokens = pgTable('action_tokens', {
 	userUUID: uuid('user_uuid').notNull().references(() => users.uuid, { onDelete: 'cascade' }),

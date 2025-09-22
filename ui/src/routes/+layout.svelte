@@ -22,7 +22,7 @@
 	{/if}
 	<main class="flex w-full flex-col">
 		<AppHeader userSession={data.session} />
-		<main class="p-2">
+		<main class="p-4">
 			{@render children?.()}
 		</main>
 		<div class="flex-grow"></div>
