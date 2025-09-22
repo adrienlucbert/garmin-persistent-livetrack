@@ -25,7 +25,7 @@
 				firstName: 'Garmin Persistent Livetrack',
 				lastName: 'Webhook',
 				uid: trackingLink.userUUID,
-				email: `trackme-${trackingLink.userUUID}@lucbert.dev`,
+				email: `garmin-persistent-livetrack-${trackingLink.userUUID}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
 				...(data.user
 					? {
 							url: `${env.PUBLIC_URL}/athletes/${data?.user?.uuid}`
