@@ -10,10 +10,19 @@
 		withGithub?: boolean;
 		followURL: string | null;
 	} = $props();
+
+	let qp = $derived.by(() => {
+		if (!followURL) {
+			return '';
+		}
+		const qp = new URLSearchParams();
+		qp.set('follow', followURL);
+		return '?' + qp.toString();
+	});
 </script>
 
 {#if withGoogle}
-	<Button variant="outline" class="w-full" href={`/auth/oauth/google?follow=${followURL}`}>
+	<Button variant="outline" class="w-full" href={`/auth/oauth/google${qp}`}>
 		<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 			<title>Google</title>
 			<path
@@ -24,7 +33,7 @@
 	>
 {/if}
 {#if withGithub}
-	<Button variant="outline" class="w-full" href={`/auth/oauth/github?follow=${followURL}`}>
+	<Button variant="outline" class="w-full" href={`/auth/oauth/github${qp}`}>
 		<svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 			<title>GitHub</title>
 			<path
