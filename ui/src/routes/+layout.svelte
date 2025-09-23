@@ -12,6 +12,7 @@
 	import { navigating } from '$app/state';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
+	import { FullPage, GrowContainer } from '$lib/components/ui/layout';
 </script>
 
 <ModeWatcher />
@@ -21,18 +22,17 @@
 		<AppSidebar />
 	{/if}
 
-	<main class="relative flex w-full flex-col">
+	<FullPage class="flex flex-col">
 		<AppHeader userSession={data.session} />
 
-		<main>
+		<GrowContainer>
 			{@render children?.()}
-		</main>
+		</GrowContainer>
 
-		<div class="flex-grow"></div>
 		{#if page.data.hideFooter !== true}
 			<AppFooter />
 		{/if}
-	</main>
+	</FullPage>
 </Sidebar.Provider>
 
 {#if navigating?.to}

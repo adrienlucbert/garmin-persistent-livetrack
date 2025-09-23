@@ -38,7 +38,7 @@
 	);
 </script>
 
-<NarrowSection>
+<NarrowSection class="mb-14">
 	<p class="mt-6 text-xl text-muted-foreground">
 		Follow those steps to setup your persistent LiveTrack link with your Garmin device.
 	</p>

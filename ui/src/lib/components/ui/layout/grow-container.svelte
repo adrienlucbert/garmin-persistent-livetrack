@@ -9,8 +9,6 @@
 	}: { children: Snippet; class?: string } = $props();
 </script>
 
-<div class={cn('flex w-full flex-col items-center justify-center', className)}>
-	<div class="max-w-xl" {...restProps}>
-		{@render children?.()}
-	</div>
+<div class={cn('flex flex-grow flex-col', className)} {...restProps}>
+	{@render children?.()}
 </div>

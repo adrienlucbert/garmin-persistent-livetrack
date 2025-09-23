@@ -1,7 +1,14 @@
 <script lang="ts">
-	let { children, ...restProps } = $props();
+	import { cn } from '$lib/utils';
+	import type { Snippet } from 'svelte';
+
+	let {
+		children,
+		class: className,
+		...restProps
+	}: { children: Snippet; class?: string } = $props();
 </script>
 
-<div class="grid min-h-[calc(100vh-var(--header-height))] place-items-center" {...restProps}>
+<div class={cn('min-h-[calc(100vh-var(--header-height))] w-full', className)} {...restProps}>
 	{@render children?.()}
 </div>

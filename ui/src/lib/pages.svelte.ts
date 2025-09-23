@@ -24,6 +24,11 @@ const _pages = {
 		url: '/getting-started',
 		icon: LinkIcon,
 	},
+	'liveTrack': {
+		title: 'LiveTrack',
+		url: '/livetrack',
+		icon: LinkIcon,
+	},
 	'spectators': {
 		title: 'Spectators',
 		url: '#',

@@ -12,7 +12,7 @@
 </svelte:head>
 
 <NarrowSection>
-	<FullPage>
+	<FullPage class="grid place-items-center">
 		<div class="text-center">
 			<h1 class="px-2 py-8 text-4xl font-bold md:text-6xl" style="line-height: 1.2;">
 				<span class="title-highlight">
