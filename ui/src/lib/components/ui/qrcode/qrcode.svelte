@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import QRCode from 'qrcode';
 
 	let {
 		data,
+		class: className,
 		...restProps
 	}: {
 		data: any;
+		class?: string;
 	} = $props();
 
 	let qrUrl: string | null = $state(null);
@@ -17,5 +20,5 @@
 </script>
 
 {#if qrUrl}
-	<img src={qrUrl} alt="QR code" {...restProps} />
+	<img src={qrUrl} alt="QR code" class={cn(className)} {...restProps} />
 {/if}

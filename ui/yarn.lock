@@ -4234,6 +4234,11 @@ svelte@^5.15.0:
     magic-string "^0.30.11"
     zimmerframe "^1.1.2"
 
+sveltekit-sse@^0.14.3:
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/sveltekit-sse/-/sveltekit-sse-0.14.3.tgz#05e2b896532c9d9ebec50022c86d6125743d479e"
+  integrity sha512-S7sACdaaHzU7FZgk5V0LnpHdyOKfbghOUrs8v0CK5kW5dr0m9kh73P1HAuSnGZ3AOkFHAlv3JiCsOnRFdVOgvw==
+
 tabbable@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-6.2.0.tgz#732fb62bc0175cfcec257330be187dcfba1f3b97"

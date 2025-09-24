@@ -1,14 +1,36 @@
 import { db } from '$lib/server/db';
-import { trackingLinks, type TrackingLinks } from '$lib/server/db/schema';
+import { trackingLinks, users, type TrackingLinks } from '$lib/server/db/schema';
 import { type UUID } from 'crypto';
 import { eq } from 'drizzle-orm';
 
-export async function createBlankTrackingLink(userUUID: UUID): Promise<TrackingLinks> {
-	const blankSession = {
-		userUUID: userUUID,
-		link: null,
+export async function createOrUpdateTrackingLink(userUUID: UUID, link: string): Promise<TrackingLinks> {
+	const user = await db().query.users.findFirst({
+		where: eq(users.uuid, userUUID)
+	})
+	if (!user) {
+		return Promise.reject('Invalid user UUID')
 	}
-	return (await db().insert(trackingLinks).values(blankSession).returning())[0]
+
+	const updatedRows = await db()
+		.insert(trackingLinks)
+		.values({
+			userUUID: userUUID,
+			link: link,
+		})
+		.onConflictDoUpdate({
+			target: trackingLinks.userUUID,
+			set: {
+				link: link,
+				updatedAt: new Date(),
+			},
+		})
+		.returning()
+
+	if (updatedRows.length === 0) {
+		return Promise.reject('Livetrack session is invalid')
+	}
+
+	return updatedRows[0]
 }
 
 export async function getTrackingLink(userUUID: UUID): Promise<TrackingLinks> {
@@ -23,16 +45,3 @@ export async function getTrackingLink(userUUID: UUID): Promise<TrackingLinks> {
 	return trackingLink
 }
 
-export async function updateTrackingLink(userUUID: UUID, link: string): Promise<void> {
-	const updatedRows = await db().update(trackingLinks)
-		.set({
-			link: link,
-			updatedAt: new Date(),
-		})
-		.where(eq(trackingLinks.userUUID, userUUID))
-		.returning()
-
-	if (updatedRows.length === 0) {
-		return Promise.reject('Livetrack session is invalid')
-	}
-}

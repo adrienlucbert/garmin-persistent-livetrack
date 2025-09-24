@@ -1,7 +1,8 @@
 import { error, json } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
-import { getTrackingLink, updateTrackingLink } from '$lib/server/link/trackingLink'
+import { getTrackingLink, createOrUpdateTrackingLink } from '$lib/server/link/trackingLink'
 import type { UUID } from 'crypto'
+import { broadcast } from '$lib/server/sse'
 
 export async function GET({ params }: RequestEvent) {
 	const session = await getTrackingLink(params.session_uuid as UUID)
@@ -20,10 +21,18 @@ export async function PUT({ params, request }: RequestEvent) {
 	}
 
 	try {
-		await updateTrackingLink(params.session_uuid as UUID, body.link)
-	} catch {
-		error(404)
+		const updatedTrackingLink = await createOrUpdateTrackingLink(params.session_uuid as UUID, body.link)
+		try {
+			broadcast(`update-link-${params.session_uuid}`, updatedTrackingLink)
+		} catch (e) { console.error(e) }
+	} catch (e) {
+		if (e === 'Invalid user UUID') {
+			error(404)
+		} else {
+			error(500, { message: String(e) })
+		}
 	}
+
 
 	return new Response()
 }
