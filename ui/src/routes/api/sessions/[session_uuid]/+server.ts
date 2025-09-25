@@ -15,6 +15,7 @@ export async function GET({ params }: RequestEvent) {
 }
 
 export async function PUT({ params, request }: RequestEvent) {
+	// TODO: set basic auth
 	const body = await request.json()
 	if (!body.link) {
 		error(400, { message: "Missing 'link' field in request body." })

@@ -18,12 +18,12 @@
 	let trackingLink = $derived(data.trackingLink);
 
 	let vcard = $derived(
-		trackingLink &&
+		user &&
 			generateVCard({
 				firstName: 'Garmin Persistent Livetrack',
 				lastName: 'Webhook',
-				uid: trackingLink.userUUID,
-				email: `garmin-persistent-livetrack-${user?.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
+				uid: user.uuid,
+				email: `garmin-persistent-livetrack-${user.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
 				...(data.user
 					? {
 							url: `${env.PUBLIC_URL}/athletes/${data?.user?.uuid}`
