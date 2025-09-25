@@ -26,7 +26,7 @@
 				email: `garmin-persistent-livetrack-${user.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
 				...(data.user
 					? {
-							url: `${env.PUBLIC_URL}/athletes/${data?.user?.uuid}`
+							url: `${env.PUBLIC_URL}/athlete/${data?.user?.uuid}`
 						}
 					: {})
 			})
