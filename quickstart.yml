@@ -25,10 +25,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    environment:
-      POSTGRES_DB: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+    env_file:
+      - ./.env
     networks:
       - garmin-persistent-livetrack-network
 
@@ -36,7 +34,7 @@ services:
     build:
       context: ui
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,7 +49,7 @@ services:
     env_file:
       - ./ui/.env
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/garmin_persistent_livetrack
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     depends_on:
       - migrate
     networks:
