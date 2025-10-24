@@ -10,12 +10,12 @@
 	import { NarrowSection } from '$lib/components/ui/layout';
 	import { env } from '$env/dynamic/public';
 	import * as Alert from '$lib/components/ui/alert';
-	import { DotLoader } from '$lib/components/ui/dot-loader';
-	import Sse from '$lib/components/sse.svelte';
+	import LinkSetupAlert from '$lib/components/link-setup-alert.svelte';
 
 	let { data } = $props();
-	let { user } = data;
-	let trackingLink = $derived(data.trackingLink);
+	let { user, link } = data;
+
+	let athleteLink = $derived(env.PUBLIC_URL && user && `${env.PUBLIC_URL}/athlete/${user?.uuid}`);
 
 	let vcard = $derived(
 		user &&
@@ -24,11 +24,7 @@
 				lastName: 'Webhook',
 				uid: user.uuid,
 				email: `garmin-persistent-livetrack-${user.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
-				...(data.user
-					? {
-							url: `${env.PUBLIC_URL}/athlete/${data?.user?.uuid}`
-						}
-					: {})
+				...(athleteLink ? { url: athleteLink } : {})
 			})
 	);
 	const vcardBlobUrl = $derived(
@@ -37,13 +33,13 @@
 </script>
 
 <NarrowSection class="mb-14">
-	<p class="mt-6 text-xl text-muted-foreground">
+	<p class="text-muted-foreground mt-6 text-xl">
 		Follow those steps to setup your persistent LiveTrack link with your Garmin device.
 	</p>
 	<ul>
 		<li>
 			<h3>
-				<QrCodeIcon class="center mr-4 inline size-6 align-middle" />
+				<QrCodeIcon class="mr-4 inline size-6 align-middle" />
 				Create a LiveTrack recipient
 			</h3>
 			<p>
@@ -64,7 +60,7 @@
 		<li>
 			<h3>
 				<svg
-					class="center mr-4 inline size-6 align-middle"
+					class="mr-4 inline size-6 align-middle"
 					viewBox="0 0 48 48"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="currentColor"
@@ -105,57 +101,16 @@
 		</li>
 		<li>
 			<h3>
-				<SquareCheckBigIcon class="center mr-4 inline size-6 align-middle" />
+				<SquareCheckBigIcon class="mr-4 inline size-6 align-middle" />
 				Try it out!
 			</h3>
-			{#snippet setupSuccessMessage()}
-				<Alert.Root variant="success" class="mt-6">
-					<CircleAlertIcon />
-					<Alert.Title class="line-clamp-none tracking-normal">You're all set!</Alert.Title>
-					<Alert.Description>
-						<p>
-							We received notice of your new activity, you're good to go!
-							<br />
-							You can preview your latest activty in the
-							<a class=" underline-offset-4 hover:underline" href="/livetrack">LiveTrack</a> tab.
-						</p>
-					</Alert.Description>
-				</Alert.Root>
-			{/snippet}
-
 			{#if user}
-				<div class="mt-6">
-					{#if trackingLink && trackingLink.link !== null}
-						{@render setupSuccessMessage()}
-					{:else}
-						<Sse channel={`update-link-${user?.uuid}`}>
-							{#snippet content(message: { link: string } | null)}
-								{#if message === null}
-									<Alert.Root variant="warning" class="mt-6">
-										<CircleAlertIcon />
-										<Alert.Title class="line-clamp-none tracking-normal">
-											We're waiting for you to start a new activity
-											<DotLoader class="w-4" />
-										</Alert.Title>
-										<Alert.Description>
-											<p>
-												Start a new activity on your Garmin device and start the LiveTrack session
-												from your Garmin Connect™ app to verify that you set it up correctly.
-											</p>
-										</Alert.Description>
-									</Alert.Root>
-								{:else}
-									{@render setupSuccessMessage()}
-								{/if}
-							{/snippet}
-						</Sse>
-					{/if}
-				</div>
+				<LinkSetupAlert {user} {link} />
 			{/if}
 		</li>
 		<li>
 			<h3>
-				<Share2Icon class="center mr-4 inline size-6 align-middle" />
+				<Share2Icon class="mr-4 inline size-6 align-middle" />
 				Share once, done forever
 			</h3>
 			<p>

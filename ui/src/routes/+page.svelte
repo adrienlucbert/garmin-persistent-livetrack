@@ -4,6 +4,7 @@
 	import MapPinIcon from '@lucide/svelte/icons/map-pin';
 	import Share2Icon from '@lucide/svelte/icons/share-2';
 	import { FullPage, NarrowSection } from '$lib/components/ui/layout';
+	import { pages } from '$lib/pages.svelte';
 </script>
 
 <svelte:head>
@@ -29,7 +30,7 @@
 				<b>friends and family</b>.
 			</div>
 			<div class="mt-6 flex justify-center gap-4 md:mt-4">
-				<Button href="/getting-started">Getting started</Button>
+				<Button href={pages().gettingStarted.url}>Getting started</Button>
 				<Button variant="outline" href="#how-it-works">How it works</Button>
 			</div>
 		</div>
@@ -39,7 +40,7 @@
 		<ul>
 			<li>
 				<h3>
-					<QrCodeIcon class="center mr-4 inline size-6 align-middle" />
+					<QrCodeIcon class="mr-4 inline size-6 align-middle" />
 					Create your link
 				</h3>
 				<p>
@@ -50,7 +51,7 @@
 			<li>
 				<h3>
 					<svg
-						class="center mr-4 inline size-6 align-middle"
+						class="mr-4 inline size-6 align-middle"
 						viewBox="0 0 48 48"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="currentColor"
@@ -72,7 +73,7 @@
 			</li>
 			<li>
 				<h3>
-					<MapPinIcon class="center mr-4 inline size-6 align-middle" />
+					<MapPinIcon class="mr-4 inline size-6 align-middle" />
 					We handle the link for you
 				</h3>
 				<p>
@@ -82,7 +83,7 @@
 			</li>
 			<li>
 				<h3>
-					<Share2Icon class="center mr-4 inline size-6 align-middle" />
+					<Share2Icon class="mr-4 inline size-6 align-middle" />
 					Share once, done forever
 				</h3>
 				<p>
@@ -92,7 +93,7 @@
 			</li>
 		</ul>
 		<div class="mt-12 flex justify-center gap-4">
-			<Button size="lg" href="/getting-started">Let's get started!</Button>
+			<Button size="lg" href={pages().gettingStarted.url}>Let's get started!</Button>
 		</div>
 	</div>
 </NarrowSection>

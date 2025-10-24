@@ -23,7 +23,7 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) })
 		}
 
-		return redirect(302, followURL ?? '/');
+		redirect(302, followURL ?? '/');
 	},
 
 	signup: async (event) => {
@@ -51,7 +51,7 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) });
 		}
 
-		return redirect(302, followURL ?? '/');
+		redirect(302, followURL ?? '/');
 	},
 
 	recoverPassword: async (event) => {
@@ -91,7 +91,7 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) })
 		}
 
-		return redirect(302, followURL ?? '/');
+		redirect(302, followURL ?? '/');
 	}
 }
 
@@ -99,7 +99,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	if (url.searchParams.get('tab') === 'verify') {
 		const token = url.searchParams.get('token')
 		if (!token) {
-			return redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
+			redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
 		}
 
 		try {
@@ -112,7 +112,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	}
 
 	if (locals.user) {
-		return redirect(302, '/');
+		redirect(302, '/');
 	}
 	return {};
 };

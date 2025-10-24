@@ -7,6 +7,7 @@
 	import AppHeader from '$lib/components/app-header.svelte';
 	import AppFooter from '$lib/components/app-footer.svelte';
 
+	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	let { data, children } = $props();
 	import { ModeWatcher } from 'mode-watcher';
 	import { navigating } from '$app/state';
@@ -15,6 +16,7 @@
 	import { FullPage, GrowContainer } from '$lib/components/ui/layout';
 </script>
 
+<Toaster />
 <ModeWatcher />
 
 <Sidebar.Provider>

@@ -3,6 +3,7 @@ export enum FeatureFlagsEnum {
 	ENABLE_VERIFY_EMAIL = "ENABLE_VERIFY_EMAIL",
 	ENABLE_OAUTH_GITHUB = "ENABLE_OAUTH_GITHUB",
 	ENABLE_OAUTH_GOOGLE = "ENABLE_OAUTH_GOOGLE",
+	ENABLE_VISITS_STATISTICS = "ENABLE_VISITS_STATISTICS",
 }
 
 export type FeatureFlags = { [key in FeatureFlagsEnum]: boolean }

@@ -1,10 +1,14 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
+
+import type { PublicUserWithTraits, Sessions, TrackingLinks } from '$lib/server/db/schema';
+
 // for information about these interfaces
 declare global {
 	namespace App {
 		interface Locals {
-			user: import('$lib/server/auth').SessionValidationResult['user'];
-			session: import('$lib/server/auth').SessionValidationResult['session']
+			user?: PublicUserWithTraits
+			session?: Sessions
+			link?: TrackingLinks
 		}
 		interface PageData {
 			hideFooter?: boolean

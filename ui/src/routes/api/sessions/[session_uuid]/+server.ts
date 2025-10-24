@@ -1,18 +1,8 @@
-import { error, json } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
-import { getTrackingLink, createOrUpdateTrackingLink } from '$lib/server/link/trackingLink'
+import { createOrUpdateTrackingLink } from '$lib/server/link/trackingLink'
 import type { UUID } from 'crypto'
 import { broadcast } from '$lib/server/sse'
-
-export async function GET({ params }: RequestEvent) {
-	const session = await getTrackingLink(params.session_uuid as UUID)
-
-	if (!session) {
-		error(404)
-	}
-
-	return json(session)
-}
 
 export async function PUT({ params, request }: RequestEvent) {
 	// TODO: set basic auth

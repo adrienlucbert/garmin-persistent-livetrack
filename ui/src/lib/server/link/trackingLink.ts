@@ -33,6 +33,13 @@ export async function createOrUpdateTrackingLink(userUUID: UUID, link: string): 
 	return updatedRows[0]
 }
 
+export async function setTrackingLinkVisibility(userUUID: UUID, isPublic: boolean): Promise<void> {
+	await db().update(trackingLinks)
+		.set({ isPublic })
+		.where(eq(trackingLinks.userUUID, userUUID))
+}
+
+
 export async function getTrackingLink(userUUID: UUID): Promise<TrackingLinks> {
 	const trackingLink = await db().query.trackingLinks.findFirst({
 		where: eq(trackingLinks.userUUID, userUUID)

@@ -2,14 +2,14 @@ import { page } from "$app/state";
 import type { Component } from "svelte";
 import HomeIcon from '@lucide/svelte/icons/house';
 import UsersIcon from '@lucide/svelte/icons/users';
-import LinkIcon from '@lucide/svelte/icons/link';
+import RocketIcon from '@lucide/svelte/icons/rocket';
 import CircleUserRound from '@lucide/svelte/icons/circle-user-round';
 
 export type Page = {
 	title: string;
 	url: string;
 	icon: Component;
-	visible?: boolean;
+	isVisible?: boolean;
 	isActive?: boolean;
 };
 
@@ -22,17 +22,12 @@ const _pages = {
 	'gettingStarted': {
 		title: 'Getting started',
 		url: '/getting-started',
-		icon: LinkIcon,
+		icon: RocketIcon,
 	},
-	'liveTrack': {
-		title: 'LiveTrack',
-		url: '/livetrack',
-		icon: LinkIcon,
-	},
-	'spectators': {
-		title: 'Spectators',
-		url: '#',
-		icon: UsersIcon
+	'manageAccess': {
+		title: 'Manage access',
+		url: '/manage-access',
+		icon: UsersIcon,
 	},
 	'account': {
 		title: 'Account',

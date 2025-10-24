@@ -9,7 +9,7 @@ export const POST = async (event) => {
 	await invalidateSession(event.locals.session.id);
 	deleteSessionTokenCookie(event);
 
-	throw redirect(302, '/auth');
+	redirect(302, '/auth');
 };
 
 export const GET = async (event) => {
@@ -20,5 +20,5 @@ export const GET = async (event) => {
 	await invalidateSession(event.locals.session.id);
 	deleteSessionTokenCookie(event);
 
-	throw redirect(302, '/auth');
+	redirect(302, '/auth');
 };
