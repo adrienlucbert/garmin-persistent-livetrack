@@ -1,5 +1,6 @@
 export const load = async () => {
 	return {
-		hideFooter: true
+		hideFooter: true,
+		hideSidebar: true,
 	};
 };

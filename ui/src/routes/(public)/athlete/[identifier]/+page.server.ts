@@ -25,8 +25,11 @@ export const load: PageServerLoad = async ({ params, locals, getClientAddress })
 		}
 
 		const follower = await getFollower(params.identifier as UUID, locals.user.uuid as UUID)
-		if (follower === undefined || follower.status !== FollowStatus.APPROVED) {
+		if (follower === undefined) {
 			return error(403, 'This tracking link is not public.')
+		}
+		if (follower.status !== FollowStatus.APPROVED) {
+			return error(403, 'Your access request is pending approval.')
 		}
 	}
 

@@ -1,5 +1,5 @@
 {
-  "id": "9621cbd6-0204-4749-b72e-296223ff3300",
+  "id": "755f2712-2ec8-497b-8417-d34191160aba",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -522,7 +522,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "followers_user_uuid_follower_user_uuid_unique": {
+          "name": "followers_user_uuid_follower_user_uuid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_uuid",
+            "follower_user_uuid"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

@@ -4,12 +4,13 @@ import { FollowStatus } from '$lib/types/followers';
 import { type UUID } from 'crypto';
 import { and, count, eq, max } from 'drizzle-orm';
 
-export async function addFollower(userUUID: UUID, followerUserUUID: UUID): Promise<void> {
+export async function requestFollow(userUUID: UUID, followerUserUUID: UUID): Promise<void> {
 	await db()
 		.insert(followers)
 		.values({
 			userUUID,
 			followerUserUUID,
+			status: FollowStatus.PENDING,
 		})
 }
 

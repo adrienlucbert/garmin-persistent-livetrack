@@ -62,7 +62,8 @@ CREATE TABLE "followers" (
 	"user_uuid" uuid NOT NULL,
 	"follower_user_uuid" uuid NOT NULL,
 	"status" "follow_status" DEFAULT 'pending' NOT NULL,
-	"enabled_notifications" boolean DEFAULT false
+	"enabled_notifications" boolean DEFAULT false,
+	CONSTRAINT "followers_user_uuid_follower_user_uuid_unique" UNIQUE("user_uuid","follower_user_uuid")
 );
 --> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
