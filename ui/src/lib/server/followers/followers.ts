@@ -58,6 +58,14 @@ export async function listFollowersStats(userUUID: UUID): Promise<FollowerStats[
 		.where(eq(followers.userUUID, userUUID))
 }
 
+export async function listFollowing(userUUID: UUID): Promise<Followers[]> {
+	return db()
+		.select()
+		.from(followers)
+		.where(eq(followers.followerUserUUID, userUUID))
+}
+
+
 export async function removeFollower(userUUID: UUID, followerUserUUID: UUID): Promise<void> {
 	await db()
 		.delete(followers)

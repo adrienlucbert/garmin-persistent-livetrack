@@ -11,11 +11,13 @@
 	import { env } from '$env/dynamic/public';
 	import * as Alert from '$lib/components/ui/alert';
 	import LinkSetupAlert from '$lib/components/link-setup-alert.svelte';
+	import { getAthleteLink } from '$lib/link.js';
+	import type { UUID } from 'crypto';
 
 	let { data } = $props();
 	let { user, link } = data;
 
-	let athleteLink = $derived(env.PUBLIC_URL && user && `${env.PUBLIC_URL}/athlete/${user?.uuid}`);
+	let linkURL = $derived(user && getAthleteLink(user.uuid as UUID));
 
 	let vcard = $derived(
 		user &&
@@ -24,7 +26,7 @@
 				lastName: 'Webhook',
 				uid: user.uuid,
 				email: `garmin-persistent-livetrack-${user.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
-				...(athleteLink ? { url: athleteLink } : {})
+				...(linkURL ? { url: linkURL.href } : {})
 			})
 	);
 	const vcardBlobUrl = $derived(

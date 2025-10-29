@@ -21,11 +21,11 @@
 </script>
 
 {#if [FollowStatus.PENDING, FollowStatus.DENIED].includes(stats.status)}
-	<Button variant="success" onclick={approveFollower}>Approve</Button>
+	<Button variant="success-outline" size="sm" onclick={approveFollower}>Approve</Button>
 {/if}
 {#if [FollowStatus.PENDING, FollowStatus.APPROVED].includes(stats.status)}
 	<AlertDialog.Root bind:open>
-		<AlertDialog.Trigger class={buttonVariants({ variant: 'destructive' })}>
+		<AlertDialog.Trigger class={buttonVariants({ variant: 'destructive-outline', size: 'sm' })}>
 			{stats.status === FollowStatus.PENDING ? 'Deny' : 'Revoke'}
 		</AlertDialog.Trigger>
 		<AlertDialog.Content interactOutsideBehavior="close">

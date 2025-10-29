@@ -3,7 +3,6 @@
 	import LinkSetupAlert from '$lib/components/link-setup-alert.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { pages } from '$lib/pages.svelte.js';
-	import { env } from '$env/dynamic/public';
 	import * as Select from '$lib/components/ui/select';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
@@ -11,11 +10,13 @@
 	import LockKeyHoleIcon from '@lucide/svelte/icons/lock-keyhole';
 	import FollowersTable from './followers-table.svelte';
 	import VisitsCharts from './visits-charts.svelte';
+	import { getAthleteLink } from '$lib/link';
+	import type { UUID } from 'crypto';
 
 	let { data } = $props();
 	let { user, link, flags } = data;
 	let linkIsPublic = $derived(link?.isPublic);
-	let linkURL = $derived(env.PUBLIC_URL && user && `${env.PUBLIC_URL}/athlete/${user?.uuid}`);
+	let linkURL = $derived(user && getAthleteLink(user.uuid as UUID));
 
 	let updatingLinkVisibility = $state(false);
 	async function updateLinkVisibility(isPublic: boolean) {
@@ -77,7 +78,7 @@
 					</Select.Root>
 				</span>
 				<span
-					class="col-start-2 grid justify-items-start gap-1 pl-2 text-sm text-muted-foreground [&_p]:leading-relaxed"
+					class="text-muted-foreground col-start-2 grid justify-items-start gap-1 pl-2 text-sm [&_p]:leading-relaxed"
 				>
 					{#if linkIsPublic}
 						Anyone on the internet with the link can view your LiveTrack.
@@ -90,8 +91,11 @@
 
 		<div class="flex items-center gap-2">
 			<Label for="link" class="sr-only">Link</Label>
-			<Input id="link" value={linkURL} readonly class="h-8" />
-			<Button class="shadow-none" onclick={() => navigator.clipboard.writeText(linkURL || '')}>
+			<Input id="link" value={linkURL?.href} readonly class="h-8" />
+			<Button
+				class="shadow-none"
+				onclick={() => navigator.clipboard.writeText(linkURL?.href || '')}
+			>
 				Copy Link
 			</Button>
 		</div>
@@ -99,7 +103,7 @@
 
 	<h3>People with access</h3>
 
-	<p class="text-sm text-muted-foreground">
+	<p class="text-muted-foreground text-sm">
 		The list of users with explicit access to your LiveTrack. If your link access is <i
 			>restricted</i
 		>, only those listed below that have been approved will be able to access your LiveTrack.
@@ -116,7 +120,7 @@
 		</div>
 	{/if}
 {:else}
-	<p class="mt-6 text-center text-xl text-muted-foreground">
+	<p class="text-muted-foreground mt-6 text-center text-xl">
 		You don't have a LiveTrack link setup yet.
 	</p>
 	<div class="mt-6 flex justify-center gap-4">

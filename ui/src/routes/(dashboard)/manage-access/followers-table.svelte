@@ -2,7 +2,7 @@
 	import { type FollowerStats } from '$lib/server/followers/followers';
 	import type { UUID } from 'crypto';
 	import { toast } from 'svelte-sonner';
-	import { FollowersTable } from '$lib/components/tables/followers';
+	import { FollowersDataTable } from '$lib/components/tables/followers';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 
 	let { showLastSeen }: { showLastSeen: boolean } = $props();
@@ -55,7 +55,7 @@
 	<Skeleton class="h-20 w-full" />
 {:then stats}
 	{#if stats}
-		<FollowersTable
+		<FollowersDataTable
 			followersStats={stats}
 			{showLastSeen}
 			{approveFollower}

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import FollowingTable from './following-table.svelte';
+
 	let { data } = $props();
 	let { user, flags } = data;
 
@@ -39,3 +41,14 @@
 		{message}
 	{/if}
 {/if}
+
+<h3>Following</h3>
+
+<p class="text-muted-foreground text-sm">
+	The list of users you are following or sent a follow request to. If their link access is
+	<i>restricted</i>, your follow request will need to be approved in order to access their
+	LiveTrack.
+</p>
+<div class="mt-2">
+	<FollowingTable />
+</div>

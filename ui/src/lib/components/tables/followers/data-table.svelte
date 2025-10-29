@@ -6,8 +6,8 @@
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { type FollowerStats } from '$lib/server/followers/followers';
-	import IconWithTitle from './icon-with-title.svelte';
 	import type { UUID } from 'crypto';
+	import IconWithTooltip from '$lib/components/icon-with-tooltip.svelte';
 
 	let {
 		showLastSeen,
@@ -31,12 +31,12 @@
 		{
 			cell: ({ row }) => {
 				return row.original.enabledNotifications
-					? renderComponent(IconWithTitle, {
+					? renderComponent(IconWithTooltip, {
 							title: 'Enabled',
 							icon: CheckIcon,
 							size: '1em'
 						})
-					: renderComponent(IconWithTitle, {
+					: renderComponent(IconWithTooltip, {
 							title: 'Disabled',
 							icon: XIcon,
 							size: '1em'

@@ -1,5 +1,5 @@
-import FollowersTable from "./table.svelte";
+import FollowersDataTable from "./data-table.svelte";
 
 export {
-	FollowersTable,
+	FollowersDataTable,
 };
