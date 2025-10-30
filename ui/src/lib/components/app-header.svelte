@@ -1,15 +1,23 @@
 <script lang="ts">
+	import { setLocale, getLocale, type Locale } from '$lib/paraglide/runtime';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import CircleUserRound from '@lucide/svelte/icons/circle-user-round';
+	import LanguagesIcon from '@lucide/svelte/icons/languages';
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import type { Sessions } from '$lib/server/db/schema';
 	import { page } from '$app/state';
 	import { pages } from '$lib/pages.svelte';
+	import { m } from '$lib/paraglide/messages.js';
+
+	let locale: Locale = $state(getLocale());
+	$effect(() => {
+		setLocale(locale);
+	});
 
 	let {
 		userSession
@@ -46,7 +54,7 @@
 									<DropdownMenu.Item>{pages().account.title}</DropdownMenu.Item>
 								</a>
 								<a href="/auth/signout">
-									<DropdownMenu.Item>Sign out</DropdownMenu.Item>
+									<DropdownMenu.Item>{m.sign_out()}</DropdownMenu.Item>
 								</a>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
@@ -55,12 +63,35 @@
 							<CircleUserRound />
 						</Button>
 					{/if}
+
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger>
+							{#snippet child({ props })}
+								<Button {...props} variant="ghost" size="icon">
+									<LanguagesIcon />
+								</Button>
+							{/snippet}
+						</DropdownMenu.Trigger>
+						<DropdownMenu.Content>
+							<DropdownMenu.RadioGroup bind:value={locale}>
+								<DropdownMenu.RadioItem value="fr">
+									<span>🇫🇷</span>
+									Français
+								</DropdownMenu.RadioItem>
+								<DropdownMenu.RadioItem value="en">
+									<span>🇬🇧</span>
+									English
+								</DropdownMenu.RadioItem>
+							</DropdownMenu.RadioGroup>
+						</DropdownMenu.Content>
+					</DropdownMenu.Root>
+
 					<Button onclick={toggleMode} variant="ghost" size="icon">
-						<SunIcon class="rotate-0 scale-100 !transition-all dark:-rotate-90 dark:scale-0" />
+						<SunIcon class="scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90" />
 						<MoonIcon
-							class="absolute rotate-90 scale-0 !transition-all dark:rotate-0 dark:scale-100"
+							class="absolute scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0"
 						/>
-						<span class="sr-only">Toggle theme</span>
+						<span class="sr-only">{m.toggle_theme()}</span>
 					</Button>
 				</ul>
 			</div>

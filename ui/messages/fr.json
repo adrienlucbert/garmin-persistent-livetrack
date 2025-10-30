@@ -1,4 +1,9 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Bonjour, {name} de fr!"
+	"sign_out": "Déconnexion",
+	"toggle_theme": "Changer de thème",
+	"home": "Accueil",
+	"getting_started": "Premiers pas",
+	"manage_access": "Gérer les accès",
+	"account": "Mon compte"
 }

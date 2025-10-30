@@ -4,6 +4,7 @@ import HomeIcon from '@lucide/svelte/icons/house';
 import UsersIcon from '@lucide/svelte/icons/users';
 import RocketIcon from '@lucide/svelte/icons/rocket';
 import CircleUserRound from '@lucide/svelte/icons/circle-user-round';
+import { m } from '$lib/paraglide/messages.js';
 
 export type Page = {
 	title: string;
@@ -15,22 +16,22 @@ export type Page = {
 
 const _pages = {
 	'home': {
-		title: 'Home',
+		title: m.home(),
 		url: '/',
 		icon: HomeIcon,
 	},
 	'gettingStarted': {
-		title: 'Getting started',
+		title: m.getting_started(),
 		url: '/getting-started',
 		icon: RocketIcon,
 	},
 	'manageAccess': {
-		title: 'Manage access',
+		title: m.manage_access(),
 		url: '/manage-access',
 		icon: UsersIcon,
 	},
 	'account': {
-		title: 'Account',
+		title: m.account(),
 		url: '/account',
 		icon: CircleUserRound,
 	}
