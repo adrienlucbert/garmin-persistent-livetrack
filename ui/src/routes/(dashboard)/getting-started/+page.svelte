@@ -3,6 +3,8 @@
 	import Youtube from 'svelte-youtube-embed';
 	import { generateVCard } from '$lib/vcard';
 	import { QRCode } from '$lib/components/ui/qrcode';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
 	import QrCodeIcon from '@lucide/svelte/icons/qr-code';
 	import SquareCheckBigIcon from '@lucide/svelte/icons/square-check-big';
 	import CircleAlertIcon from '@lucide/svelte/icons/circle-alert';
@@ -13,6 +15,8 @@
 	import LinkSetupAlert from '$lib/components/link-setup-alert.svelte';
 	import { getAthleteLink } from '$lib/link.js';
 	import type { UUID } from 'crypto';
+	import { pages } from '$lib/pages.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
 	let { user, link } = data;
@@ -35,7 +39,7 @@
 </script>
 
 <NarrowSection class="mb-14">
-	<p class="text-muted-foreground mt-6 text-xl">
+	<p class="mt-6 text-xl text-muted-foreground">
 		Follow those steps to setup your persistent LiveTrack link with your Garmin device.
 	</p>
 	<ul>
@@ -119,6 +123,27 @@
 				Instead of sending your friends a new link every ride, just share your personal static URL
 				once. They can bookmark it — it will always point to your most recent LiveTrack.
 			</p>
+
+			{#if link}
+				<div class="my-6 flex items-center gap-2">
+					<Label for="link" class="sr-only">Link</Label>
+					<Input id="link" value={linkURL?.href} readonly class="h-8" />
+					<Button
+						class="shadow-none"
+						onclick={() => {
+							navigator.clipboard.writeText(linkURL?.href || '');
+							toast.success('Link copied to clipboard', { duration: 3000 });
+						}}
+					>
+						Copy Link
+					</Button>
+				</div>
+				<div class="mt-6 flex justify-center gap-4 md:mt-4">
+					<Button variant="outline" href={pages().manageAccess.url}
+						>{pages().manageAccess.title}</Button
+					>
+				</div>
+			{/if}
 		</li>
 	</ul>
 </NarrowSection>

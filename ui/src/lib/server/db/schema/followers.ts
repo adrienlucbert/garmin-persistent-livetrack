@@ -10,7 +10,7 @@ export const followers = pgTable('followers', {
 	userUUID: uuid('user_uuid').notNull().references(() => users.uuid, { onDelete: 'cascade' }),
 	followerUserUUID: uuid('follower_user_uuid').notNull().references(() => users.uuid, { onDelete: 'cascade' }),
 	status: followStatus().notNull().default(FollowStatus.PENDING),
-	enabledNotifications: boolean('enabled_notifications').default(false),
+	enabledNotifications: boolean('enabled_notifications').default(true),
 },
 	(t) => ({
 		uniqUserAction: unique().on(t.userUUID, t.followerUserUUID)

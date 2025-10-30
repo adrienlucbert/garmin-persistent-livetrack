@@ -30,7 +30,7 @@
 				<b>friends and family</b>.
 			</div>
 			<div class="mt-6 flex justify-center gap-4 md:mt-4">
-				<Button href={pages().gettingStarted.url}>Getting started</Button>
+				<Button href={pages().gettingStarted.url}>{pages().gettingStarted.title}</Button>
 				<Button variant="outline" href="#how-it-works">How it works</Button>
 			</div>
 		</div>
