@@ -39,21 +39,22 @@ const _pages = {
 
 export type PageName = keyof typeof _pages;
 
-export function pages(): Record<PageName, Page> {
+export function pages(url?: URL): Record<PageName, Page> {
+	const pageUrl = url || page.url
 	return Object.fromEntries(
 		Object.entries(_pages).map(([key, value]) => {
 			return [
 				key, {
 					...value,
-					isActive: value.url === '/' ? page.url.pathname === '/'
-						: page.url.pathname.startsWith(value.url)
+					isActive: value.url === '/' ? pageUrl.pathname === '/'
+						: pageUrl.pathname.startsWith(value.url)
 				}
 			];
 		})
 	) as Record<PageName, Page>
 }
 
-export function currentPage(): Page | undefined {
-	return Object.values(pages())
+export function currentPage(url?: URL): Page | undefined {
+	return Object.values(pages(url))
 		.find((page) => page.isActive)
 }

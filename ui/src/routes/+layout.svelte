@@ -1,20 +1,24 @@
 <script lang="ts">
 	import '../app.css';
-
 	import { page } from '$app/state';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import AppHeader from '$lib/components/app-header.svelte';
 	import AppFooter from '$lib/components/app-footer.svelte';
-
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
-	let { data, children } = $props();
 	import { ModeWatcher } from 'mode-watcher';
 	import { navigating } from '$app/state';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import { FullPage, GrowContainer } from '$lib/components/ui/layout';
+
+	let { data, children } = $props();
 </script>
+
+<svelte:head>
+	<title>{page.data.seo ? page.data.seo.title : 'LiveTrack'}</title>
+	<meta name="description" content={page.data.seo?.description || 'Garmin Persistent Livetrack'} />
+</svelte:head>
 
 <Toaster />
 <ModeWatcher />

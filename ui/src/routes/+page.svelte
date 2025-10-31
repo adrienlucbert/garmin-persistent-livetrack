@@ -8,11 +8,6 @@
 	import { m } from '$lib/paraglide/messages.js';
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="" />
-</svelte:head>
-
 <NarrowSection>
 	<FullPage class="grid place-items-center">
 		<div class="text-center">
@@ -34,7 +29,7 @@
 			</div>
 		</div>
 	</FullPage>
-	<div id="how-it-works" class="mb-14 scroll-m-20">
+	<div id="how-it-works" class="my-14 scroll-m-20">
 		<h1>{m.app_footer_how_it_works()}</h1>
 		<ul>
 			<li>

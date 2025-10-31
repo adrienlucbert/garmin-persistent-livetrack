@@ -1,5 +1,10 @@
-export const load = async () => {
+import { currentPage } from '$lib/pages.svelte';
+
+export const load = async ({ url }) => {
 	return {
-		hideFooter: false
+		hideFooter: false,
+		seo: {
+			title: currentPage(url)?.title
+		},
 	};
 };

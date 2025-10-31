@@ -13,6 +13,10 @@ declare global {
 		interface PageData {
 			hideFooter?: boolean
 			hideSidebar?: boolean
+			seo?: {
+				title?: string
+				description?: string
+			}
 		}
 	} // interface Error {}
 	// interface Locals {}
