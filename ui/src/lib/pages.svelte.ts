@@ -16,22 +16,22 @@ export type Page = {
 
 const _pages = {
 	'home': {
-		title: m.home(),
+		title: m.pages_home(),
 		url: '/',
 		icon: HomeIcon,
 	},
 	'gettingStarted': {
-		title: m.getting_started(),
+		title: m.pages_getting_started(),
 		url: '/getting-started',
 		icon: RocketIcon,
 	},
 	'manageAccess': {
-		title: m.manage_access(),
+		title: m.pages_manage_access(),
 		url: '/manage-access',
 		icon: UsersIcon,
 	},
 	'account': {
-		title: m.account(),
+		title: m.pages_account(),
 		url: '/account',
 		icon: CircleUserRound,
 	}

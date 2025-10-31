@@ -54,7 +54,7 @@
 									<DropdownMenu.Item>{pages().account.title}</DropdownMenu.Item>
 								</a>
 								<a href="/auth/signout">
-									<DropdownMenu.Item>{m.sign_out()}</DropdownMenu.Item>
+									<DropdownMenu.Item>{m.app_header_sign_out()}</DropdownMenu.Item>
 								</a>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
@@ -91,7 +91,7 @@
 						<MoonIcon
 							class="absolute scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0"
 						/>
-						<span class="sr-only">{m.toggle_theme()}</span>
+						<span class="sr-only">{m.app_header_toggle_theme()}</span>
 					</Button>
 				</ul>
 			</div>
