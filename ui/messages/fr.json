@@ -116,6 +116,7 @@
 	"invalid_livetrack_session": "La session LiveTrack est invalide",
 	"missing_cookie": "Cookie '{name}' manquant",
 	"oauth_state_invalid_or_expired": "La session d'OAuth est invalide ou a expiré",
+	"authentication": "Authentification",
 	"app_footer_explore": "Explorer",
 	"app_footer_notice": "Avertissement",
 	"app_footer_notice_text": "Ce service n'est en aucun cas lié à <a class=\"link\" href=\"https://www.garmin.com/\">Garmin&reg;</a> mais se contente d'augmenter et de simplifier sa fonctionnalité de LiveTrack.",
