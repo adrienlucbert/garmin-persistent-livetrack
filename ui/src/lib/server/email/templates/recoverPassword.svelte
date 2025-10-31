@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Button, Container, Heading, Paragraph } from '@uraniadev/emailer';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		expiresIn: string;
@@ -10,31 +11,32 @@
 </script>
 
 <Container>
-	<Heading class="text-center">Reset your password</Heading>
+	<Heading class="text-center">{m.mail_reset_password_title()}</Heading>
 	<Container class="rounded-md border-2 border-solid border-gray-200 p-4">
-		<Paragraph>You requested to recover your password.</Paragraph>
-		<Paragraph>If you think this is a mistake please notice the platform administrator.</Paragraph>
+		<Paragraph>{m.mail_reset_password_p1()}</Paragraph>
+		<Paragraph>{m.mail_reset_password_p2()}</Paragraph>
 
 		<Button
 			class="m-auto my-4 max-w-max rounded-lg bg-neutral-800 px-6 py-4 !text-white"
-			href={resetURL}>Reset password</Button
+			href={resetURL}
 		>
+			{m.mail_reset_password_button()}
+		</Button>
 
-		<Paragraph
-			>This link will expire in {expiresIn}.
-			<a href={recoverURL}>Click here to get a new one</a>.
+		<Paragraph>
+			{m.mail_reset_password_link_expires({ expiresIn })}
+			<a href={recoverURL}>{m.mail_reset_password_click_get_new_one()}</a>.
 		</Paragraph>
 	</Container>
 	<Container class="mx-auto max-w-lg">
 		<Paragraph class="mt-8 text-center text-sm">
-			You're receiving this email because a password reset was requested for your account.
+			{m.mail_reset_password_p3()}
 		</Paragraph>
 		<Paragraph class="text-center text-sm">
-			If you're having trouble clicking the "Reset password" button, copy and paste the URL below
-			into your web browser: <a
-				style="overflow-wrap: break-word; word-wrap: break-word;"
-				href={resetURL}>{resetURL}</a
-			>
+			{m.mail_trouble_clicking_button({ button: m.mail_reset_password_button() })}
+			<a style="overflow-wrap: break-word; word-wrap: break-word;" href={resetURL}>
+				{resetURL}
+			</a>
 		</Paragraph>
 	</Container>
 </Container>

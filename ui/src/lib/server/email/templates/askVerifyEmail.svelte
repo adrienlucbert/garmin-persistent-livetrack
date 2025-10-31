@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { env as pubEnv } from '$env/dynamic/public';
 	import { env as privEnv } from '$env/dynamic/private';
-	import { Button, Card, Container, Heading, inline, Paragraph } from '@uraniadev/emailer';
+	import { Button, Container, Heading, Paragraph } from '@uraniadev/emailer';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		email: string;
@@ -11,33 +12,33 @@
 </script>
 
 <Container>
-	<Heading class="text-center">Verify your email address</Heading>
+	<Heading class="text-center">{m.mail_verify_email_title()}</Heading>
 	<Container class="rounded-md border-2 border-solid border-gray-200 p-4">
 		<Paragraph>
-			To activate your account, we just need to verify your email address:
+			{m.mail_verify_email_p1()}
 			<a href={`mailto:${email}`}>{email}</a>
 		</Paragraph>
 
 		<Button
 			class="m-auto my-4 max-w-max rounded-lg bg-neutral-800 px-6 py-4 !text-white"
-			href={callbackURL}>Verify email address</Button
+			href={callbackURL}
 		>
+			{m.mail_verify_email_button()}
+		</Button>
 		<Paragraph class="mt-8 text-center text-sm">
-			This will let you receive notifications and password resets from {privEnv.APP_NAME}
+			{m.mail_verify_email_p2({ appName: privEnv.APP_NAME })}
 		</Paragraph>
 	</Container>
 	<Container class="mx-auto max-w-lg">
 		<Paragraph class="mt-8 text-center text-sm">
-			You're receiving this email because you recently created an account requested at
-			<a href={pubEnv.PUBLIC_URL}>{privEnv.APP_NAME}</a>. If it wasn't you, please ignore this
-			email.
+			{m.mail_verify_email_p3()} <a href={pubEnv.PUBLIC_URL}>{privEnv.APP_NAME}</a>.
+			{m.mail_verify_email_p4()}
 		</Paragraph>
 		<Paragraph class="text-center text-sm">
-			If you're having trouble clicking the "Verify email address" button, copy and paste the URL
-			below into your web browser: <a
-				style="overflow-wrap: break-word; word-wrap: break-word;"
-				href={callbackURL}>{callbackURL}</a
-			>
+			{m.mail_trouble_clicking_button({ button: m.mail_verify_email_button() })}
+			<a style="overflow-wrap: break-word; word-wrap: break-word;" href={callbackURL}>
+				{callbackURL}
+			</a>
 		</Paragraph>
 	</Container>
 </Container>
