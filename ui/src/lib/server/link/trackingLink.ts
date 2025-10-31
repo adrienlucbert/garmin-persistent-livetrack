@@ -2,13 +2,14 @@ import { db } from '$lib/server/db';
 import { trackingLinks, users, type TrackingLinks } from '$lib/server/db/schema';
 import { type UUID } from 'crypto';
 import { eq } from 'drizzle-orm';
+import { m } from '$lib/paraglide/messages.js';
 
 export async function createOrUpdateTrackingLink(userUUID: UUID, link: string): Promise<TrackingLinks> {
 	const user = await db().query.users.findFirst({
 		where: eq(users.uuid, userUUID)
 	})
 	if (!user) {
-		return Promise.reject('Invalid user UUID')
+		return Promise.reject(m.invalid_user_uuid())
 	}
 
 	const updatedRows = await db()
@@ -27,7 +28,7 @@ export async function createOrUpdateTrackingLink(userUUID: UUID, link: string): 
 		.returning()
 
 	if (updatedRows.length === 0) {
-		return Promise.reject('Livetrack session is invalid')
+		return Promise.reject(m.invalid_livetrack_session())
 	}
 
 	return updatedRows[0]
@@ -46,7 +47,7 @@ export async function getTrackingLink(userUUID: UUID): Promise<TrackingLinks> {
 	})
 
 	if (!trackingLink) {
-		return Promise.reject('Livetrack session is invalid')
+		return Promise.reject(m.invalid_livetrack_session())
 	}
 
 	return trackingLink

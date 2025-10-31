@@ -7,6 +7,7 @@ import type { URL } from "url";
 import { type UUID } from "crypto";
 import { AuthMethod, createUser, getUser } from "$lib/server/auth/user";
 import { generateCustomState, validateState } from "./state";
+import { m } from '$lib/paraglide/messages.js';
 
 export const google = new Google(
 	privEnv.GOOGLE_CLIENT_ID,
@@ -38,14 +39,17 @@ export const GoogleOAuthProvider: OAuthProvider = {
 	async validateAuthorizationCode(cookies: Cookies, urlSearchParams: URLSearchParams): Promise<OAuthTokensWithState> {
 		const code = urlSearchParams.get("code");
 		const state = urlSearchParams.get("state");
-		if (code === null || state === null) {
-			return Promise.reject('Missing state cookies');
+		if (code === null) {
+			return Promise.reject(m.missing_cookie({ name: 'code' }));
+		}
+		if (state === null) {
+			return Promise.reject(m.missing_cookie({ name: 'state' }));
 		}
 		const stateData = await validateState(state, cookies.get("google_oauth_csrf") ?? null)
 
 		const codeVerifier = cookies.get("google_code_verifier") ?? null;
 		if (codeVerifier === null) {
-			return Promise.reject('Missing callback URL parameters');
+			return Promise.reject(m.missing_cookie({ name: 'google_code_verifier' }));
 		}
 
 		try {

@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { signin, signup, recoverPassword, resetPassword, verifyEmail } from '$lib/server/auth/flows';
 import { validateEmail, validatePassword } from '$lib/validators';
 import type { PageServerLoad, Actions } from "./$types";
+import { m } from '$lib/paraglide/messages.js';
 
 export const actions: Actions = {
 	signin: async (event) => {
@@ -11,10 +12,10 @@ export const actions: Actions = {
 		const password = formData.get('password')
 
 		if (!validateEmail(email)) {
-			return fail(400, { message: 'Invalid email address' });
+			return fail(400, { message: m.invalid_email_address() });
 		}
 		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password (min 8 characters)' });
+			return fail(400, { message: m.invalid_password() });
 		}
 
 		try {
@@ -34,15 +35,15 @@ export const actions: Actions = {
 		const confirmPassword = formData.get('confirm_password')
 
 		if (!validateEmail(email)) {
-			return fail(400, { message: 'Invalid email address' });
+			return fail(400, { message: m.invalid_email_address() });
 		}
 
 		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password (min 8 characters)' })
+			return fail(400, { message: m.invalid_password() })
 		}
 
 		if (password !== confirmPassword) {
-			return fail(400, { message: 'Passwords do not match' })
+			return fail(400, { message: m.passwords_do_not_match() })
 		}
 
 		try {
@@ -60,7 +61,7 @@ export const actions: Actions = {
 		const email = formData.get('email')
 
 		if (!validateEmail(email)) {
-			return fail(400, { message: 'Invalid email address' });
+			return fail(400, { message: m.invalid_email_address() });
 		}
 
 		try {
@@ -78,11 +79,11 @@ export const actions: Actions = {
 		const confirmPassword = formData.get('confirm_password')
 
 		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password (min 8 characters)' })
+			return fail(400, { message: m.invalid_password() })
 		}
 
 		if (password !== confirmPassword) {
-			return fail(400, { message: 'Passwords do not match' })
+			return fail(400, { message: m.passwords_do_not_match() })
 		}
 
 		try {

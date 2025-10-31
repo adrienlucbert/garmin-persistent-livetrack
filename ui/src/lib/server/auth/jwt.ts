@@ -6,6 +6,7 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { db } from '../db';
 import { eq } from 'drizzle-orm';
 import { invalidateSession } from './session';
+import { m } from '$lib/paraglide/messages.js';
 
 type JWTContent = {
 	user: {
@@ -43,12 +44,12 @@ export async function validateSessionToken(token: string): Promise<Sessions & { 
 	});
 
 	if (!sess) {
-		return Promise.reject('Token is invalid or has expired')
+		return Promise.reject(m.token_invalid_or_expired())
 	}
 
 	if (new Date() >= sess.expiresAt) {
 		await invalidateSession(sessionId)
-		return Promise.reject('Token has expired')
+		return Promise.reject(m.token_expired())
 	}
 
 	return sess;

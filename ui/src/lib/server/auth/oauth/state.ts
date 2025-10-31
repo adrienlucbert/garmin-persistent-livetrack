@@ -1,4 +1,5 @@
 import { generateState } from 'arctic'
+import { m } from '$lib/paraglide/messages.js';
 
 export type OAuthStateData = {
 	csrf: string;
@@ -20,7 +21,7 @@ export function generateCustomState(followURL: string | null): { state: string; 
 
 export async function validateState(state: string, csrf_cookie: string | null): Promise<OAuthStateWithoutCSRF> {
 	if (csrf_cookie === null) {
-		return Promise.reject('Missing CSRF cookie');
+		return Promise.reject(m.missing_cookie({ name: 'CSRF' }));
 	}
 
 	const { csrf, ...data }: OAuthStateData = JSON.parse(
@@ -30,7 +31,7 @@ export async function validateState(state: string, csrf_cookie: string | null): 
 	);
 
 	if (csrf !== csrf_cookie) {
-		return Promise.reject('OAuth state is invalid or has expired')
+		return Promise.reject(m.oauth_state_invalid_or_expired())
 	}
 
 	return data;

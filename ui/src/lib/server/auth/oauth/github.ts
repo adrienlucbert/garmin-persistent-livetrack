@@ -6,6 +6,7 @@ import type { Cookies } from "@sveltejs/kit";
 import { type UUID } from "crypto";
 import { AuthMethod, createUser, getUser } from "$lib/server/auth/user";
 import { generateCustomState, validateState } from "./state";
+import { m } from '$lib/paraglide/messages.js';
 
 export const github = new GitHub(env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET, null)
 
@@ -26,8 +27,11 @@ export const GithubOAuthProvider: OAuthProvider = {
 	async validateAuthorizationCode(cookies: Cookies, urlSearchParams: URLSearchParams): Promise<OAuthTokensWithState> {
 		const code = urlSearchParams.get("code");
 		const state = urlSearchParams.get("state");
-		if (code === null || state === null) {
-			return Promise.reject('Missing state cookies');
+		if (code === null) {
+			return Promise.reject(m.missing_cookie({ name: 'code' }));
+		}
+		if (state === null) {
+			return Promise.reject(m.missing_cookie({ name: 'state' }));
 		}
 		const stateData = await validateState(state, cookies.get("github_oauth_csrf") ?? null)
 

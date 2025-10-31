@@ -9,6 +9,7 @@ import { formatDuration } from "$lib/time";
 import { env } from "$env/dynamic/public";
 import { FeatureFlagsConfig as flags } from "$lib/featureFlags/config";
 import { askVerifyEmail } from "$lib/server/auth/flows"
+import { m } from '$lib/paraglide/messages.js';
 
 export async function recoverPassword(email: string, followURL: string | null): Promise<void> {
 	const user = await getUser(AuthMethod.Password, email)
@@ -18,7 +19,7 @@ export async function recoverPassword(email: string, followURL: string | null): 
 
 	if (flags.ENABLE_VERIFY_EMAIL && !user.traits.isEmailVerified) {
 		await askVerifyEmail({ uuid: user.uuid, email: user.traits.email })
-		return Promise.reject('Your email is not verified')
+		return Promise.reject(m.email_not_verified())
 	}
 
 	const expiresIn = 1000 * 60 * 30 // 30 minutes

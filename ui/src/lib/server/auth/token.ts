@@ -2,6 +2,7 @@ import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { Action, actionTokens, type ActionTokens, type PublicUserWithTraits, type Users } from "../db/schema";
 import { db } from "../db";
 import { eq, and, sql } from "drizzle-orm";
+import { m } from '$lib/paraglide/messages.js';
 
 export function generateSessionToken(): string {
 	const bytes = new Uint8Array(20);
@@ -55,16 +56,16 @@ export async function validateActionToken(token: string, action: Action): Promis
 	})
 
 	if (!actionToken) {
-		return Promise.reject('Token is invalid or has expired')
+		return Promise.reject(m.token_invalid_or_expired())
 	}
 
 	if (actionToken.action != action) {
-		return Promise.reject('Token does not allow this action')
+		return Promise.reject(m.invalid_action_token())
 	}
 
 	if (actionToken.expiresAt && new Date() >= actionToken.expiresAt) {
 		await invalidateActionToken(token)
-		return Promise.reject('Token has expired')
+		return Promise.reject(m.token_expired())
 	}
 
 	return actionToken
