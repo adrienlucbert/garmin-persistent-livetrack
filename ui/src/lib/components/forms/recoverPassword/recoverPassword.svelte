@@ -4,6 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		method,
@@ -22,12 +23,12 @@
 
 <Card.Root class="sm:mx-auto sm:w-full sm:max-w-md">
 	<Card.Header>
-		<Card.Title>Recover your account</Card.Title>
-		<Card.Description
-			>Enter your email below and we will send you an email to reset your password</Card.Description
-		>
+		<Card.Title>{m.recover_account_title()}</Card.Title>
+		<Card.Description>
+			{m.recover_account_text()}
+		</Card.Description>
 		<Card.Action>
-			<Button onclick={() => navigate('signin')} variant="link">Sign in</Button>
+			<Button onclick={() => navigate('signin')} variant="link">{m.sign_in_button()}</Button>
 		</Card.Action>
 	</Card.Header>
 	<Card.Content>
@@ -35,17 +36,17 @@
 			<div class="flex flex-col gap-6">
 				<Input name="follow" type="hidden" value={followURL} />
 				<div class="grid gap-2">
-					<Label for="email">Email</Label>
+					<Label for="email">{m.email_label()}</Label>
 					<Input
 						id="email"
 						name="email"
 						type="email"
-						placeholder="Enter your email address"
+						placeholder={m.email_placeholder()}
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
-					<Button type="submit" class="w-full">Send email</Button>
+					<Button type="submit" class="w-full">{m.send_email_button()}</Button>
 					<p style="color: red">{message ?? ''}</p>
 				</div>
 			</div>

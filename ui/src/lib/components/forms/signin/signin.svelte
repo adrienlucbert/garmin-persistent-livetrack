@@ -5,6 +5,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import Socials from '$lib/components/forms/socials.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		method,
@@ -29,10 +30,10 @@
 
 <Card.Root class="sm:mx-auto sm:w-full sm:max-w-md">
 	<Card.Header>
-		<Card.Title>Sign in to your account</Card.Title>
-		<Card.Description>Enter your email below to sign in to your account</Card.Description>
+		<Card.Title>{m.sign_in_title()}</Card.Title>
+		<Card.Description>{m.sign_in_text()}</Card.Description>
 		<Card.Action>
-			<Button onclick={() => navigate('signup')} variant="link">Sign up</Button>
+			<Button onclick={() => navigate('signup')} variant="link">{m.sign_up_button()}</Button>
 		</Card.Action>
 	</Card.Header>
 	<Card.Content>
@@ -40,25 +41,25 @@
 			<div class="flex flex-col gap-6">
 				<Input name="follow" type="hidden" value={followURL} />
 				<div class="grid gap-2">
-					<Label for="email">Email</Label>
+					<Label for="email">{m.email_label()}</Label>
 					<Input
 						id="email"
 						name="email"
 						type="email"
-						placeholder="Enter your email address"
+						placeholder={m.email_placeholder()}
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
 					<div class="flex items-center">
-						<Label for="password">Password</Label>
+						<Label for="password">{m.password_label()}</Label>
 						{#if withRecoverPassword}
 							<Button
 								variant="link"
 								onclick={() => navigate('reset')}
 								class="ml-auto inline-block text-sm underline-offset-4"
 							>
-								Forgot your password?
+								{m.forgot_password_button()}
 							</Button>
 						{/if}
 					</div>
@@ -66,12 +67,12 @@
 						id="password"
 						name="password"
 						type="password"
-						placeholder="Enter your password"
+						placeholder={m.password_placeholder()}
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
-					<Button type="submit" class="w-full">Sign in</Button>
+					<Button type="submit" class="w-full">{m.sign_in_button()}</Button>
 					<p style="color: red">{message ?? ''}</p>
 				</div>
 			</div>

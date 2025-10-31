@@ -88,13 +88,6 @@
 		{/if}
 		{#if flags.ENABLE_VERIFY_EMAIL}
 			<Tabs.Content value="verify">
-				{#if !success}
-					<form onsubmit={askVerify}>
-						<button>Verify email</button>
-					</form>
-				{/if}
-				{message}
-
 				<VerifyEmailForm success={success ?? false} {navigate} {message} />
 			</Tabs.Content>
 		{/if}

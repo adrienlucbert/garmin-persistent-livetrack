@@ -5,6 +5,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import Socials from '$lib/components/forms/socials.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		method,
@@ -27,10 +28,10 @@
 
 <Card.Root class="sm:mx-auto sm:w-full sm:max-w-md">
 	<Card.Header>
-		<Card.Title>Create an account</Card.Title>
-		<Card.Description>Enter your email and password below to create a new account</Card.Description>
+		<Card.Title>{m.sign_up_title()}</Card.Title>
+		<Card.Description>{m.sign_up_text()}</Card.Description>
 		<Card.Action>
-			<Button onclick={() => navigate('signin')} variant="link">Sign in</Button>
+			<Button onclick={() => navigate('signin')} variant="link">{m.sign_in_button()}</Button>
 		</Card.Action>
 	</Card.Header>
 	<Card.Content>
@@ -38,37 +39,37 @@
 			<div class="flex flex-col gap-6">
 				<Input name="follow" type="hidden" value={followURL} />
 				<div class="grid gap-2">
-					<Label for="email">Email</Label>
+					<Label for="email">{m.email_label()}</Label>
 					<Input
 						id="email"
 						name="email"
 						type="email"
-						placeholder="Enter your email address"
+						placeholder={m.email_placeholder()}
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
-					<Label for="password">Password</Label>
+					<Label for="password">{m.password_label()}</Label>
 					<Input
 						id="password"
 						name="password"
 						type="password"
-						placeholder="Enter your password"
+						placeholder={m.password_placeholder()}
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
-					<Label for="confirm_password">Confirm your password</Label>
+					<Label for="confirm_password">{m.confirm_password_label()}</Label>
 					<Input
 						id="confirm_password"
 						name="confirm_password"
 						type="password"
-						placeholder="Re-enter your password"
+						placeholder={m.confirm_password_placeholder()}
 						required
 					/>
 				</div>
 				<div class="grid gap-2">
-					<Button type="submit" class="w-full">Sign up</Button>
+					<Button type="submit" class="w-full">{m.sign_up_button()}</Button>
 					<p style="color: red">{message ?? ''}</p>
 				</div>
 			</div>
