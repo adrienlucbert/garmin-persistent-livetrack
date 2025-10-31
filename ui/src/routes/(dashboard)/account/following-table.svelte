@@ -4,6 +4,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { FollowingDataTable } from '$lib/components/tables/following';
 	import type { Followers } from '$lib/server/db/schema';
+	import { m } from '$lib/paraglide/messages.js';
 
 	async function fetchFollowing(): Promise<Followers[]> {
 		return fetch('/api/following').then((r) => r.json());
@@ -23,12 +24,12 @@
 				await refreshFollowing();
 			} else {
 				const { message } = await res.json().catch(() => {
-					throw `Unexpected server error ${res.status}`;
+					throw m.unexpected_server_error({ code: res.status });
 				});
 				throw message;
 			}
 		} catch (error) {
-			toast.error('An error occurred', {
+			toast.error(m.an_error_occurred(), {
 				description: String(error),
 				duration: 10000
 			});
@@ -46,7 +47,7 @@
 			unfollow={removeFollowRequest}
 		/>
 	{:else}
-		There was an issue loading followers.
+		{m.following_issue_loading()}
 	{/if}
 {:catch error}
 	{error.message}

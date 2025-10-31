@@ -2,6 +2,7 @@
 	import { type ColumnDef, getCoreRowModel } from '@tanstack/table-core';
 	import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -48,7 +49,8 @@
 				</Table.Row>
 			{:else}
 				<Table.Row>
-					<Table.Cell colspan={columns.length} class="h-24 text-center">No results.</Table.Cell>
+					<Table.Cell colspan={columns.length} class="h-24 text-center">{m.no_results()}</Table.Cell
+					>
 				</Table.Row>
 			{/each}
 		</Table.Body>

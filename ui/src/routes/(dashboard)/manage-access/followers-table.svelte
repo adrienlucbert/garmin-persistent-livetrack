@@ -30,7 +30,7 @@
 				await refreshFollowersStats();
 			} else {
 				const { message } = await res.json().catch(() => {
-					throw `${m.unexpected_server_error()} ${res.status}`;
+					throw m.unexpected_server_error({ code: res.status });
 				});
 				throw message;
 			}

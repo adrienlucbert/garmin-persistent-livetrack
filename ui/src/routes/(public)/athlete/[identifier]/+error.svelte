@@ -3,6 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { FullPage, NarrowSection } from '$lib/components/ui/layout';
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
+	import { m } from '$lib/paraglide/messages.js';
 </script>
 
 <NarrowSection>
@@ -13,12 +14,12 @@
 				style="line-height: 1.2;"
 			>
 				<TriangleAlertIcon size="1.5em" />
-				<span>{page.error.message}</span>
+				<span>{page.error?.message}</span>
 			</h2>
-			{#if [401, 403].includes(page.status) && page.error.message === 'This tracking link is not public.'}
+			{#if [401, 403].includes(page.status) && page.error?.message === m.tracking_link_is_not_public()}
 				<div class="flex justify-center gap-4">
 					<Button size="lg" variant="outline" href={`${page.params.identifier}/follow`}>
-						Request access
+						{m.request_access()}
 					</Button>
 				</div>
 			{/if}

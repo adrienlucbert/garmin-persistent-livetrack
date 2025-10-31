@@ -3,10 +3,11 @@ import type { PageServerLoad } from "./$types";
 import { requestFollow } from "$lib/server/followers/followers";
 import type { UUID } from "crypto";
 import { getAthleteLink } from "$lib/link";
+import { m } from '$lib/paraglide/messages.js';
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!/^[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$/.test(params.identifier)) {
-		return error(400, 'Athlete identifier is not a valid UUID.')
+		return error(400, m.invalid_athlete_identifier())
 	}
 	if (!locals.user) {
 		throw redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)

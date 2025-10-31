@@ -35,9 +35,12 @@
 			<AlertDialog.Header>
 				<AlertDialog.Title>{m.are_you_sure()}</AlertDialog.Title>
 				<AlertDialog.Description>
-					{stats.status === FollowStatus.PENDING
-						? m.followers_permanently_or_temporarily_deny()
-						: m.followers_permanently_or_temporarily_revoke()}
+					{m.followers_permanently_or_temporarily({
+						action: (stats.status === FollowStatus.PENDING
+							? m.followers_deny()
+							: m.followers_revoke()
+						).toLowerCase()
+					})}
 				</AlertDialog.Description>
 			</AlertDialog.Header>
 			<AlertDialog.Footer>
@@ -45,9 +48,10 @@
 					class={buttonVariants({ variant: 'destructive-outline' })}
 					onclick={() => banFollower().finally(() => (open = false))}
 				>
-					{stats.status === FollowStatus.PENDING
-						? m.followers_permanently_deny()
-						: m.followers_permanently_revoke()}
+					{m.followers_permanently({
+						action:
+							stats.status === FollowStatus.PENDING ? m.followers_deny() : m.followers_revoke()
+					})}
 				</AlertDialog.Action>
 				<AlertDialog.Action
 					class={buttonVariants({ variant: 'destructive' })}

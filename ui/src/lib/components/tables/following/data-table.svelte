@@ -10,6 +10,7 @@
 	import ButtonIcon from '$lib/components/button-icon.svelte';
 	import ToggleNotifications from './toggle-notifications.svelte';
 	import { FollowStatus } from '$lib/types/followers';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		following,
@@ -28,7 +29,7 @@
 		});
 		if (!res.ok) {
 			const { message } = await res.json().catch(() => {
-				throw `Unexpected server error ${res.status}`;
+				throw m.unexpected_server_error({ code: res.status });
 			});
 			throw message;
 		}
@@ -36,11 +37,11 @@
 
 	export const columns: ColumnDef<Followers>[] = [
 		{
-			header: 'User',
+			header: m.following_user_header(),
 			accessorKey: 'userUUID'
 		},
 		{
-			header: 'Notifications',
+			header: m.following_notifications_header(),
 			cell: ({ row }) => {
 				return renderComponent(ToggleNotifications, {
 					checked: row.original.enabledNotifications || false,
@@ -51,7 +52,7 @@
 			}
 		},
 		{
-			header: 'Tracking link',
+			header: m.following_tracking_link_header(),
 			cell: ({ row }) => {
 				return renderComponent(ButtonIcon, {
 					icon: ExternalLinkIcon,
@@ -61,7 +62,7 @@
 			}
 		},
 		{
-			header: 'Actions',
+			header: m.followers_actions_header(),
 			cell: ({ row }) => {
 				return renderComponent(RowActions, {
 					follow: row.original,

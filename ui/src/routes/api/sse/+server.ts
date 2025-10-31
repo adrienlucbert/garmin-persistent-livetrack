@@ -1,9 +1,10 @@
-import { broadcast, createStream } from '$lib/server/sse';
+import { createStream } from '$lib/server/sse';
 import { error } from '@sveltejs/kit';
+import { m } from '$lib/paraglide/messages.js';
 
 export const GET = async ({ locals, url }) => {
 	if (!locals.user) {
-		throw error(401, 'User is not logged in')
+		throw error(401, m.user_not_logged_in())
 	}
 	const channel = url.searchParams.get('channel') || 'default';
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FollowingTable from './following-table.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 	let { user, flags } = data;
@@ -35,19 +36,16 @@
 	{#if user.passwordTrait && !user.passwordTrait.isEmailVerified}
 		{#if !success}
 			<form onsubmit={askVerify}>
-				<button>Verify email</button>
+				<button>{m.verify_email()}</button>
 			</form>
 		{/if}
 		{message}
 	{/if}
 {/if}
 
-<h3>Following</h3>
-
-<p class="text-muted-foreground text-sm">
-	The list of users you are following or sent a follow request to. If their link access is
-	<i>restricted</i>, your follow request will need to be approved in order to access their
-	LiveTrack.
+<h3>{m.following_title()}</h3>
+<p class="text-sm text-muted-foreground">
+	{@html m.following_text()}
 </p>
 <div class="mt-2">
 	<FollowingTable />
