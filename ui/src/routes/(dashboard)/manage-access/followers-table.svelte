@@ -4,6 +4,7 @@
 	import { toast } from 'svelte-sonner';
 	import { FollowersDataTable } from '$lib/components/tables/followers';
 	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { showLastSeen }: { showLastSeen: boolean } = $props();
 
@@ -29,12 +30,12 @@
 				await refreshFollowersStats();
 			} else {
 				const { message } = await res.json().catch(() => {
-					throw `Unexpected server error ${res.status}`;
+					throw `${m.unexpected_server_error()} ${res.status}`;
 				});
 				throw message;
 			}
 		} catch (error) {
-			toast.error('An error occurred', {
+			toast.error(m.an_error_occurred(), {
 				description: String(error),
 				duration: 10000
 			});
@@ -63,7 +64,7 @@
 			{banFollower}
 		/>
 	{:else}
-		There was an issue loading followers.
+		{m.followers_issue_loading()}
 	{/if}
 {:catch error}
 	{error.message}

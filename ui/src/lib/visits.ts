@@ -1,4 +1,5 @@
 import type { Visits } from '$lib/server/db/schema';
+import { m } from '$lib/paraglide/messages.js';
 
 export type TotalVisits = { date: Date; count: number }
 
@@ -21,7 +22,7 @@ export function transformPerUserVisits(visits: Visits[]): PerUserVisits[] {
 	const dailyCounts = new Map<number, { [user: string]: number }>();
 
 	for (const visit of visits) {
-		const user = visit.visitorUserUUID || 'Visitor';
+		const user = visit.visitorUserUUID || m.visitor();
 		const date = new Date(new Date(visit.timestamp).toDateString()).getTime();
 		const dateCounts = dailyCounts.get(date) || {};
 		dateCounts[user] = (dateCounts[user] || 0) + 1;
@@ -36,7 +37,7 @@ export function transformPerUserVisits(visits: Visits[]): PerUserVisits[] {
 export function listUniqueUsers(visits: Visits[]): string[] {
 	let users = new Set<string>();
 	for (const visit of visits) {
-		users.add(visit.visitorUserUUID || 'Visitor');
+		users.add(visit.visitorUserUUID || m.visitor());
 	}
 	return [...users];
 }

@@ -12,6 +12,7 @@
 	import VisitsCharts from './visits-charts.svelte';
 	import { getAthleteLink } from '$lib/link';
 	import type { UUID } from 'crypto';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 	let { user, link, flags } = data;
@@ -31,12 +32,12 @@
 				linkIsPublic = isPublic;
 			} else {
 				const { message } = await res.json().catch(() => {
-					throw `Unexpected server error ${res.status}`;
+					throw `${m.unexpected_server_error()} ${res.status}`;
 				});
 				throw message;
 			}
 		} catch (error) {
-			toast.error('An error occurred', {
+			toast.error(m.an_error_occurred(), {
 				description: String(error),
 				duration: 10000
 			});
@@ -47,7 +48,7 @@
 </script>
 
 {#if link}
-	<h3>General access</h3>
+	<h3>{m.ma_general_access()}</h3>
 
 	<div class="mt-6">
 		<div class="mb-4 flex gap-2 align-middle">
@@ -69,11 +70,11 @@
 						}
 					>
 						<Select.Trigger class="cursor-pointer" aria-label="Edit" variant="ghost">
-							{linkIsPublic ? 'Anyone with the link' : 'Restricted'}
+							{linkIsPublic ? m.ma_anyone_with_the_link() : m.ma_restricted()}
 						</Select.Trigger>
 						<Select.Content>
-							<Select.Item value={'public'}>Anyone with the link</Select.Item>
-							<Select.Item value={'private'}>Restricted</Select.Item>
+							<Select.Item value={'public'}>{m.ma_anyone_with_the_link()}</Select.Item>
+							<Select.Item value={'private'}>{m.ma_restricted()}</Select.Item>
 						</Select.Content>
 					</Select.Root>
 				</span>
@@ -81,9 +82,9 @@
 					class="col-start-2 grid justify-items-start gap-1 pl-2 text-sm text-muted-foreground [&_p]:leading-relaxed"
 				>
 					{#if linkIsPublic}
-						Anyone on the internet with the link can view your LiveTrack.
+						{m.ma_anyone_with_the_link_description()}
 					{:else}
-						Only people with explicit access can open your LiveTrack.
+						{m.ma_restricted_description()}
 					{/if}
 				</span>
 			</div>
@@ -96,38 +97,35 @@
 				class="shadow-none"
 				onclick={() => {
 					navigator.clipboard.writeText(linkURL?.href || '');
-					toast.success('Link copied to clipboard', { duration: 3000 });
+					toast.success(m.link_copied(), { duration: 3000 });
 				}}
 			>
-				Copy Link
+				{m.copy_link()}
 			</Button>
 		</div>
 	</div>
 
-	<h3>People with access</h3>
+	<h3>{m.ma_people_with_access_title()}</h3>
 
 	<p class="text-sm text-muted-foreground">
-		The list of users with explicit access to your LiveTrack. If your link access is <i
-			>restricted</i
-		>, only those listed below that have been approved will be able to access your LiveTrack.
+		{@html m.ma_people_with_access_text()}
 	</p>
 	<div class="mt-2">
 		<FollowersTable showLastSeen={flags.ENABLE_VISITS_STATISTICS} />
 	</div>
 
 	{#if flags.ENABLE_VISITS_STATISTICS}
-		<h3>Visits history</h3>
-
+		<h3>{m.ma_visits_history()}</h3>
 		<div class="mt-6">
 			<VisitsCharts />
 		</div>
 	{/if}
 {:else}
 	<p class="mt-6 text-center text-xl text-muted-foreground">
-		You don't have a LiveTrack link setup yet.
+		{m.no_livetrack_link_setup_yet()}
 	</p>
 	<div class="mt-6 flex justify-center gap-4">
-		<Button size="lg" href={pages().gettingStarted.url}>Getting started</Button>
+		<Button size="lg" href={pages().gettingStarted.url}>{pages().gettingStarted.title}</Button>
 	</div>
 	{#if user}
 		<LinkSetupAlert {user} {link} />

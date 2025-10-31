@@ -8,6 +8,7 @@
 	import { type FollowerStats } from '$lib/server/followers/followers';
 	import type { UUID } from 'crypto';
 	import IconWithTooltip from '$lib/components/icon-with-tooltip.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		showLastSeen,
@@ -25,10 +26,11 @@
 
 	export const columns: ColumnDef<FollowerStats>[] = [
 		{
-			accessorKey: 'followerUserUUID',
-			header: 'User'
+			header: m.followers_user_header(),
+			accessorKey: 'followerUserUUID'
 		},
 		{
+			header: m.followers_notifications_header(),
 			cell: ({ row }) => {
 				return row.original.enabledNotifications
 					? renderComponent(IconWithTooltip, {
@@ -41,23 +43,22 @@
 							icon: XIcon,
 							size: '1em'
 						});
-			},
-			header: 'Notifications'
+			}
 		},
 		...(showLastSeen
 			? [
 					{
-						accessorKey: 'visits',
-						header: 'Visits'
+						header: m.followers_visits_header(),
+						accessorKey: 'visits'
 					},
 					{
-						accessorFn: (row: FollowerStats) => row['lastSeen']?.toLocaleString() || '-',
-						header: 'Last seen'
+						header: m.followers_last_seen_header(),
+						accessorFn: (row: FollowerStats) => row['lastSeen']?.toLocaleString() || '-'
 					}
 				]
 			: []),
 		{
-			header: 'Actions',
+			header: m.followers_actions_header(),
 			cell: ({ row }) => {
 				return renderComponent(RowActions, {
 					stats: row.original,

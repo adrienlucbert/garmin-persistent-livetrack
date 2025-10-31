@@ -4,13 +4,14 @@
 	import type { Visits } from '$lib/server/db/schema';
 	import { PerUserVisitsChart, TotalVisitsChart } from '$lib/components/charts/visits/index.js';
 	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { m } from '$lib/paraglide/messages.js';
 
 	async function fetchFollowersStats(): Promise<Visits[]> {
 		return fetch('/api/link/visits').then((r) => r.json());
 	}
 	let visitsPromise = $state(fetchFollowersStats());
 
-	let perUserView = $state(false);
+	let perUserView = $state(true);
 </script>
 
 {#await visitsPromise}
@@ -26,7 +27,7 @@
 	{#if visits}
 		<div class="mb-8 flex items-center space-x-2">
 			<Switch class="cursor-pointer" id="per-user" bind:checked={perUserView} />
-			<Label class="cursor-pointer" for="per-user">Detail per user</Label>
+			<Label class="cursor-pointer" for="per-user">{m.visits_detail_per_user()}</Label>
 		</div>
 		<div>
 			<div class="flex">
@@ -40,7 +41,7 @@
 			</div>
 		</div>
 	{:else}
-		There was an issue loading visits.
+		{m.visits_issue_loading()}
 	{/if}
 {:catch error}
 	{error.message}

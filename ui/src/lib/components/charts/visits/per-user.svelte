@@ -6,6 +6,7 @@
 	import { utcDay } from 'd3-time';
 	import BaseChart from './base.svelte';
 	import { mergeSum } from '$lib/utils';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { visits }: { visits: Visits[] } = $props();
 
@@ -32,9 +33,9 @@
 	config={chartConfig}
 	data={perUserVisits}
 	series={users.map((user) => ({
-		key: user || 'Visitor',
-		label: chartConfig[user || 'Visitor'].label,
-		color: chartConfig[user || 'Visitor'].color
+		key: user || m.visitor(),
+		label: chartConfig[user || m.visitor()].label,
+		color: chartConfig[user || m.visitor()].color
 	}))}
 	legend
 />

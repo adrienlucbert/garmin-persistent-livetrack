@@ -4,6 +4,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import type { FollowerStats } from '$lib/server/followers/followers';
 	import { FollowStatus } from '$lib/types/followers';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		stats,
@@ -21,20 +22,22 @@
 </script>
 
 {#if [FollowStatus.PENDING, FollowStatus.DENIED].includes(stats.status)}
-	<Button variant="success-outline" size="sm" onclick={approveFollower}>Approve</Button>
+	<Button variant="success-outline" size="sm" onclick={approveFollower}
+		>{m.followers_approve()}</Button
+	>
 {/if}
 {#if [FollowStatus.PENDING, FollowStatus.APPROVED].includes(stats.status)}
 	<AlertDialog.Root bind:open>
 		<AlertDialog.Trigger class={buttonVariants({ variant: 'destructive-outline', size: 'sm' })}>
-			{stats.status === FollowStatus.PENDING ? 'Deny' : 'Revoke'}
+			{stats.status === FollowStatus.PENDING ? m.followers_deny() : m.followers_revoke()}
 		</AlertDialog.Trigger>
 		<AlertDialog.Content interactOutsideBehavior="close">
 			<AlertDialog.Header>
-				<AlertDialog.Title>Are you sure?</AlertDialog.Title>
+				<AlertDialog.Title>{m.are_you_sure()}</AlertDialog.Title>
 				<AlertDialog.Description>
-					Do you want to permanently or temporarily {stats.status === FollowStatus.PENDING
-						? 'deny'
-						: 'revoke'} access?
+					{stats.status === FollowStatus.PENDING
+						? m.followers_permanently_or_temporarily_deny()
+						: m.followers_permanently_or_temporarily_revoke()}
 				</AlertDialog.Description>
 			</AlertDialog.Header>
 			<AlertDialog.Footer>
@@ -42,13 +45,16 @@
 					class={buttonVariants({ variant: 'destructive-outline' })}
 					onclick={() => banFollower().finally(() => (open = false))}
 				>
-					Permanently {stats.status === FollowStatus.PENDING ? 'deny' : 'revoke'} access
+					{stats.status === FollowStatus.PENDING
+						? m.followers_permanently_deny()
+						: m.followers_permanently_revoke()}
 				</AlertDialog.Action>
 				<AlertDialog.Action
 					class={buttonVariants({ variant: 'destructive' })}
 					onclick={() => denyFollower().finally(() => (open = false))}
 				>
-					{stats.status === FollowStatus.PENDING ? 'Deny' : 'Revoke'} access
+					{stats.status === FollowStatus.PENDING ? m.followers_deny() : m.followers_revoke()}
+					{m.followers_access()}
 				</AlertDialog.Action>
 			</AlertDialog.Footer>
 		</AlertDialog.Content>
