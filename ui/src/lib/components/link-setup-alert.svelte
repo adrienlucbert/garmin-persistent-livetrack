@@ -5,6 +5,7 @@
 	import Sse from '$lib/components/sse.svelte';
 	import type { PublicUserWithTraits, TrackingLinks } from '$lib/server/db/schema';
 	import { pages } from '$lib/pages.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		user,
@@ -18,15 +19,16 @@
 {#snippet setupSuccessMessage()}
 	<Alert.Root variant="success" class="mt-6">
 		<CircleAlertIcon />
-		<Alert.Title class="line-clamp-none tracking-normal">You're all set!</Alert.Title>
+		<Alert.Title class="line-clamp-none tracking-normal">{m.link_setup_youre_all_set()}</Alert.Title
+		>
 		<Alert.Description>
 			<p>
-				We received notice of your new activity, you're good to go!
+				{m.link_setup_we_received_notice()}
 				<br />
-				You can preview your latest activty in the
+				{m.link_setup_preview_your_latest_activity()}
 				<a class="underline-offset-4 hover:underline" href={pages().manageAccess.url}>
 					{pages().manageAccess.title}
-				</a> tab.
+				</a>{m.link_setup_tab()}
 			</p>
 		</Alert.Description>
 	</Alert.Root>
@@ -42,14 +44,11 @@
 					<Alert.Root variant="warning" class="mt-6">
 						<CircleAlertIcon />
 						<Alert.Title class="line-clamp-none tracking-normal">
-							We're waiting for you to start a new activity
+							{m.link_setup_waiting_for_activity()}
 							<DotLoader class="w-4" />
 						</Alert.Title>
 						<Alert.Description>
-							<p>
-								Start a new activity on your Garmin device and start the LiveTrack session from your
-								Garmin Connect™ app to verify that you set it up correctly.
-							</p>
+							<p>{m.link_setup_start_new_activity()}</p>
 						</Alert.Description>
 					</Alert.Root>
 				{:else}

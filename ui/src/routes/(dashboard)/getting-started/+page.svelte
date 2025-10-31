@@ -17,6 +17,7 @@
 	import type { UUID } from 'crypto';
 	import { pages } from '$lib/pages.svelte';
 	import { toast } from 'svelte-sonner';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 	let { user, link } = data;
@@ -40,27 +41,28 @@
 
 <NarrowSection class="mb-14">
 	<p class="mt-6 text-xl text-muted-foreground">
-		Follow those steps to setup your persistent LiveTrack link with your Garmin device.
+		{m.gs_follow_those_steps()}
 	</p>
 	<ul>
 		<li>
 			<h3>
 				<QrCodeIcon class="mr-4 inline size-6 align-middle" />
-				Create a LiveTrack recipient
+				{m.gs_create_a_livetrack_recipient_title()}
 			</h3>
 			<p>
-				For Garmin to notify us when you start a LiveTrack session, we need you to add us as
-				recipient for your LiveTrack.
+				{m.gs_create_a_livetrack_recipient_text()}
 			</p>
 			<div class="mt-6">
 				<div class="mt-2 flex flex-col items-center">
 					{#if vcard}
 						<QRCode data={vcard} class="max-w-60" />
-						<Button href={vcardBlobUrl} download="contact.vcf" variant="link">Download vCard</Button
+						<Button href={vcardBlobUrl} download="contact.vcf" variant="link"
+							>{m.gs_download_vcard()}</Button
 						>
 					{/if}
 				</div>
-				<br /> First, scan or download this contact card that contains a dedicated recipient email address.
+				<br />
+				{m.gs_scan_or_download_contact()}
 			</div>
 		</li>
 		<li>
@@ -78,37 +80,29 @@
 						d="M45,32.58a22,22,0,0,1-39.4,2.2A19.48,19.48,0,0,1,3,27h7.4a14.66,14.66,0,0,0,26.3,5.5Z"
 					/></svg
 				>
-				Set it in Garmin Connect™
+				{m.gs_set_it_in_garmin_connect_title()}
 			</h3>
 			<p>
-				In the <a href="https://www.garmin.com/en-US/p/125677/">Garmin Connect™ app</a>, add our
-				contact as an email recipient for your LiveTrack sessions. That way, whenever you start
-				LiveTrack, Garmin will send the tracking email to us.
+				{@html m.gs_set_it_in_garmin_connect_text()}
 			</p>
-			<p>Here's a video showing you how to do this:</p>
+			<p>{m.gs_heres_a_video()}</p>
 			<div class="mt-2">
 				<Youtube id="DzfFG0gdhF4" animations={false} />
 			</div>
 			<Alert.Root class="mt-6">
 				<CircleAlertIcon />
-				<Alert.Title class="line-clamp-none tracking-normal">Turn on Auto Start</Alert.Title>
+				<Alert.Title class="line-clamp-none tracking-normal"
+					>{m.gs_turn_on_auto_start_title()}</Alert.Title
+				>
 				<Alert.Description>
-					<p>
-						It is recommended that you turn on Auto Start from the Garmin Connect™ app's LiveTrack
-						menu. This way, your tracking link here is automatically updated, without you needing to
-						manually start a LiveTrack session.
-					</p>
-					<p>
-						Beware, while LiveTrack is active on your Garmin device, it consumes more battery on
-						both your phone and Garmin device.
-					</p>
+					{@html m.gs_turn_on_auto_start_text()}
 				</Alert.Description>
 			</Alert.Root>
 		</li>
 		<li>
 			<h3>
 				<SquareCheckBigIcon class="mr-4 inline size-6 align-middle" />
-				Try it out!
+				{m.gs_try_it_out_title()}
 			</h3>
 			{#if user}
 				<LinkSetupAlert {user} {link} />
@@ -117,11 +111,10 @@
 		<li>
 			<h3>
 				<Share2Icon class="mr-4 inline size-6 align-middle" />
-				Share once, done forever
+				{m.hiw_share_once_done_forever_title()}
 			</h3>
 			<p>
-				Instead of sending your friends a new link every ride, just share your personal static URL
-				once. They can bookmark it — it will always point to your most recent LiveTrack.
+				{m.hiw_share_once_done_forever_text()}
 			</p>
 
 			{#if link}
@@ -132,10 +125,10 @@
 						class="shadow-none"
 						onclick={() => {
 							navigator.clipboard.writeText(linkURL?.href || '');
-							toast.success('Link copied to clipboard', { duration: 3000 });
+							toast.success(m.link_copied(), { duration: 3000 });
 						}}
 					>
-						Copy Link
+						{m.copy_link()}
 					</Button>
 				</div>
 				<div class="mt-6 flex justify-center gap-4 md:mt-4">
