@@ -20,8 +20,10 @@
 	});
 
 	let {
+		title,
 		userSession
 	}: {
+		title: string;
 		userSession?: Sessions;
 	} = $props();
 </script>
@@ -37,7 +39,7 @@
 		<div class="container flex items-center">
 			<div class="flex-1">
 				<a class="px-4 text-xl font-semibold" href={pages().home.url}>
-					<span class="hidden sm:inline">Garmin Persistent</span> Livetrack
+					{title}
 				</a>
 			</div>
 			<div class="flex-none">

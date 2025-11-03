@@ -6,6 +6,13 @@ import { paraglideMiddleware } from '$lib/paraglide/server';
 import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { getTrackingLink } from '$lib/server/link/trackingLink';
 import type { UUID } from 'crypto';
+import { env } from '$env/dynamic/private';
+
+const handleLocals: Handle = async ({ event, resolve }) => {
+	event.locals.appName = env.APP_NAME
+
+	return resolve(event)
+};
 
 const handleFeatureFlags: Handle = ({ event, resolve }) => {
 	if (!flags.ENABLE_OAUTH_GITHUB && event.url.pathname.startsWith('/auth/oauth/github')) {
@@ -59,4 +66,4 @@ const handleTrackingLink: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(handleFeatureFlags, handleParaglide, handleAuth, handleTrackingLink);
+export const handle: Handle = sequence(handleLocals, handleFeatureFlags, handleParaglide, handleAuth, handleTrackingLink);

@@ -6,6 +6,7 @@ import type { PublicUserWithTraits, Sessions, TrackingLinks } from '$lib/server/
 declare global {
 	namespace App {
 		interface Locals {
+			appName: string
 			user?: PublicUserWithTraits
 			session?: Sessions
 			link?: TrackingLinks

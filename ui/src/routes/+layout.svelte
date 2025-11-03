@@ -29,7 +29,7 @@
 	{/if}
 
 	<FullPage class="flex flex-col">
-		<AppHeader userSession={data.session} />
+		<AppHeader userSession={data.session} title={data.appName} />
 
 		<GrowContainer>
 			{@render children?.()}
