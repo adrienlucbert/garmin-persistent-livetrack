@@ -1,8 +1,9 @@
 import { db } from '$lib/server/db';
-import { followers, visits, type Followers } from '$lib/server/db/schema';
+import { followers, users, visits, type Followers } from '$lib/server/db/schema';
 import { FollowStatus } from '$lib/types/followers';
 import { type UUID } from 'crypto';
-import { and, count, eq, max } from 'drizzle-orm';
+import { and, count, eq, getTableColumns, max } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 
 export async function requestFollow(userUUID: UUID, followerUserUUID: UUID): Promise<void> {
 	await db()
@@ -14,7 +15,12 @@ export async function requestFollow(userUUID: UUID, followerUserUUID: UUID): Pro
 		})
 }
 
-export type FollowerStats = Followers & {
+export type FollowersWithNames = Followers & {
+	userName: string;
+	followerUserName: string;
+}
+
+export type FollowerStats = FollowersWithNames & {
 	lastSeen: Date | null;
 	visits: number;
 }
@@ -41,10 +47,15 @@ export async function listFollowersStats(userUUID: UUID): Promise<FollowerStats[
 		.groupBy(visits.linkUserUUID, visits.visitorUserUUID)
 		.as('visits')
 
+	const followerUser = alias(users, 'followerUser')
+	const followingUser = alias(users, 'followingUser')
+
 	return await db()
 		.select({
 			userUUID: followers.userUUID,
+			userName: followingUser.name,
 			followerUserUUID: followers.followerUserUUID,
+			followerUserName: followerUser.name,
 			status: followers.status,
 			enabledNotifications: followers.enabledNotifications,
 			lastSeen: subquery.lastSeen,
@@ -55,13 +66,24 @@ export async function listFollowersStats(userUUID: UUID): Promise<FollowerStats[
 			eq(followers.userUUID, subquery.linkUserUUID),
 			eq(followers.followerUserUUID, subquery.visitorUserUUID),
 		))
+		.innerJoin(followingUser, eq(followers.userUUID, followingUser.uuid))
+		.innerJoin(followerUser, eq(followers.followerUserUUID, followerUser.uuid))
 		.where(eq(followers.userUUID, userUUID))
 }
 
-export async function listFollowing(userUUID: UUID): Promise<Followers[]> {
+export async function listFollowing(userUUID: UUID): Promise<FollowersWithNames[]> {
+	const followerUser = alias(users, 'followerUser')
+	const followingUser = alias(users, 'followingUser')
+
 	return db()
-		.select()
+		.select({
+			...getTableColumns(followers),
+			userName: followingUser.name,
+			followerUserName: followerUser.name,
+		})
 		.from(followers)
+		.innerJoin(followingUser, eq(followers.userUUID, followingUser.uuid))
+		.innerJoin(followerUser, eq(followers.followerUserUUID, followerUser.uuid))
 		.where(eq(followers.followerUserUUID, userUUID))
 }
 

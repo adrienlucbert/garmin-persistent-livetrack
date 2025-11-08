@@ -22,18 +22,10 @@
 	}
 </script>
 
-{#if user.passwordTrait}
-	<h3>Hi, {user.passwordTrait.email}!</h3>
-{/if}
-{#if user.githubTrait}
-	<h3>Hi, {user.githubTrait.username}!</h3>
-{/if}
-{#if user.googleTrait}
-	<h3>Hi, {user.googleTrait.username}!</h3>
-{/if}
-<p>Your user ID is {user.uuid}.</p>
+<h3>Hi, {user?.name}!</h3>
+<p>Your user ID is {user?.uuid}.</p>
 {#if flags.ENABLE_VERIFY_EMAIL}
-	{#if user.passwordTrait && !user.passwordTrait.isEmailVerified}
+	{#if user?.passwordTrait && !user?.passwordTrait.isEmailVerified}
 		{#if !success}
 			<form onsubmit={askVerify}>
 				<button>{m.verify_email()}</button>
@@ -43,8 +35,8 @@
 	{/if}
 {/if}
 
-<h3>{m.following_title()}</h3>
-<p class="text-sm text-muted-foreground">
+<h3 id="following">{m.following_title()}</h3>
+<p class="text-muted-foreground text-sm">
 	{@html m.following_text()}
 </p>
 <div class="mt-2">

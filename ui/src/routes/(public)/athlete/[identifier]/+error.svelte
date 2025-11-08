@@ -3,6 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { FullPage, NarrowSection } from '$lib/components/ui/layout';
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
+	import { pages } from '$lib/pages.svelte';
 	import { m } from '$lib/paraglide/messages.js';
 </script>
 
@@ -21,6 +22,13 @@
 					<Button size="lg" variant="outline" href={`${page.params.identifier}/follow`}>
 						{m.request_access()}
 					</Button>
+				</div>
+			{:else}
+				<div class="flex justify-center gap-4">
+					<Button size="lg" variant="outline" href="/">{m.go_back_home()}</Button>
+					<Button size="lg" href={`${pages().account.url}#following`}
+						>{m.see_access_requests()}</Button
+					>
 				</div>
 			{/if}
 		</div>

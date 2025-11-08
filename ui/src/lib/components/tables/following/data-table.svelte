@@ -5,19 +5,19 @@
 	import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
 	import { renderComponent } from '$lib/components/ui/data-table';
 	import type { UUID } from 'crypto';
-	import type { Followers } from '$lib/server/db/schema';
 	import { getAthleteLink } from '$lib/link';
 	import ButtonIcon from '$lib/components/button-icon.svelte';
 	import ToggleNotifications from './toggle-notifications.svelte';
 	import { FollowStatus } from '$lib/types/followers';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { FollowersWithNames } from '$lib/server/followers/followers';
 
 	let {
 		following,
 		cancelFollowRequest,
 		unfollow
 	}: {
-		following: Followers[];
+		following: FollowersWithNames[];
 		cancelFollowRequest: (userUUID: UUID) => Promise<void>;
 		unfollow: (userUUID: UUID) => Promise<void>;
 	} = $props();
@@ -35,10 +35,10 @@
 		}
 	}
 
-	export const columns: ColumnDef<Followers>[] = [
+	export const columns: ColumnDef<FollowersWithNames>[] = [
 		{
 			header: m.following_user_header(),
-			accessorKey: 'userUUID'
+			accessorKey: 'userName'
 		},
 		{
 			header: m.following_notifications_header(),
@@ -56,7 +56,7 @@
 			cell: ({ row }) => {
 				return renderComponent(ButtonIcon, {
 					icon: ExternalLinkIcon,
-					href: getAthleteLink(row.original.userUUID as UUID).href,
+					href: getAthleteLink(row.original.userName).href,
 					target: '_blank'
 				});
 			}

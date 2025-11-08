@@ -3,11 +3,35 @@ import { eq } from "drizzle-orm";
 import type { UUID } from 'crypto';
 import { hashPassword } from '$lib/server/auth/password';
 import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema';
+import { m } from '$lib/paraglide/messages.js';
+import { uuid } from 'drizzle-orm/gel-core';
 
 export enum AuthMethod {
 	Password = 'password',
 	Github = 'github',
 	Google = 'google',
+}
+
+function slugifyUsername(username: string): string {
+	return username
+		.split('@')[0]
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.substring(0, 50);
+}
+
+// Returns the slugified username if it is not already taken in the users table.
+// If it is taken, append a unique suffix to it.
+async function getAvailableUsernameSlug(username: string): Promise<string> {
+	let slug = slugifyUsername(username)
+	const usernameAvailable = await isUsernameAvailable(slug)
+	if (!usernameAvailable) {
+		const suffix = crypto.randomUUID().split("-")[0]
+		slug = `${slug}-${suffix}`
+	}
+	return slug
 }
 
 export async function createUser(method: AuthMethod.Password, email: string, password: string): Promise<UUID>;
@@ -16,10 +40,11 @@ export async function createUser(method: AuthMethod.Google, userId: string, user
 export async function createUser(method: AuthMethod, ...args: any): Promise<UUID> {
 	const userUUID = crypto.randomUUID()
 	return await db().transaction(async (tx) => {
-		await tx.insert(users).values({ uuid: userUUID })
 		switch (method) {
 			case AuthMethod.Password: {
 				const [email, password]: [email: string, password: string] = args
+				const slug = await getAvailableUsernameSlug(email)
+				await tx.insert(users).values({ uuid: userUUID, name: slug })
 				await tx.insert(passwordTraits).values({
 					userUUID: userUUID,
 					email: email,
@@ -29,6 +54,8 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 			}
 			case AuthMethod.Github: {
 				const [userId, username]: [userId: number, username: string] = args
+				const slug = await getAvailableUsernameSlug(username)
+				await tx.insert(users).values({ uuid: userUUID, name: slug })
 				await tx.insert(githubTraits).values({
 					userUUID: userUUID,
 					userId: userId,
@@ -38,6 +65,8 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 			}
 			case AuthMethod.Google: {
 				const [userId, username]: [userId: string, username: string] = args
+				const slug = await getAvailableUsernameSlug(username)
+				await tx.insert(users).values({ uuid: userUUID, name: slug })
 				await tx.insert(googleTraits).values({
 					userUUID: userUUID,
 					userId: userId,
@@ -50,6 +79,41 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 	})
 }
 
+export async function getUserByName(name: string): Promise<Users | undefined> {
+	return await db().query.users.findFirst({
+		where: eq(users.name, name)
+	})
+}
+
+export async function getUserByUUID(userUUID: UUID): Promise<Users | undefined> {
+	return await db().query.users.findFirst({
+		where: eq(users.uuid, userUUID)
+	})
+}
+
+export async function getUserUUID(identifier: string): Promise<UUID | undefined> {
+	if (/^[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$/.test(identifier)) {
+		return identifier as UUID
+	}
+	const user = await getUserByName(identifier)
+	if (!user) {
+		throw m.invalid_athlete_identifier()
+	}
+	return user.uuid as UUID
+}
+
+export async function getUserByNameOrUUID(identifier: string): Promise<Users | undefined> {
+	let userUUID = identifier
+	if (!/^[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$/.test(identifier)) {
+		const user = await getUserByName(identifier)
+		if (!user) {
+			throw m.invalid_athlete_identifier()
+		}
+		userUUID = user.uuid
+	}
+	return getUserByUUID(userUUID as UUID)
+}
+
 export async function getUser(method: AuthMethod.Password, email: string): Promise<Users & { traits: PasswordTraits } | undefined>;
 export async function getUser(method: AuthMethod.Github, userid: number): Promise<Users & { traits: GithubTraits } | undefined>;
 export async function getUser(method: AuthMethod.Google, userid: string): Promise<Users & { traits: GoogleTraits } | undefined>;
@@ -59,6 +123,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 			const [email]: [email: string] = args
 			return (await db().select({
 				uuid: users.uuid,
+				name: users.name,
 				traits: passwordTraits
 			})
 				.from(passwordTraits)
@@ -70,6 +135,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 			const [userid]: [userid: number] = args
 			return (await db().select({
 				uuid: users.uuid,
+				name: users.name,
 				traits: githubTraits
 			})
 				.from(githubTraits)
@@ -81,6 +147,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 			const [userid]: [userid: string] = args
 			return (await db().select({
 				uuid: users.uuid,
+				name: users.name,
 				traits: googleTraits
 			})
 				.from(googleTraits)
@@ -101,6 +168,28 @@ export async function updateUserPassword(userUUID: UUID, password: string): Prom
 	await db().update(passwordTraits)
 		.set({ passwordHash: await hashPassword(password) })
 		.where(eq(passwordTraits.userUUID, userUUID))
+}
+
+async function isUsernameAvailable(username: string): Promise<boolean> {
+	return (await db().query.users.findFirst({ where: eq(users.name, username) })) === undefined
+}
+
+export async function validateSlug(slug: string): Promise<void> {
+	const slugified = slugifyUsername(slug)
+	if (slugifyUsername(slug) !== slug) {
+		throw m.invalid_username_slug({ slug: slugified })
+	}
+	const usernameAvailable = await isUsernameAvailable(slug)
+	if (!usernameAvailable) {
+		throw m.username_slug_already_taken()
+	}
+}
+
+export async function updateUserName(userUUID: UUID, username: string): Promise<void> {
+	await validateSlug(username)
+	await db().update(users)
+		.set({ name: username })
+		.where(eq(users.uuid, userUUID))
 }
 
 export async function deleteUser(userUUID: UUID): Promise<void> {

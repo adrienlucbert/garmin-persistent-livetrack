@@ -14,7 +14,6 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import LinkSetupAlert from '$lib/components/link-setup-alert.svelte';
 	import { getAthleteLink } from '$lib/link.js';
-	import type { UUID } from 'crypto';
 	import { pages } from '$lib/pages.svelte';
 	import { toast } from 'svelte-sonner';
 	import { m } from '$lib/paraglide/messages.js';
@@ -22,7 +21,7 @@
 	let { data } = $props();
 	let { user, link } = data;
 
-	let linkURL = $derived(user && getAthleteLink(user.uuid as UUID));
+	let linkURL = $derived(user && getAthleteLink(user.name));
 
 	let vcard = $derived(
 		user &&
@@ -40,7 +39,7 @@
 </script>
 
 <NarrowSection class="mb-14">
-	<p class="mt-6 text-xl text-muted-foreground">
+	<p class="text-muted-foreground mt-6 text-xl">
 		{m.gs_follow_those_steps()}
 	</p>
 	<ul>

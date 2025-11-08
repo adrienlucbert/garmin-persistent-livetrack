@@ -11,13 +11,12 @@
 	import FollowersTable from './followers-table.svelte';
 	import VisitsCharts from './visits-charts.svelte';
 	import { getAthleteLink } from '$lib/link';
-	import type { UUID } from 'crypto';
 	import { m } from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 	let { user, link, flags } = data;
 	let linkIsPublic = $derived(link?.isPublic);
-	let linkURL = $derived(user && getAthleteLink(user.uuid as UUID));
+	let linkURL = $derived(user && getAthleteLink(user.name));
 
 	let updatingLinkVisibility = $state(false);
 	async function updateLinkVisibility(isPublic: boolean) {
@@ -79,7 +78,7 @@
 					</Select.Root>
 				</span>
 				<span
-					class="col-start-2 grid justify-items-start gap-1 pl-2 text-sm text-muted-foreground [&_p]:leading-relaxed"
+					class="text-muted-foreground col-start-2 grid justify-items-start gap-1 pl-2 text-sm [&_p]:leading-relaxed"
 				>
 					{#if linkIsPublic}
 						{m.ma_anyone_with_the_link_description()}
@@ -107,7 +106,7 @@
 
 	<h3>{m.ma_people_with_access_title()}</h3>
 
-	<p class="text-sm text-muted-foreground">
+	<p class="text-muted-foreground text-sm">
 		{@html m.ma_people_with_access_text()}
 	</p>
 	<div class="mt-2">
@@ -121,7 +120,7 @@
 		</div>
 	{/if}
 {:else}
-	<p class="mt-6 text-center text-xl text-muted-foreground">
+	<p class="text-muted-foreground mt-6 text-center text-xl">
 		{m.no_livetrack_link_setup_yet()}
 	</p>
 	<div class="mt-6 flex justify-center gap-4">

@@ -27,7 +27,7 @@
 	export const columns: ColumnDef<FollowerStats>[] = [
 		{
 			header: m.followers_user_header(),
-			accessorKey: 'followerUserUUID'
+			accessorKey: 'followerUserName'
 		},
 		{
 			header: m.followers_notifications_header(),

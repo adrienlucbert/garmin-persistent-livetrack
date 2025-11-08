@@ -3,15 +3,15 @@
 	import { toast } from 'svelte-sonner';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { FollowingDataTable } from '$lib/components/tables/following';
-	import type { Followers } from '$lib/server/db/schema';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { FollowersWithNames } from '$lib/server/followers/followers';
 
-	async function fetchFollowing(): Promise<Followers[]> {
+	async function fetchFollowing(): Promise<FollowersWithNames[]> {
 		return fetch('/api/following').then((r) => r.json());
 	}
 	let followingPromise = $state(fetchFollowing());
 
-	async function refreshFollowing(): Promise<Followers[]> {
+	async function refreshFollowing(): Promise<FollowersWithNames[]> {
 		const stats = await fetchFollowing();
 		followingPromise = Promise.resolve(stats);
 		return stats;

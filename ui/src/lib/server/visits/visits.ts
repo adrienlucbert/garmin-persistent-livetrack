@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
-import { visits, type Visits } from '$lib/server/db/schema';
+import { users, visits, type Visits } from '$lib/server/db/schema';
 import { type UUID } from 'crypto';
-import { and, count, eq, gt, max } from 'drizzle-orm';
+import { and, eq, getTableColumns, gt } from 'drizzle-orm';
 
 export async function recordVisit(linkUserUUID: UUID, visitorUserUUID: UUID | null, ip: string, timestamp: Date): Promise<void> {
 	await db()
@@ -14,35 +14,19 @@ export async function recordVisit(linkUserUUID: UUID, visitorUserUUID: UUID | nu
 		})
 }
 
-export type VisitStats = {
-	linkUserUUID: string;
-	visitorUserUUID: string | null;
-	ip: string | null;
-	lastSeen: Date | null;
-	visits: number;
-}
+export type VisitsWithName = Visits & { visitorUserName: string | null };
 
-export async function listVisitStats(linkUserUUID: UUID): Promise<VisitStats[]> {
-	return await db()
-		.select({
-			linkUserUUID: visits.linkUserUUID,
-			visitorUserUUID: visits.visitorUserUUID,
-			ip: visits.ip,
-			lastSeen: max(visits.timestamp),
-			visits: count(),
-		})
-		.from(visits)
-		.where(eq(visits.linkUserUUID, linkUserUUID))
-		.groupBy(visits.linkUserUUID, visits.visitorUserUUID, visits.ip);
-}
-
-export async function listVisits(linkUserUUID: UUID, since?: Date): Promise<Visits[]> {
+export async function listVisits(linkUserUUID: UUID, since?: Date): Promise<VisitsWithName[]> {
 	const filters = [eq(visits.linkUserUUID, linkUserUUID)]
 	if (since) {
 		filters.push(gt(visits.timestamp, since))
 	}
 	return await db()
-		.select()
+		.select({
+			...getTableColumns(visits),
+			visitorUserName: users.name,
+		})
 		.from(visits)
+		.leftJoin(users, eq(visits.visitorUserUUID, users.uuid))
 		.where(and(...filters))
 }

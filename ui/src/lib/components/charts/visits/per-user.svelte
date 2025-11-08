@@ -1,14 +1,14 @@
 <script lang="ts">
 	import * as Chart from '$lib/components/ui/chart/index.js';
-	import type { Visits } from '$lib/server/db/schema';
 	import { resampleToTimeInterval } from '$lib/time';
 	import { listUniqueUsers, transformPerUserVisits } from '$lib/visits';
 	import { utcDay } from 'd3-time';
 	import BaseChart from './base.svelte';
 	import { mergeSum } from '$lib/utils';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { VisitsWithName } from '$lib/server/visits/visits';
 
-	let { visits }: { visits: Visits[] } = $props();
+	let { visits }: { visits: VisitsWithName[] } = $props();
 
 	let users = $derived(listUniqueUsers(visits));
 	let perUserVisits = $derived(

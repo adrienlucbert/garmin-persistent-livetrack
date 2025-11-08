@@ -1,10 +1,16 @@
-import { relations } from 'drizzle-orm'
-import { pgTable, uuid } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm'
+import { check, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits } from './traits';
 
 export const users = pgTable('users', {
 	uuid: uuid('uuid').primaryKey().defaultRandom().unique(),
-});
+	name: text('name').notNull().unique(),
+}, (table) => ({
+	nameFormatCheck: check(
+		"name_format_check",
+		sql`${table.name} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`
+	),
+}));
 
 export const usersRelations = relations(users, ({ one }) => ({
 	passwordTrait: one(passwordTraits, {

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Switch } from '$lib/components/ui/switch/index.js';
-	import type { Visits } from '$lib/server/db/schema';
 	import { PerUserVisitsChart, TotalVisitsChart } from '$lib/components/charts/visits/index.js';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { VisitsWithName } from '$lib/server/visits/visits';
 
-	async function fetchFollowersStats(): Promise<Visits[]> {
+	async function fetchFollowersStats(): Promise<VisitsWithName[]> {
 		return fetch('/api/link/visits').then((r) => r.json());
 	}
 	let visitsPromise = $state(fetchFollowersStats());
