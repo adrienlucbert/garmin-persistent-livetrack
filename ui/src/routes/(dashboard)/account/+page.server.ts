@@ -1,8 +1,8 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { validateEmail, validatePassword } from "$lib/validators";
 import type { Actions } from "./$types";
 import { m } from '$lib/paraglide/messages.js';
-import { AuthMethod, getUser, getUserByUUID, updateUserEmail, updateUserName, updateUserPassword, validateSlug } from '$lib/server/auth/user';
+import { AuthMethod, deleteUser, getUser, getUserByUUID, updateUserEmail, updateUserName, updateUserPassword, validateSlug } from '$lib/server/auth/user';
 import type { UUID } from 'crypto';
 import { askVerifyEmail } from '$lib/server/auth/flows';
 import { verifyPasswordHash } from '$lib/server/auth/password';
@@ -77,4 +77,18 @@ export const actions: Actions = {
 			return fail(400, { message: String(message) })
 		}
 	},
+
+	deleteAccount: async ({ locals }) => {
+		if (!locals.user) {
+			return fail(401, { message: m.user_not_logged_in() })
+		}
+
+		try {
+			await deleteUser(locals.user.uuid as UUID)
+		} catch {
+			return fail(500, m.failed_to_delete_account())
+		}
+
+		return redirect(303, '/')
+	}
 }

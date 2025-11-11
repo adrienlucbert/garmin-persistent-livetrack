@@ -10,12 +10,10 @@
 	let {
 		method,
 		action,
-		message,
 		userWithTraits
 	}: {
 		method?: 'dialog' | 'get' | 'post' | 'DIALOG' | 'GET' | 'POST';
 		action: string;
-		message?: string;
 		userWithTraits: PublicUserWithTraits;
 	} = $props();
 </script>
@@ -64,9 +62,8 @@
 		</div>
 		<div class="grid gap-2">
 			<div class="text-left">
-				<Button type="submit" variant="outline" class="px-10">{m.save_button()}</Button>
+				<Button type="submit" variant="outline">{m.save_button()}</Button>
 			</div>
-			<p class="m-0 text-red-400">{message ?? ''}</p>
 		</div>
 	</div>
 </form>

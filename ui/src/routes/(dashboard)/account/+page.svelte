@@ -1,7 +1,11 @@
 <script lang="ts">
 	import AccountSidebar from '$lib/components/sidebars/account-sidebar.svelte';
 	import FollowingTable from './following-table.svelte';
-	import { EditUserForm, ChangePasswordForm } from '$lib/components/forms/account';
+	import {
+		EditUserForm,
+		ChangePasswordForm,
+		DeleteAccountForm
+	} from '$lib/components/forms/account';
 	import { Separator } from '$lib/components/ui/separator';
 	import { SvelteURL } from 'svelte/reactivity';
 	import { VerifyEmailForm } from '$lib/components/forms/account';
@@ -27,11 +31,13 @@
 						{#if flags.ENABLE_VERIFY_EMAIL}
 							<VerifyEmailForm {user} />
 						{/if}
-						<EditUserForm method="post" action="?/editUser" message={''} userWithTraits={user} />
+						<EditUserForm method="post" action="?/editUser" userWithTraits={user} />
 						{#if user.passwordTrait}
-							<h3 class="mt-0">{m.change_password_title()}</h3>
-							<ChangePasswordForm method="post" action="?/changePassword" message={''} />
+							<h3 class="mt-4">{m.change_password_title()}</h3>
+							<ChangePasswordForm method="post" action="?/changePassword" />
 						{/if}
+						<h3 class="mt-4">{m.delete_account_title()}</h3>
+						<DeleteAccountForm method="post" action="?/deleteAccount" />
 					{/if}
 				{/if}
 
