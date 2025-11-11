@@ -6,7 +6,7 @@ import { AskVerifyEmail } from "$lib/server/email/templates";
 import { setUserEmailVerified } from "$lib/server/auth/user";
 import type { UUID } from "crypto";
 
-export async function askVerifyEmail({ uuid, email }: { uuid: string, email: string }): Promise<void> {
+export async function askVerifyEmail(uuid: string, email: string): Promise<void> {
 	const verifyToken = await createActionToken(uuid, Action.VERIFY_EMAIL)
 
 	const qp = new URLSearchParams()

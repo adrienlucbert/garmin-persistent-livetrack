@@ -5,7 +5,7 @@
 	import { SignupForm } from '$lib/components/forms/signup';
 	import { RecoverPasswordForm } from '$lib/components/forms/recoverPassword';
 	import { ResetPasswordForm } from '$lib/components/forms/resetPassword';
-	import { VerifyEmailForm } from '$lib/components/forms/verifyEmail';
+	import { VerifyEmailResult } from '$lib/components/forms/verifyEmail';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -22,21 +22,8 @@
 		goto(`?${page.url.searchParams.toString()}`, { replaceState: true });
 	}
 
-	let success = $state(data.success);
+	let success = $state(data.success || false);
 	let message = $state(data.message);
-
-	async function askVerify(e: SubmitEvent) {
-		e.preventDefault();
-		const formData = new FormData(e.target as HTMLFormElement);
-
-		const res = await fetch('/auth/verify', {
-			method: 'POST',
-			body: formData
-		});
-		success = res.status >= 200 && res.status < 300;
-		const data = await res.json();
-		message = data.message;
-	}
 </script>
 
 <div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -88,7 +75,7 @@
 		{/if}
 		{#if flags.ENABLE_VERIFY_EMAIL}
 			<Tabs.Content value="verify">
-				<VerifyEmailForm success={success ?? false} {navigate} {message} />
+				<VerifyEmailResult {success} {message} {navigate} />
 			</Tabs.Content>
 		{/if}
 	</Tabs.Root>

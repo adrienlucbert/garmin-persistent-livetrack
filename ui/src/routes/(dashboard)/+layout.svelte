@@ -16,7 +16,7 @@
 		</h1>
 		<Separator orientation="horizontal" />
 	{/if}
-	<GrowContainer class="p-2">
+	<GrowContainer>
 		{@render children?.()}
 	</GrowContainer>
 </GrowContainer>

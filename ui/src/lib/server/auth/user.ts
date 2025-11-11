@@ -1,10 +1,9 @@
 import { db } from '$lib/server/db';
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import type { UUID } from 'crypto';
 import { hashPassword } from '$lib/server/auth/password';
 import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema';
 import { m } from '$lib/paraglide/messages.js';
-import { uuid } from 'drizzle-orm/gel-core';
 
 export enum AuthMethod {
 	Password = 'password',
@@ -35,48 +34,69 @@ async function getAvailableUsernameSlug(username: string): Promise<string> {
 }
 
 export async function createUser(method: AuthMethod.Password, email: string, password: string): Promise<UUID>;
-export async function createUser(method: AuthMethod.Github, userId: number, username: string): Promise<UUID>;
-export async function createUser(method: AuthMethod.Google, userId: string, username: string): Promise<UUID>;
+export async function createUser(method: AuthMethod.Github, email: string | undefined, isEmailVerified: boolean | undefined, userId: number, username: string): Promise<UUID>;
+export async function createUser(method: AuthMethod.Google, email: string | undefined, isEmailVerified: boolean | undefined, userId: string, username: string): Promise<UUID>;
 export async function createUser(method: AuthMethod, ...args: any): Promise<UUID> {
 	const userUUID = crypto.randomUUID()
-	return await db().transaction(async (tx) => {
-		switch (method) {
-			case AuthMethod.Password: {
-				const [email, password]: [email: string, password: string] = args
-				const slug = await getAvailableUsernameSlug(email)
-				await tx.insert(users).values({ uuid: userUUID, name: slug })
-				await tx.insert(passwordTraits).values({
-					userUUID: userUUID,
-					email: email,
-					passwordHash: await hashPassword(password),
-				})
-				break
+	try {
+		return await db().transaction(async (tx) => {
+			switch (method) {
+				case AuthMethod.Password: {
+					const [email, password]: [email: string, password: string] = args
+					const slug = await getAvailableUsernameSlug(email)
+					await tx.insert(users).values({
+						uuid: userUUID,
+						name: slug,
+						email: email,
+						isEmailVerified: false,
+					})
+					await tx.insert(passwordTraits).values({
+						userUUID: userUUID,
+						passwordHash: await hashPassword(password),
+					})
+					break
+				}
+				case AuthMethod.Github: {
+					const [email, isEmailVerified, userId, username]: [email: string, isEmailVerified: boolean, userId: number, username: string] = args
+					const slug = await getAvailableUsernameSlug(username)
+					await tx.insert(users).values({
+						uuid: userUUID,
+						name: slug,
+						email: email,
+						isEmailVerified: email && isEmailVerified || false,
+					})
+					await tx.insert(githubTraits).values({
+						userUUID: userUUID,
+						userId: userId,
+						username: username,
+					})
+					break
+				}
+				case AuthMethod.Google: {
+					const [email, isEmailVerified, userId, username]: [email: string, isEmailVerified: boolean, userId: string, username: string] = args
+					const slug = await getAvailableUsernameSlug(username)
+					await tx.insert(users).values({
+						uuid: userUUID,
+						name: slug,
+						email: email,
+						isEmailVerified: email && isEmailVerified || false,
+					})
+					await tx.insert(googleTraits).values({
+						userUUID: userUUID,
+						userId: userId,
+						username: username,
+					})
+					break
+				}
 			}
-			case AuthMethod.Github: {
-				const [userId, username]: [userId: number, username: string] = args
-				const slug = await getAvailableUsernameSlug(username)
-				await tx.insert(users).values({ uuid: userUUID, name: slug })
-				await tx.insert(githubTraits).values({
-					userUUID: userUUID,
-					userId: userId,
-					username: username,
-				})
-				break
-			}
-			case AuthMethod.Google: {
-				const [userId, username]: [userId: string, username: string] = args
-				const slug = await getAvailableUsernameSlug(username)
-				await tx.insert(users).values({ uuid: userUUID, name: slug })
-				await tx.insert(googleTraits).values({
-					userUUID: userUUID,
-					userId: userId,
-					username: username,
-				})
-				break
-			}
+			return userUUID;
+		})
+	} catch (err: any) {
+		if (err.code === '23505') { // unique constraint
+			throw m.user_with_email_already_exists()
 		}
-		return userUUID;
-	})
+		throw err
+	}
 }
 
 export async function getUserByName(name: string): Promise<Users | undefined> {
@@ -122,20 +142,18 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 		case AuthMethod.Password: {
 			const [email]: [email: string] = args
 			return (await db().select({
-				uuid: users.uuid,
-				name: users.name,
+				...getTableColumns(users),
 				traits: passwordTraits
 			})
 				.from(passwordTraits)
 				.innerJoin(users, eq(users.uuid, passwordTraits.userUUID))
-				.where(eq(passwordTraits.email, email))
+				.where(eq(users.email, email))
 				.limit(1))[0]
 		}
 		case AuthMethod.Github: {
 			const [userid]: [userid: number] = args
 			return (await db().select({
-				uuid: users.uuid,
-				name: users.name,
+				...getTableColumns(users),
 				traits: githubTraits
 			})
 				.from(githubTraits)
@@ -146,8 +164,7 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 		case AuthMethod.Google: {
 			const [userid]: [userid: string] = args
 			return (await db().select({
-				uuid: users.uuid,
-				name: users.name,
+				...getTableColumns(users),
 				traits: googleTraits
 			})
 				.from(googleTraits)
@@ -159,9 +176,9 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 }
 
 export async function setUserEmailVerified(userUUID: UUID): Promise<void> {
-	await db().update(passwordTraits)
+	await db().update(users)
 		.set({ isEmailVerified: true })
-		.where(eq(passwordTraits.userUUID, userUUID))
+		.where(eq(users.uuid, userUUID))
 }
 
 export async function updateUserPassword(userUUID: UUID, password: string): Promise<void> {
@@ -186,9 +203,14 @@ export async function validateSlug(slug: string): Promise<void> {
 }
 
 export async function updateUserName(userUUID: UUID, username: string): Promise<void> {
-	await validateSlug(username)
 	await db().update(users)
 		.set({ name: username })
+		.where(eq(users.uuid, userUUID))
+}
+
+export async function updateUserEmail(userUUID: UUID, email: string): Promise<void> {
+	await db().update(users)
+		.set({ email: email, isEmailVerified: false })
 		.where(eq(users.uuid, userUUID))
 }
 

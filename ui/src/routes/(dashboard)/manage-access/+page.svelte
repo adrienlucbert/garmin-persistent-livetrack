@@ -46,87 +46,89 @@
 	}
 </script>
 
-{#if link}
-	<h3>{m.ma_general_access()}</h3>
+<div class="p-2">
+	{#if link}
+		<h3>{m.ma_general_access()}</h3>
 
-	<div class="mt-6">
-		<div class="mb-4 flex gap-2 align-middle">
-			<div class="flex items-center">
-				{#if linkIsPublic}
-					<GlobeIcon class="flex items-center align-middle" />
-				{:else}
-					<LockKeyHoleIcon class="flex items-center align-middle" />
-				{/if}
-			</div>
-			<div class="flex flex-col">
-				<span class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight">
-					<Select.Root
-						disabled={updatingLinkVisibility}
-						type="single"
-						bind:value={
-							() => (linkIsPublic ? 'public' : 'private'),
-							async (v) => await updateLinkVisibility(v === 'public')
-						}
-					>
-						<Select.Trigger class="cursor-pointer" aria-label="Edit" variant="ghost">
-							{linkIsPublic ? m.ma_anyone_with_the_link() : m.ma_restricted()}
-						</Select.Trigger>
-						<Select.Content>
-							<Select.Item value={'public'}>{m.ma_anyone_with_the_link()}</Select.Item>
-							<Select.Item value={'private'}>{m.ma_restricted()}</Select.Item>
-						</Select.Content>
-					</Select.Root>
-				</span>
-				<span
-					class="text-muted-foreground col-start-2 grid justify-items-start gap-1 pl-2 text-sm [&_p]:leading-relaxed"
-				>
-					{#if linkIsPublic}
-						{m.ma_anyone_with_the_link_description()}
-					{:else}
-						{m.ma_restricted_description()}
-					{/if}
-				</span>
-			</div>
-		</div>
-
-		<div class="flex items-center gap-2">
-			<Label for="link" class="sr-only">Link</Label>
-			<Input id="link" value={linkURL?.href} readonly class="h-8" />
-			<Button
-				class="shadow-none"
-				onclick={() => {
-					navigator.clipboard.writeText(linkURL?.href || '');
-					toast.success(m.link_copied(), { duration: 3000 });
-				}}
-			>
-				{m.copy_link()}
-			</Button>
-		</div>
-	</div>
-
-	<h3>{m.ma_people_with_access_title()}</h3>
-
-	<p class="text-muted-foreground text-sm">
-		{@html m.ma_people_with_access_text()}
-	</p>
-	<div class="mt-2">
-		<FollowersTable showLastSeen={flags.ENABLE_VISITS_STATISTICS} />
-	</div>
-
-	{#if flags.ENABLE_VISITS_STATISTICS}
-		<h3>{m.ma_visits_history()}</h3>
 		<div class="mt-6">
-			<VisitsCharts />
+			<div class="mb-4 flex gap-2 align-middle">
+				<div class="flex items-center">
+					{#if linkIsPublic}
+						<GlobeIcon class="flex items-center align-middle" />
+					{:else}
+						<LockKeyHoleIcon class="flex items-center align-middle" />
+					{/if}
+				</div>
+				<div class="flex flex-col">
+					<span class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight">
+						<Select.Root
+							disabled={updatingLinkVisibility}
+							type="single"
+							bind:value={
+								() => (linkIsPublic ? 'public' : 'private'),
+								async (v) => await updateLinkVisibility(v === 'public')
+							}
+						>
+							<Select.Trigger class="cursor-pointer" aria-label="Edit" variant="ghost">
+								{linkIsPublic ? m.ma_anyone_with_the_link() : m.ma_restricted()}
+							</Select.Trigger>
+							<Select.Content>
+								<Select.Item value={'public'}>{m.ma_anyone_with_the_link()}</Select.Item>
+								<Select.Item value={'private'}>{m.ma_restricted()}</Select.Item>
+							</Select.Content>
+						</Select.Root>
+					</span>
+					<span
+						class="text-muted-foreground col-start-2 grid justify-items-start gap-1 pl-2 text-sm [&_p]:leading-relaxed"
+					>
+						{#if linkIsPublic}
+							{m.ma_anyone_with_the_link_description()}
+						{:else}
+							{m.ma_restricted_description()}
+						{/if}
+					</span>
+				</div>
+			</div>
+
+			<div class="flex items-center gap-2">
+				<Label for="link" class="sr-only">Link</Label>
+				<Input id="link" value={linkURL?.href} readonly class="h-8" />
+				<Button
+					class="shadow-none"
+					onclick={() => {
+						navigator.clipboard.writeText(linkURL?.href || '');
+						toast.success(m.link_copied(), { duration: 3000 });
+					}}
+				>
+					{m.copy_link()}
+				</Button>
+			</div>
 		</div>
+
+		<h3>{m.ma_people_with_access_title()}</h3>
+
+		<p class="text-muted-foreground text-sm">
+			{@html m.ma_people_with_access_text()}
+		</p>
+		<div class="mt-2">
+			<FollowersTable showLastSeen={flags.ENABLE_VISITS_STATISTICS} />
+		</div>
+
+		{#if flags.ENABLE_VISITS_STATISTICS}
+			<h3>{m.ma_visits_history()}</h3>
+			<div class="mt-6">
+				<VisitsCharts />
+			</div>
+		{/if}
+	{:else}
+		<p class="text-muted-foreground mt-6 text-center text-xl">
+			{m.no_livetrack_link_setup_yet()}
+		</p>
+		<div class="mt-6 flex justify-center gap-4">
+			<Button size="lg" href={pages().gettingStarted.url}>{pages().gettingStarted.title}</Button>
+		</div>
+		{#if user}
+			<LinkSetupAlert {user} {link} />
+		{/if}
 	{/if}
-{:else}
-	<p class="text-muted-foreground mt-6 text-center text-xl">
-		{m.no_livetrack_link_setup_yet()}
-	</p>
-	<div class="mt-6 flex justify-center gap-4">
-		<Button size="lg" href={pages().gettingStarted.url}>{pages().gettingStarted.title}</Button>
-	</div>
-	{#if user}
-		<LinkSetupAlert {user} {link} />
-	{/if}
-{/if}
+</div>

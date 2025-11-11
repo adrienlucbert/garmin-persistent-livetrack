@@ -73,7 +73,7 @@
 				</div>
 				<div class="grid gap-2">
 					<Button type="submit" class="w-full">{m.sign_in_button()}</Button>
-					<p style="color: red">{message ?? ''}</p>
+					<p class="text-red-400">{message ?? ''}</p>
 				</div>
 			</div>
 		</form>

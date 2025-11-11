@@ -13,7 +13,7 @@ export const github = new GitHub(env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET,
 export const GithubOAuthProvider: OAuthProvider = {
 	createAuthorizationURL(cookies: Cookies, followURL: string | null): URL {
 		const { state, csrf } = generateCustomState(followURL);
-		const url = github.createAuthorizationURL(state, []);
+		const url = github.createAuthorizationURL(state, ['user:email']);
 
 		cookies.set("github_oauth_csrf", csrf, {
 			path: "/",
@@ -62,6 +62,14 @@ export const GithubOAuthProvider: OAuthProvider = {
 			return existingUser.uuid as UUID;
 		}
 
-		return await createUser(AuthMethod.Github, githubUserId, githubUsername);
+		const githubUserEmailsResponse = await fetch("https://api.github.com/user/emails", {
+			headers: {
+				Authorization: `Bearer ${tokens.accessToken()}`
+			}
+		});
+		const githubUserEmails = await githubUserEmailsResponse.json() as { primary: boolean, email: string, verified: boolean }[];
+		const primaryEmail = githubUserEmails.find(e => e.primary)
+
+		return await createUser(AuthMethod.Github, primaryEmail?.email, primaryEmail?.verified, githubUserId, githubUsername);
 	}
 }

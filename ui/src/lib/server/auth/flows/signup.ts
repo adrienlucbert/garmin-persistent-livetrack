@@ -8,7 +8,7 @@ export async function signup(email: string, password: string): Promise<SessionWi
 
 	const session = await createSession({ uuid: uuid })
 	if (env.ENABLE_VERIFY_EMAIL) {
-		await askVerifyEmail({ uuid, email })
+		await askVerifyEmail(uuid, email)
 	}
 	return session
 }

@@ -19,7 +19,7 @@ export const GoogleOAuthProvider: OAuthProvider = {
 	createAuthorizationURL(cookies: Cookies, followURL: string | null): URL {
 		const { state, csrf } = generateCustomState(followURL);
 		const codeVerifier = generateCodeVerifier();
-		const url = google.createAuthorizationURL(state, codeVerifier, ["openid", "profile"]);
+		const url = google.createAuthorizationURL(state, codeVerifier, ["openid", "profile", "email"]);
 
 		cookies.set("google_oauth_csrf", csrf, {
 			path: "/",
@@ -64,14 +64,14 @@ export const GoogleOAuthProvider: OAuthProvider = {
 	},
 
 	async findOrCreateUser(tokens: OAuth2Tokens): Promise<UUID> {
-		const claims = decodeIdToken(tokens.idToken()) as { sub: string, name: string };
-		const { sub: googleUserId, name: username } = claims;
+		const claims = decodeIdToken(tokens.idToken()) as { sub: string, name: string, email: string, email_verified: boolean };
+		const { sub: googleUserId, name: username, email, email_verified } = claims;
 
 		const existingUser = await getUser(AuthMethod.Google, googleUserId);
 		if (existingUser) {
 			return existingUser.uuid as UUID;
 		}
 
-		return await createUser(AuthMethod.Google, googleUserId, username);
+		return await createUser(AuthMethod.Google, email, email_verified, googleUserId, username);
 	}
 }

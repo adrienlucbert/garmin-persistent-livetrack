@@ -1,5 +1,5 @@
 {
-  "id": "755f2712-2ec8-497b-8417-d34191160aba",
+  "id": "7a4e818f-5ce3-4660-956d-4b54961f3d5c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,9 +14,45 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_email_verified": {
+          "name": "is_email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "email_unique_index": {
+          "name": "email_unique_index",
+          "columns": [
+            {
+              "expression": "lower(\"email\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"users\".\"email\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -26,10 +62,26 @@
           "columns": [
             "uuid"
           ]
+        },
+        "users_name_unique": {
+          "name": "users_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "name_format_check": {
+          "name": "name_format_check",
+          "value": "\"users\".\"name\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+        },
+        "email_verified_requires_email": {
+          "name": "email_verified_requires_email",
+          "value": "\"users\".\"email\" IS NOT NULL OR \"users\".\"is_email_verified\" = false"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.sessions": {
@@ -148,43 +200,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "password_hash": {
           "name": "password_hash",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "is_email_verified": {
-          "name": "is_email_verified",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
         }
       },
-      "indexes": {
-        "emailUniqueIndex": {
-          "name": "emailUniqueIndex",
-          "columns": [
-            {
-              "expression": "lower(\"email\")",
-              "asc": true,
-              "isExpression": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "password_traits_user_uuid_users_uuid_fk": {
           "name": "password_traits_user_uuid_users_uuid_fk",
@@ -201,15 +224,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "password_traits_email_unique": {
-          "name": "password_traits_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -355,7 +370,7 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "default": false
+          "default": true
         },
         "updated_at": {
           "name": "updated_at",
@@ -489,7 +504,7 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "default": false
+          "default": true
         }
       },
       "indexes": {},

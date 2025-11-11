@@ -17,8 +17,8 @@ export async function recoverPassword(email: string, followURL: string | null): 
 		return
 	}
 
-	if (flags.ENABLE_VERIFY_EMAIL && !user.traits.isEmailVerified) {
-		await askVerifyEmail({ uuid: user.uuid, email: user.traits.email })
+	if (flags.ENABLE_VERIFY_EMAIL && user.email && !user.isEmailVerified) {
+		await askVerifyEmail(user.uuid, user.email)
 		return Promise.reject(m.email_not_verified())
 	}
 
