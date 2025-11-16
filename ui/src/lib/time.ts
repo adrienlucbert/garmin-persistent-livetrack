@@ -35,7 +35,7 @@ export function resampleToTimeInterval<T extends Record<K, Date>, K extends keyo
 	}
 
 	const ticks = scaleUtc()
-		.domain(series.map((v: T) => v[timeKey]))
+		.domain([...series.map((v: T) => v[timeKey]), new Date()])
 		.ticks(interval);
 
 	return ticks.map((date: Date) => {
