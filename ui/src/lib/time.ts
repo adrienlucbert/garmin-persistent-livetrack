@@ -16,6 +16,10 @@ export function formatDuration(ms: number): string {
 		.join(', ');
 };
 
+function toUTCDate(date: Date): Date {
+	return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}
+
 export function resampleToTimeInterval<T extends Record<K, Date>, K extends keyof T>(
 	series: T[],
 	timeKey: K,
@@ -25,7 +29,7 @@ export function resampleToTimeInterval<T extends Record<K, Date>, K extends keyo
 ): T[] {
 	const valueMap = new Map<number, Omit<T, K>>();
 	for (let { [timeKey]: d, ...value } of series) {
-		const key = interval.floor(d).getTime()
+		const key = interval.floor(toUTCDate(d)).getTime()
 		const agg = valueMap.get(key);
 		if (agg) {
 			valueMap.set(key, merger(agg, value));
@@ -35,14 +39,14 @@ export function resampleToTimeInterval<T extends Record<K, Date>, K extends keyo
 	}
 
 	const ticks = scaleUtc()
-		.domain([...series.map((v: T) => v[timeKey]), new Date()])
+		.domain([...series.map((v: T) => interval.floor(toUTCDate(v[timeKey]))), interval.floor(toUTCDate(new Date()))])
 		.ticks(interval);
 
 	return ticks.map((date: Date) => {
 		return {
 			[timeKey]: date,
-			...(valueMap.get(date.getTime()) ?? defaultValue)
-		};
+			...(valueMap.get(interval.floor(date).getTime()) ?? defaultValue)
+		} as T;
 	});
 }
 
