@@ -5,20 +5,14 @@
 	import { toast } from 'svelte-sonner';
 	import { m } from '$lib/paraglide/messages.js';
 
-	let {
-		method,
-		action
-	}: {
-		method?: 'dialog' | 'get' | 'post' | 'DIALOG' | 'GET' | 'POST';
-		action: string;
-	} = $props();
+	let { action }: { action: string } = $props();
 
 	let open = $state(false);
 	let form: HTMLFormElement | null = $state(null);
 </script>
 
 <form
-	{method}
+	method="POST"
 	{action}
 	bind:this={form}
 	use:enhance={() => {

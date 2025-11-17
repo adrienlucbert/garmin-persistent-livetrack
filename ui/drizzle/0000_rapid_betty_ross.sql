@@ -1,4 +1,4 @@
-CREATE TYPE "public"."action" AS ENUM('reset_password', 'verify_email');--> statement-breakpoint
+CREATE TYPE "public"."action" AS ENUM('reset_password', 'verify_email', 'follow_user');--> statement-breakpoint
 CREATE TYPE "public"."follow_status" AS ENUM('pending', 'approved', 'denied');--> statement-breakpoint
 CREATE TABLE "users" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,

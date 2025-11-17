@@ -8,18 +8,16 @@
 	import { toast } from 'svelte-sonner';
 
 	let {
-		method,
 		action,
 		userWithTraits
 	}: {
-		method?: 'dialog' | 'get' | 'post' | 'DIALOG' | 'GET' | 'POST';
 		action: string;
 		userWithTraits: PublicUserWithTraits;
 	} = $props();
 </script>
 
 <form
-	{method}
+	method="POST"
 	{action}
 	use:enhance={() => {
 		return async ({ update, result }) => {

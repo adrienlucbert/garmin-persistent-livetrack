@@ -5,7 +5,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 import { dev } from '$app/environment';
 import { eq } from "drizzle-orm";
 import { sessions, type Sessions } from '$lib/server/db/schema';
-import { createToken } from '$lib/server/auth/jwt';
+import { generateJWT } from '$lib/server/auth/jwt';
 
 export const SESSION_COOKIE_NAME = 'auth_token'
 
@@ -16,7 +16,7 @@ export type SessionWithToken = Sessions & {
 }
 
 export async function createSession({ uuid }: { uuid: string }): Promise<SessionWithToken> {
-	const token = createToken({ user: { uuid: uuid } })
+	const token = generateJWT({ user: { uuid: uuid } })
 	const sess: Sessions = {
 		id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
 		userUUID: uuid,

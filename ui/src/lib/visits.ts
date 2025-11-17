@@ -18,7 +18,7 @@ export function transformTotalVisits(visits: VisitsWithName[]): TotalVisits[] {
 
 type PerUserVisits = { date: Date } & { [user: string]: number | Date };
 
-export function transformPerUserVisits(visits: VisitsWithName[]): PerUserVisits[] {
+export function transformPerUserVisits(visits: VisitsWithName[], users: string[]): PerUserVisits[] {
 	const dailyCounts = new Map<number, { [user: string]: number }>();
 
 	for (const visit of visits) {
@@ -30,7 +30,11 @@ export function transformPerUserVisits(visits: VisitsWithName[]): PerUserVisits[
 	}
 
 	return Array.from(dailyCounts.entries()).map(([date, counts]) => {
-		return { date: new Date(date), ...counts };
+		return {
+			date: new Date(date),
+			...Object.fromEntries(users.map((u) => [u, 0])),
+			...counts
+		};
 	});
 }
 

@@ -8,13 +8,7 @@ import { eq } from 'drizzle-orm';
 import { invalidateSession } from './session';
 import { m } from '$lib/paraglide/messages.js';
 
-type JWTContent = {
-	user: {
-		uuid: string,
-	}
-}
-
-export function createToken(payload: JWTContent, expiresIn?: string): string {
+export function generateJWT(payload: object, expiresIn?: string): string {
 	return jwt.sign(
 		{
 			...payload,
@@ -22,6 +16,10 @@ export function createToken(payload: JWTContent, expiresIn?: string): string {
 		JWT_TOKEN_SECRET,
 		{ expiresIn: expiresIn ?? '7d' }
 	);
+}
+
+export function decodeJWT<T = object>(token: string): T {
+	return jwt.verify(token, JWT_TOKEN_SECRET)
 }
 
 export async function validateSessionToken(token: string): Promise<Sessions & { user: PublicUserWithTraits }> {

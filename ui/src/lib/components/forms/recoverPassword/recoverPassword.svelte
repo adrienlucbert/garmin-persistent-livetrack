@@ -7,13 +7,11 @@
 	import { m } from '$lib/paraglide/messages.js';
 
 	let {
-		method,
 		action,
 		followURL,
 		message,
 		navigate
 	}: {
-		method?: 'dialog' | 'get' | 'post' | 'DIALOG' | 'GET' | 'POST';
 		action: string;
 		followURL: string | null;
 		message?: string;
@@ -32,7 +30,7 @@
 		</Card.Action>
 	</Card.Header>
 	<Card.Content>
-		<form {method} {action} use:enhance>
+		<form method="POST" {action} use:enhance>
 			<div class="flex flex-col gap-6">
 				<Input name="follow" type="hidden" value={followURL} />
 				<div class="grid gap-2">

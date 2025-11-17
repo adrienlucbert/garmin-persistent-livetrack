@@ -1,6 +1,6 @@
 import type { UUID } from "crypto";
 import { createSession, type SessionWithToken } from "$lib/server/auth/session";
-import { createActionToken, validateActionToken, invalidateActionToken } from "$lib/server/auth/token";
+import { createActionToken, validateActionToken, invalidateActionToken, generateRandomToken } from "$lib/server/auth/token";
 import { AuthMethod, getUser, updateUserPassword } from "$lib/server/auth/user";
 import { Action } from "$lib/server/db/schema";
 import { send } from "$lib/server/email/sender";
@@ -23,7 +23,7 @@ export async function recoverPassword(email: string, followURL: string | null): 
 	}
 
 	const expiresIn = 1000 * 60 * 30 // 30 minutes
-	const recoverToken = await createActionToken(user.uuid, Action.RESET_PASSWORD, expiresIn)
+	const recoverToken = await createActionToken(generateRandomToken(), user.uuid, Action.RESET_PASSWORD, expiresIn)
 
 	const qp = new URLSearchParams()
 	qp.set('tab', 'reset')

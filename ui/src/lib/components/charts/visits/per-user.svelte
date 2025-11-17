@@ -13,7 +13,7 @@
 	let users = $derived(listUniqueUsers(visits));
 	let perUserVisits = $derived(
 		resampleToTimeInterval(
-			transformPerUserVisits(visits),
+			transformPerUserVisits(visits, users),
 			'date',
 			utcDay.every(1),
 			Object.fromEntries(users.map((u) => [u, 0])),

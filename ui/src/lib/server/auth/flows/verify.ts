@@ -1,4 +1,4 @@
-import { createActionToken, validateActionToken, invalidateActionToken } from "$lib/server/auth/token";
+import { createActionToken, validateActionToken, invalidateActionToken, generateRandomToken } from "$lib/server/auth/token";
 import { Action } from "$lib/server/db/schema";
 import { send } from "$lib/server/email/sender";
 import { env } from "$env/dynamic/public";
@@ -7,7 +7,7 @@ import { setUserEmailVerified } from "$lib/server/auth/user";
 import type { UUID } from "crypto";
 
 export async function askVerifyEmail(uuid: string, email: string): Promise<void> {
-	const verifyToken = await createActionToken(uuid, Action.VERIFY_EMAIL)
+	const verifyToken = await createActionToken(generateRandomToken(), uuid, Action.VERIFY_EMAIL)
 
 	const qp = new URLSearchParams()
 	qp.set('tab', 'verify')

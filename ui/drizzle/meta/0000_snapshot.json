@@ -1,5 +1,5 @@
 {
-  "id": "7a4e818f-5ce3-4660-956d-4b54961f3d5c",
+  "id": "f71df296-378a-45d9-b72c-f8b7d8ef6b3a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -558,7 +558,8 @@
       "schema": "public",
       "values": [
         "reset_password",
-        "verify_email"
+        "verify_email",
+        "follow_user"
       ]
     },
     "public.follow_status": {

@@ -11,11 +11,13 @@ export function generateSessionToken(): string {
 	return token;
 }
 
-export async function createActionToken(userUUID: string, action: Action, expiresIn: number | null = null): Promise<ActionTokens> {
+export function generateRandomToken(): string {
 	const bytes = new Uint8Array(32);
 	crypto.getRandomValues(bytes);
-	const token = encodeBase32LowerCaseNoPadding(bytes);
+	return encodeBase32LowerCaseNoPadding(bytes);
+}
 
+export async function createActionToken(token: string, userUUID: string, action: Action, expiresIn: number | null = null): Promise<ActionTokens> {
 	const actionToken: ActionTokens = {
 		userUUID,
 		token,

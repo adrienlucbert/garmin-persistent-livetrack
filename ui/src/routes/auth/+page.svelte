@@ -30,7 +30,6 @@
 	<Tabs.Root value={tab}>
 		<Tabs.Content value="signin">
 			<SigninForm
-				method="post"
 				action="?/signin"
 				{navigate}
 				{followURL}
@@ -42,7 +41,6 @@
 		</Tabs.Content>
 		<Tabs.Content value="signup">
 			<SignupForm
-				method="post"
 				action="?/signup"
 				{navigate}
 				{followURL}
@@ -55,7 +53,6 @@
 			<Tabs.Content value="reset">
 				{#if !token}
 					<RecoverPasswordForm
-						method="post"
 						action="?/recoverPassword"
 						{navigate}
 						{followURL}
@@ -63,7 +60,6 @@
 					/>
 				{:else}
 					<ResetPasswordForm
-						method="post"
 						action="?/resetPassword"
 						{navigate}
 						{followURL}

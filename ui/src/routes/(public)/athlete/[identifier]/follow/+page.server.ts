@@ -1,11 +1,14 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { requestFollow } from "$lib/server/followers/followers";
+import { createFollow } from "$lib/server/followers/followers";
 import type { UUID } from "crypto";
 import { getAthleteLink } from "$lib/link";
 import { getUserByNameOrUUID } from "$lib/server/auth/user";
-import type { Users } from "$lib/server/db/schema";
+import { Action, type Users } from "$lib/server/db/schema";
 import { m } from '$lib/paraglide/messages.js';
+import { FollowStatus } from "$lib/types/followers";
+import { invalidateActionToken, validateActionToken } from "$lib/server/auth/token";
+import { decodeJWT } from "$lib/server/auth/jwt";
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!locals.user) {
@@ -21,6 +24,30 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 	} catch (err: any) {
 		throw error(400, err)
 	}
-	await requestFollow(user.uuid as UUID, locals.user.uuid as UUID)
+
+	if (locals.user.uuid === user.uuid) {
+		// A user can't follow themself, redirect to their LiveTrack session
+		throw redirect(303, getAthleteLink(user.name).href)
+	}
+
+	const token = url.searchParams.get('token')
+
+	try {
+		if (token) {
+			// Follow token -> create approved follow
+			const actionToken = await validateActionToken(token, Action.FOLLOW_USER)
+			await createFollow(user.uuid as UUID, locals.user.uuid as UUID, FollowStatus.APPROVED)
+
+			const payload = decodeJWT<{ uses: 'single' | 'multi' }>(actionToken.token)
+			if (payload.uses === 'single') {
+				await invalidateActionToken(token)
+			}
+		} else {
+			// No follow token -> request follow
+			await createFollow(user.uuid as UUID, locals.user.uuid as UUID, FollowStatus.PENDING)
+		}
+	} catch (e) {
+		throw error(400, { message: String(e) })
+	}
 	throw redirect(303, getAthleteLink(user.name).href)
 };

@@ -31,13 +31,13 @@
 						{#if flags.ENABLE_VERIFY_EMAIL}
 							<VerifyEmailForm {user} />
 						{/if}
-						<EditUserForm method="post" action="?/editUser" userWithTraits={user} />
+						<EditUserForm action="?/editUser" userWithTraits={user} />
 						{#if user.passwordTrait}
 							<h3 class="mt-4">{m.change_password_title()}</h3>
-							<ChangePasswordForm method="post" action="?/changePassword" />
+							<ChangePasswordForm action="?/changePassword" />
 						{/if}
 						<h3 class="mt-4">{m.delete_account_title()}</h3>
-						<DeleteAccountForm method="post" action="?/deleteAccount" />
+						<DeleteAccountForm action="?/deleteAccount" />
 					{/if}
 				{/if}
 

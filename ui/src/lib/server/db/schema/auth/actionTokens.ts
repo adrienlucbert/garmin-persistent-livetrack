@@ -6,6 +6,7 @@ import { enumToPgEnum } from '../../utils';
 export enum Action {
 	RESET_PASSWORD = 'reset_password',
 	VERIFY_EMAIL = 'verify_email',
+	FOLLOW_USER = 'follow_user',
 }
 
 export const action = pgEnum('action', enumToPgEnum(Action))

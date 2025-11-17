@@ -6,17 +6,11 @@
 	import { toast } from 'svelte-sonner';
 	import { m } from '$lib/paraglide/messages.js';
 
-	let {
-		method,
-		action
-	}: {
-		method?: 'dialog' | 'get' | 'post' | 'DIALOG' | 'GET' | 'POST';
-		action: string;
-	} = $props();
+	let { action }: { action: string } = $props();
 </script>
 
 <form
-	{method}
+	method="POST"
 	{action}
 	use:enhance={() => {
 		return async ({ update, result }) => {
