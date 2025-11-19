@@ -6,7 +6,7 @@ import { m } from '$lib/paraglide/messages.js';
 
 export const PUT: RequestHandler = async ({ request, locals, params }) => {
 	if (!locals.user) {
-		error(401, m.user_not_logged_in());
+		error(401, { message: m.user_not_logged_in() });
 	}
 
 	const body = await request.json()
@@ -21,6 +21,6 @@ export const PUT: RequestHandler = async ({ request, locals, params }) => {
 		await setFollowerEnabledNotifications(userUUID as UUID, followerUserUUID as UUID, body.enabled)
 		return json({ success: true })
 	} catch (err) {
-		error(500, m.failed_to_toggle_notifications({ action: (body.enabled ? m.enable() : m.disable()).toLowerCase() }));
+		error(500, { message: m.failed_to_toggle_notifications({ action: (body.enabled ? m.enable() : m.disable()).toLowerCase() }) });
 	}
 };

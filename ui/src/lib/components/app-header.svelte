@@ -9,23 +9,17 @@
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import type { Sessions } from '$lib/server/db/schema';
 	import { page } from '$app/state';
 	import { pages } from '$lib/pages.svelte';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { Snippet } from 'svelte';
 
 	let locale: Locale = $state(getLocale());
 	$effect(() => {
 		setLocale(locale);
 	});
 
-	let {
-		title,
-		userSession
-	}: {
-		title: string;
-		userSession?: Sessions;
-	} = $props();
+	let { data, actions }: { data: any; actions: (() => ReturnType<Snippet>)[] } = $props();
 </script>
 
 <div
@@ -39,12 +33,12 @@
 		<div class="container flex items-center">
 			<div class="flex-1">
 				<a class="px-4 text-xl font-semibold" href={pages().home.url}>
-					{title}
+					{data.appName}
 				</a>
 			</div>
 			<div class="flex-none">
 				<ul class="inline-flex flex-row flex-wrap space-x-1 p-2 text-lg font-bold">
-					{#if userSession}
+					{#if data.session}
 						<DropdownMenu.Root>
 							<DropdownMenu.Trigger>
 								<Button variant="ghost" size="icon">
@@ -95,6 +89,10 @@
 						/>
 						<span class="sr-only">{m.app_header_toggle_theme()}</span>
 					</Button>
+
+					{#each actions as action}
+						{@render action()}
+					{/each}
 				</ul>
 			</div>
 		</div>

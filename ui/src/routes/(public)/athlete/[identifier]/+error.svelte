@@ -19,7 +19,12 @@
 			</h2>
 			{#if [401, 403].includes(page.status) && page.error?.message === m.tracking_link_is_not_public()}
 				<div class="flex justify-center gap-4">
-					<Button size="lg" variant="outline" href={`${page.params.identifier}/follow`}>
+					<Button
+						size="lg"
+						variant="outline"
+						href={`${page.params.identifier}/follow`}
+						data-sveltekit-reload
+					>
 						{m.request_access()}
 					</Button>
 				</div>
