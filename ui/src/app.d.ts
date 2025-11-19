@@ -1,6 +1,7 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 
-import type { PublicUserWithTraits, Sessions, TrackingLinks } from '$lib/server/db/schema';
+import type { PublicUserWithTraits, Sessions } from '$lib/server/db/schema';
+import type { TrackingLinkWithUser } from '$lib/server/link/trackingLink';
 
 // for information about these interfaces
 declare global {
@@ -9,7 +10,6 @@ declare global {
 			appName: string
 			user?: PublicUserWithTraits
 			session?: Sessions
-			link?: TrackingLinks
 		}
 		interface PageData {
 			hideFooter?: boolean

@@ -1,4 +1,6 @@
-import { fail } from '@sveltejs/kit';
+import type { PageServerLoad } from "./$types";
+import { getTrackingLink } from '$lib/server/link/trackingLink';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions } from "./$types";
 import { m } from '$lib/paraglide/messages.js';
 import { createFollowLink } from '$lib/server/followers/followers';
@@ -43,3 +45,17 @@ export const actions: Actions = {
 		}
 	},
 }
+
+
+export const load: PageServerLoad = async ({ url, locals }) => {
+	if (!locals.user || !locals.session) {
+		redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
+	}
+
+	try {
+		const trackingLink = await getTrackingLink(locals.user.uuid as UUID)
+		return { link: trackingLink }
+	} catch (e) {
+		error(500, { message: String(e) })
+	}
+};

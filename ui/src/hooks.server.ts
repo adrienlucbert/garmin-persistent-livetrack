@@ -4,8 +4,6 @@ import { setSessionTokenCookie, deleteSessionTokenCookie, SESSION_COOKIE_NAME } 
 import { error, type Handle } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
-import { getTrackingLink } from '$lib/server/link/trackingLink';
-import type { UUID } from 'crypto';
 import { env } from '$env/dynamic/private';
 
 const handleLocals: Handle = async ({ event, resolve }) => {
@@ -54,16 +52,4 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-const handleTrackingLink: Handle = async ({ event, resolve }) => {
-	try {
-		const { user } = event.locals
-		if (user) {
-			const trackingLink = await getTrackingLink(user.uuid as UUID)
-			event.locals.link = trackingLink
-		}
-	} catch { }
-
-	return resolve(event);
-};
-
-export const handle: Handle = sequence(handleLocals, handleFeatureFlags, handleParaglide, handleAuth, handleTrackingLink);
+export const handle: Handle = sequence(handleLocals, handleFeatureFlags, handleParaglide, handleAuth);
