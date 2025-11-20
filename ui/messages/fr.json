@@ -98,6 +98,8 @@
 	"user_with_email_already_exists": "Un utilisateur avec cette adresse email existe déjà",
 	"new_verify_link_sent": "Un nouveau lien de vérification a été envoyé par email.",
 	"missing_field_in_body": "Le champ '{field}' est manquant dans le corps de la requête.",
+	"missing_header": "En-tête '{header}' manquante.",
+	"invalid_header": "En-tête '{header}' invalide.",
 	"failed_to_update_visibility": "Échec lors de la mise à jour de la visibilité",
 	"failed_to_list_visits": "Échec lors du listage des visites",
 	"failed_to_list_followers_stats": "Échec lors du listage des statistiques d'abonnés",

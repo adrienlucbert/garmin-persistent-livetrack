@@ -6,6 +6,8 @@ services:
       - 25:25
     volumes:
       - ./smtp-proxy:/app
+    env_file:
+      - ./.env
     environment:
       - API_HOST=http://ui:3000
     restart: "unless-stopped"
@@ -47,6 +49,7 @@ services:
       context: ui
     restart: "unless-stopped"
     env_file:
+      - ./.env
       - ./ui/.env
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}

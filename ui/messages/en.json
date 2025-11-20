@@ -96,6 +96,8 @@
 	"user_with_email_already_exists": "A user with this email address already exists",
 	"new_verify_link_sent": "A new verify link was sent to your email.",
 	"missing_field_in_body": "Missing '{field}' field in request body.",
+	"missing_header": "Missing '{header}' header.",
+	"invalid_header": "Invalid '{header}' header.",
 	"failed_to_update_visibility": "Failed to update visibility",
 	"failed_to_list_visits": "Failed to list visits",
 	"failed_to_list_followers_stats": "Failed to list followers stats",

@@ -1,3 +1,4 @@
+import base64
 import os
 import re
 import sys
@@ -8,6 +9,10 @@ from salmon.routing import route, stateless
 API_HOST = os.environ.get("API_HOST")
 if API_HOST is None:
     raise Exception("API_HOST is not defined")
+
+SMTP_PROXY_BASIC_AUTH = os.environ.get("SMTP_PROXY_BASIC_AUTH", "")
+if SMTP_PROXY_BASIC_AUTH == "":
+    raise Exception("SMTP_PROXY_BASIC_AUTH is not defined")
 
 
 def extract_livetrack_session(content: str) -> str:
@@ -27,6 +32,9 @@ def NEW_ACTIVITY(message, session_uuid: str, host: str) -> None:
         session_link = extract_livetrack_session(message.body())
         requests.put(
             url=f"{API_HOST}/api/sessions/{session_uuid}",
+            headers={
+                "Authorization": f"Basic {base64.b64encode(SMTP_PROXY_BASIC_AUTH.encode('utf-8'))}"
+            },
             json={"link": session_link},
         )
     except Exception as e:
