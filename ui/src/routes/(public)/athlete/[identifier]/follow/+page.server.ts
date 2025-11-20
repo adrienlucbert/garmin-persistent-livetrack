@@ -9,6 +9,10 @@ import { m } from '$lib/paraglide/messages.js';
 import { FollowStatus } from "$lib/types/followers";
 import { invalidateActionToken, validateActionToken } from "$lib/server/auth/token";
 import { decodeJWT } from "$lib/server/auth/jwt";
+import { send } from "$lib/server/email/sender";
+import { NewFollowRequestEmail } from "$lib/server/email/templates";
+import { env } from '$env/dynamic/public';
+import { APP_NAME } from "$env/static/private";
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!locals.user) {
@@ -45,6 +49,15 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 		} else {
 			// No follow token -> request follow
 			await createFollow(user.uuid as UUID, locals.user.uuid as UUID, FollowStatus.PENDING)
+			if (user.email && user.isEmailVerified) {
+				await send(NewFollowRequestEmail(locals.user.uuid), {
+					username: locals.user.name,
+					approveURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/approve`,
+					denyURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/ban`,
+					manageAccessURL: `${env.PUBLIC_URL ?? 'http://localhost'}/manage-access`,
+					appName: APP_NAME
+				}, user.email)
+			}
 		}
 	} catch (e) {
 		throw error(400, { message: String(e) })

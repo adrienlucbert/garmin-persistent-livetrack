@@ -28,13 +28,13 @@
 			<a href={recoverURL}>{m.mail_reset_password_click_get_new_one()}</a>.
 		</Paragraph>
 	</Container>
-	<Container class="mx-auto max-w-lg">
-		<Paragraph class="mt-8 text-center text-sm">
+	<Container class="mx-auto mt-8 max-w-lg">
+		<Paragraph class="text-center text-sm">
 			{m.mail_reset_password_p3()}
 		</Paragraph>
 		<Paragraph class="text-center text-sm">
 			{m.mail_trouble_clicking_button({ button: m.mail_reset_password_button() })}
-			<a style="overflow-wrap: break-word; word-wrap: break-word;" href={resetURL}>
+			<a class="wrap-break-word" href={resetURL}>
 				{resetURL}
 			</a>
 		</Paragraph>

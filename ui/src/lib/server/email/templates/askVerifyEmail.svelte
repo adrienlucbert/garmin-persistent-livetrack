@@ -29,14 +29,14 @@
 			{m.mail_verify_email_p2({ appName: privEnv.APP_NAME })}
 		</Paragraph>
 	</Container>
-	<Container class="mx-auto max-w-lg">
-		<Paragraph class="mt-8 text-center text-sm">
+	<Container class="mx-auto mt-8 max-w-lg">
+		<Paragraph class="text-center text-sm">
 			{m.mail_verify_email_p3()} <a href={pubEnv.PUBLIC_URL}>{privEnv.APP_NAME}</a>.
 			{m.mail_verify_email_p4()}
 		</Paragraph>
 		<Paragraph class="text-center text-sm">
 			{m.mail_trouble_clicking_button({ button: m.mail_verify_email_button() })}
-			<a style="overflow-wrap: break-word; word-wrap: break-word;" href={callbackURL}>
+			<a class="wrap-break-word" href={callbackURL}>
 				{callbackURL}
 			</a>
 		</Paragraph>
