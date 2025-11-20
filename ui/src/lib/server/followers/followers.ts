@@ -1,6 +1,6 @@
 import { env } from "$env/dynamic/public";
 import { db } from '$lib/server/db';
-import { Action, followers, users, visits, type Followers } from '$lib/server/db/schema';
+import { Action, followers, users, visits, type Followers, type Users } from '$lib/server/db/schema';
 import { createActionToken } from "$lib/server/auth/token";
 import { generateJWT } from '$lib/server/auth/jwt';
 import { FollowStatus } from '$lib/types/followers';
@@ -40,6 +40,17 @@ export async function getFollower(userUUID: UUID, followerUserUUID: UUID): Promi
 			eq(followers.userUUID, userUUID),
 			eq(followers.followerUserUUID, followerUserUUID),
 		)
+	});
+}
+
+export async function listFollowers(userUUID: UUID): Promise<(Followers & { followerUser: Users })[]> {
+	return await db().query.followers.findMany({
+		with: {
+			followerUser: true
+		},
+		where: and(
+			eq(followers.userUUID, userUUID),
+		),
 	});
 }
 
