@@ -4,7 +4,7 @@ import type { UUID } from 'crypto';
 import { hashPassword } from '$lib/server/auth/password';
 import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema';
 import { m } from '$lib/paraglide/messages.js';
-import { type Locale } from '$lib/paraglide/runtime';
+import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
 export enum AuthMethod {
 	Password = 'password',
@@ -50,6 +50,7 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 						name: slug,
 						email: email,
 						isEmailVerified: false,
+						preferredLocale: getLocale(),
 					})
 					await tx.insert(passwordTraits).values({
 						userUUID: userUUID,
@@ -65,6 +66,7 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 						name: slug,
 						email: email,
 						isEmailVerified: email && isEmailVerified || false,
+						preferredLocale: getLocale(),
 					})
 					await tx.insert(githubTraits).values({
 						userUUID: userUUID,
@@ -81,6 +83,7 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 						name: slug,
 						email: email,
 						isEmailVerified: email && isEmailVerified || false,
+						preferredLocale: getLocale(),
 					})
 					await tx.insert(googleTraits).values({
 						userUUID: userUUID,
