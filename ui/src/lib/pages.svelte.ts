@@ -3,7 +3,8 @@ import type { Component } from "svelte";
 import HomeIcon from '@lucide/svelte/icons/house';
 import UsersIcon from '@lucide/svelte/icons/users';
 import RocketIcon from '@lucide/svelte/icons/rocket';
-import CircleUserRound from '@lucide/svelte/icons/circle-user-round';
+import CircleUserRoundIcon from '@lucide/svelte/icons/circle-user-round';
+import LogOutIcon from '@lucide/svelte/icons/log-out';
 import { m } from '$lib/paraglide/messages.js';
 
 export type Page = {
@@ -33,7 +34,12 @@ const _pages = {
 	'account': {
 		title: m.pages_account(),
 		url: '/account',
-		icon: CircleUserRound,
+		icon: CircleUserRoundIcon,
+	},
+	'signout': {
+		title: m.pages_signout(),
+		url: '/auth/signout',
+		icon: LogOutIcon,
 	}
 } satisfies Record<string, Omit<Page, 'isActive'>>
 

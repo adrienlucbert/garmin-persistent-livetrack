@@ -11,7 +11,7 @@
 		pages().account
 	]);
 
-	const footerItems: MenuItem[] = $derived([]);
+	const footerItems: MenuItem[] = $derived([pages().signout]);
 </script>
 
 <Sidebar.Root>
