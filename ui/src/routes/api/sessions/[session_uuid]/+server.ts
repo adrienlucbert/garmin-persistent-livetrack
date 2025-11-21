@@ -1,4 +1,3 @@
-import { SMTP_PROXY_BASIC_AUTH } from "$env/static/private";
 import { error } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
 import { createOrUpdateTrackingLink } from '$lib/server/link/trackingLink'
@@ -11,6 +10,7 @@ import { NewActivity } from "$lib/server/email/templates";
 import { getUserByUUID } from "$lib/server/auth/user";
 import { getAthleteLink } from "$lib/link";
 import { env } from '$env/dynamic/public';
+import { env as privEnv } from '$env/dynamic/private';
 import { FollowStatus } from "$lib/types/followers";
 
 export async function PUT({ params, request }: RequestEvent) {
@@ -19,7 +19,7 @@ export async function PUT({ params, request }: RequestEvent) {
 		error(400, { message: m.missing_header({ header: "Authorization" }) })
 	}
 
-	if (auth !== `Basic ${btoa(SMTP_PROXY_BASIC_AUTH)}`) {
+	if (auth !== `Basic ${btoa(privEnv.SMTP_PROXY_BASIC_AUTH)}`) {
 		error(401, { message: m.invalid_header({ header: "Authorization" }) })
 	}
 
