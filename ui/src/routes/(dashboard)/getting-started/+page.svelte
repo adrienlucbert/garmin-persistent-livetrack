@@ -26,7 +26,7 @@
 	let vcard = $derived(
 		user &&
 			generateVCard({
-				firstName: 'Garmin Persistent Livetrack',
+				firstName: data.appName,
 				lastName: 'Webhook',
 				uid: user.uuid,
 				email: `garmin-persistent-livetrack-${user.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
