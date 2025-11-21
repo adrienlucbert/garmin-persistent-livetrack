@@ -1,6 +1,7 @@
 import type { PageServerLoad } from "./$types";
+import { type TrackingLinks } from '$lib/server/db/schema';
 import { getTrackingLink } from '$lib/server/link/trackingLink';
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { UUID } from 'crypto';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
@@ -8,10 +9,12 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 		redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
 	}
 
+	let link: TrackingLinks | null = null
+
 	try {
 		const trackingLink = await getTrackingLink(locals.user.uuid as UUID)
 		return { link: trackingLink }
-	} catch (e) {
-		error(500, { message: String(e) })
-	}
+	} catch { }
+
+	return { link }
 };
