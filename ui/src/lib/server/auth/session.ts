@@ -6,6 +6,7 @@ import { dev } from '$app/environment';
 import { eq } from "drizzle-orm";
 import { sessions, type Sessions } from '$lib/server/db/schema';
 import { generateJWT } from '$lib/server/auth/jwt';
+import type { UUID } from 'crypto';
 
 export const SESSION_COOKIE_NAME = 'auth_token'
 
@@ -15,8 +16,8 @@ export type SessionWithToken = Sessions & {
 	persist(event: RequestEvent): void
 }
 
-export async function createSession({ uuid }: { uuid: string }): Promise<SessionWithToken> {
-	const token = generateJWT({ user: { uuid: uuid } })
+export async function createSession(uuid: UUID): Promise<SessionWithToken> {
+	const token = generateJWT({ user: { uuid } })
 	const sess: Sessions = {
 		id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
 		userUUID: uuid,

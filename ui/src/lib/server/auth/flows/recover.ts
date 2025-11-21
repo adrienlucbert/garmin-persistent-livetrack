@@ -1,7 +1,7 @@
 import type { UUID } from "crypto";
 import { createSession, type SessionWithToken } from "$lib/server/auth/session";
 import { createActionToken, validateActionToken, invalidateActionToken, generateRandomToken } from "$lib/server/auth/token";
-import { AuthMethod, getUser, updateUserPassword } from "$lib/server/auth/user";
+import { AuthMethod, getUser, setUserPreferredLocale, updateUserPassword } from "$lib/server/auth/user";
 import { Action } from "$lib/server/db/schema";
 import { send } from "$lib/server/email/sender";
 import { RecoverPassword } from "$lib/server/email/templates";
@@ -10,6 +10,7 @@ import { env } from "$env/dynamic/public";
 import { FeatureFlagsConfig as flags } from "$lib/featureFlags/config";
 import { askVerifyEmail } from "$lib/server/auth/flows"
 import { m } from '$lib/paraglide/messages.js';
+import { getLocale } from "$lib/paraglide/runtime";
 
 export async function recoverPassword(email: string, followURL: string | null): Promise<void> {
 	const user = await getUser(AuthMethod.Password, email)
@@ -45,5 +46,11 @@ export async function resetPassword(token: string, password: string): Promise<Se
 	const actionToken = await validateActionToken(token, Action.RESET_PASSWORD)
 	await updateUserPassword(actionToken.userUUID as UUID, password)
 	await invalidateActionToken(token)
-	return await createSession(actionToken.user)
+
+	if (actionToken.user.preferredLocale !== getLocale()) {
+		await setUserPreferredLocale(actionToken.user.uuid as UUID, getLocale())
+			.catch(console.error)
+	}
+
+	return await createSession(actionToken.user.uuid as UUID)
 }

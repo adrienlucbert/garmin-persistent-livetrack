@@ -14,16 +14,19 @@
 	import { m } from '$lib/paraglide/messages.js';
 	import type { Snippet } from 'svelte';
 
+	let { data, actions }: { data: any; actions: (() => ReturnType<Snippet>)[] } = $props();
+
 	let locale: Locale = $state(getLocale());
 	$effect(() => {
 		setLocale(locale);
-		fetch('/api/user/locale', {
-			method: 'PUT',
-			body: JSON.stringify({ locale })
-		}).catch(console.error);
-	});
 
-	let { data, actions }: { data: any; actions: (() => ReturnType<Snippet>)[] } = $props();
+		if (data.session) {
+			fetch('/api/user/locale', {
+				method: 'PUT',
+				body: JSON.stringify({ locale })
+			}).catch(console.error);
+		}
+	});
 </script>
 
 <div
@@ -87,9 +90,9 @@
 					</DropdownMenu.Root>
 
 					<Button onclick={toggleMode} variant="ghost" size="icon">
-						<SunIcon class="scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90" />
+						<SunIcon class="rotate-0 scale-100 !transition-all dark:-rotate-90 dark:scale-0" />
 						<MoonIcon
-							class="absolute scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0"
+							class="absolute rotate-90 scale-0 !transition-all dark:rotate-0 dark:scale-100"
 						/>
 						<span class="sr-only">{m.app_header_toggle_theme()}</span>
 					</Button>

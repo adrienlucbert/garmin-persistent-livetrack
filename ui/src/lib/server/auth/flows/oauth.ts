@@ -5,6 +5,9 @@ import { GithubOAuthProvider, GoogleOAuthProvider } from "$lib/server/auth/oauth
 import { createSession } from "$lib/server/auth/session"
 import type { OAuthStateWithoutCSRF } from "../oauth/state"
 import { m } from '$lib/paraglide/messages.js';
+import { setUserPreferredLocale } from "../user"
+import { getLocale } from "$lib/paraglide/runtime"
+import type { Users } from "$lib/server/db/schema"
 
 export async function initOAuth(provider: string, cookies: Cookies, followURL: string | null): Promise<URL> {
 	switch (provider) {
@@ -21,20 +24,20 @@ export async function initOAuth(provider: string, cookies: Cookies, followURL: s
 }
 
 export async function resolveOAuth(provider: string, event: RequestEvent): Promise<OAuthStateWithoutCSRF> {
-	let userUUID: UUID;
+	let user: Users;
 	let stateData: OAuthStateWithoutCSRF;
 
 	switch (provider) {
 		case 'github': {
 			const { tokens, state } = await GithubOAuthProvider.validateAuthorizationCode(event.cookies, event.url.searchParams)
 			stateData = state
-			userUUID = await GithubOAuthProvider.findOrCreateUser(tokens)
+			user = await GithubOAuthProvider.findOrCreateUser(tokens)
 			break
 		}
 		case 'google': {
 			const { tokens, state } = await GoogleOAuthProvider.validateAuthorizationCode(event.cookies, event.url.searchParams)
 			stateData = state
-			userUUID = await GoogleOAuthProvider.findOrCreateUser(tokens)
+			user = await GoogleOAuthProvider.findOrCreateUser(tokens)
 			break
 		}
 		default: {
@@ -42,7 +45,12 @@ export async function resolveOAuth(provider: string, event: RequestEvent): Promi
 		}
 	}
 
-	const session = await createSession({ uuid: userUUID })
+	if (user.preferredLocale !== getLocale()) {
+		await setUserPreferredLocale(user.uuid as UUID, getLocale())
+			.catch(console.error)
+	}
+
+	const session = await createSession(user.uuid as UUID)
 	session.persist(event)
 
 	return stateData

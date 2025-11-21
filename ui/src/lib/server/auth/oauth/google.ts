@@ -8,6 +8,7 @@ import { type UUID } from "crypto";
 import { AuthMethod, createUser, getUser } from "$lib/server/auth/user";
 import { generateCustomState, validateState } from "./state";
 import { m } from '$lib/paraglide/messages.js';
+import type { Users } from "$lib/server/db/schema"
 
 export const google = new Google(
 	privEnv.GOOGLE_CLIENT_ID,
@@ -63,13 +64,13 @@ export const GoogleOAuthProvider: OAuthProvider = {
 		}
 	},
 
-	async findOrCreateUser(tokens: OAuth2Tokens): Promise<UUID> {
+	async findOrCreateUser(tokens: OAuth2Tokens): Promise<Users> {
 		const claims = decodeIdToken(tokens.idToken()) as { sub: string, name: string, email: string, email_verified: boolean };
 		const { sub: googleUserId, name: username, email, email_verified } = claims;
 
 		const existingUser = await getUser(AuthMethod.Google, googleUserId);
 		if (existingUser) {
-			return existingUser.uuid as UUID;
+			return existingUser;
 		}
 
 		return await createUser(AuthMethod.Google, email, email_verified, googleUserId, username);

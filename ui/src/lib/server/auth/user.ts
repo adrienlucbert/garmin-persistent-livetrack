@@ -34,10 +34,10 @@ async function getAvailableUsernameSlug(username: string): Promise<string> {
 	return slug
 }
 
-export async function createUser(method: AuthMethod.Password, email: string, password: string): Promise<UUID>;
-export async function createUser(method: AuthMethod.Github, email: string | undefined, isEmailVerified: boolean | undefined, userId: number, username: string): Promise<UUID>;
-export async function createUser(method: AuthMethod.Google, email: string | undefined, isEmailVerified: boolean | undefined, userId: string, username: string): Promise<UUID>;
-export async function createUser(method: AuthMethod, ...args: any): Promise<UUID> {
+export async function createUser(method: AuthMethod.Password, email: string, password: string): Promise<Users>;
+export async function createUser(method: AuthMethod.Github, email: string | undefined, isEmailVerified: boolean | undefined, userId: number, username: string): Promise<Users>;
+export async function createUser(method: AuthMethod.Google, email: string | undefined, isEmailVerified: boolean | undefined, userId: string, username: string): Promise<Users>;
+export async function createUser(method: AuthMethod, ...args: any): Promise<Users> {
 	const userUUID = crypto.randomUUID()
 	try {
 		return await db().transaction(async (tx) => {
@@ -45,55 +45,54 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<UUID
 				case AuthMethod.Password: {
 					const [email, password]: [email: string, password: string] = args
 					const slug = await getAvailableUsernameSlug(email)
-					await tx.insert(users).values({
+					const user = (await tx.insert(users).values({
 						uuid: userUUID,
 						name: slug,
 						email: email,
 						isEmailVerified: false,
 						preferredLocale: getLocale(),
-					})
+					}).returning())[0]
 					await tx.insert(passwordTraits).values({
 						userUUID: userUUID,
 						passwordHash: await hashPassword(password),
 					})
-					break
+					return user
 				}
 				case AuthMethod.Github: {
 					const [email, isEmailVerified, userId, username]: [email: string, isEmailVerified: boolean, userId: number, username: string] = args
 					const slug = await getAvailableUsernameSlug(username)
-					await tx.insert(users).values({
+					const user = (await tx.insert(users).values({
 						uuid: userUUID,
 						name: slug,
 						email: email,
 						isEmailVerified: email && isEmailVerified || false,
 						preferredLocale: getLocale(),
-					})
+					}).returning())[0]
 					await tx.insert(githubTraits).values({
 						userUUID: userUUID,
 						userId: userId,
 						username: username,
 					})
-					break
+					return user
 				}
 				case AuthMethod.Google: {
 					const [email, isEmailVerified, userId, username]: [email: string, isEmailVerified: boolean, userId: string, username: string] = args
 					const slug = await getAvailableUsernameSlug(username)
-					await tx.insert(users).values({
+					const user = (await tx.insert(users).values({
 						uuid: userUUID,
 						name: slug,
 						email: email,
 						isEmailVerified: email && isEmailVerified || false,
 						preferredLocale: getLocale(),
-					})
+					}).returning())[0]
 					await tx.insert(googleTraits).values({
 						userUUID: userUUID,
 						userId: userId,
 						username: username,
 					})
-					break
+					return user
 				}
 			}
-			return userUUID;
 		})
 	} catch (err: any) {
 		if (err.code === '23505') { // unique constraint

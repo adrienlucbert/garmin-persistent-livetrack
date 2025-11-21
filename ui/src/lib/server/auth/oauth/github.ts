@@ -3,10 +3,10 @@ import { env } from '$env/dynamic/private'
 import type { OAuthProvider, OAuthTokensWithState } from "$lib/server/auth/oauth/provider";
 import type { URL } from "url";
 import type { Cookies } from "@sveltejs/kit";
-import { type UUID } from "crypto";
 import { AuthMethod, createUser, getUser } from "$lib/server/auth/user";
 import { generateCustomState, validateState } from "./state";
 import { m } from '$lib/paraglide/messages.js';
+import type { Users } from "$lib/server/db/schema"
 
 export const github = new GitHub(env.GITHUB_CLIENT_ID, env.GITHUB_CLIENT_SECRET, null)
 
@@ -46,7 +46,7 @@ export const GithubOAuthProvider: OAuthProvider = {
 		}
 	},
 
-	async findOrCreateUser(tokens: OAuth2Tokens): Promise<UUID> {
+	async findOrCreateUser(tokens: OAuth2Tokens): Promise<Users> {
 		const githubUserResponse = await fetch("https://api.github.com/user", {
 			headers: {
 				Authorization: `Bearer ${tokens.accessToken()}`
@@ -59,7 +59,7 @@ export const GithubOAuthProvider: OAuthProvider = {
 		const existingUser = await getUser(AuthMethod.Github, githubUserId);
 
 		if (existingUser) {
-			return existingUser.uuid as UUID;
+			return existingUser;
 		}
 
 		const githubUserEmailsResponse = await fetch("https://api.github.com/user/emails", {
