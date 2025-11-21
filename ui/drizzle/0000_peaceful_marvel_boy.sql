@@ -5,6 +5,7 @@ CREATE TABLE "users" (
 	"name" text NOT NULL,
 	"email" text,
 	"is_email_verified" boolean DEFAULT false NOT NULL,
+	"preferred_locale" text DEFAULT 'en',
 	CONSTRAINT "users_uuid_unique" UNIQUE("uuid"),
 	CONSTRAINT "users_name_unique" UNIQUE("name"),
 	CONSTRAINT "name_format_check" CHECK ("users"."name" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
