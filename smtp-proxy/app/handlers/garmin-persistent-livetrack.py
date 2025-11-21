@@ -33,7 +33,7 @@ def NEW_ACTIVITY(message, session_uuid: str, host: str) -> None:
         requests.put(
             url=f"{API_HOST}/api/sessions/{session_uuid}",
             headers={
-                "Authorization": f"Basic {base64.b64encode(SMTP_PROXY_BASIC_AUTH.encode('utf-8'))}"
+                "Authorization": f"Basic {base64.b64encode(SMTP_PROXY_BASIC_AUTH.encode('utf-8')).decode('utf-8')}"
             },
             json={"link": session_link},
         )
