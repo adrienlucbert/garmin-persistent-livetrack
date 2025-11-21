@@ -51,7 +51,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 			// No follow token -> request follow
 			await createFollow(user.uuid as UUID, locals.user.uuid as UUID, FollowStatus.PENDING)
 			if (user.email && user.isEmailVerified) {
-				await send(NewFollowRequest(locals.user.uuid), {
+				await send(NewFollowRequest(locals.user.name), {
 					username: locals.user.name,
 					approveURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/approve`,
 					denyURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/ban`,
