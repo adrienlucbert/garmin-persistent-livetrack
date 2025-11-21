@@ -17,6 +17,10 @@
 	let locale: Locale = $state(getLocale());
 	$effect(() => {
 		setLocale(locale);
+		fetch('/api/user/locale', {
+			method: 'PUT',
+			body: JSON.stringify({ locale })
+		}).catch(console.error);
 	});
 
 	let { data, actions }: { data: any; actions: (() => ReturnType<Snippet>)[] } = $props();

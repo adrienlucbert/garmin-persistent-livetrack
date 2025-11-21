@@ -1,29 +1,37 @@
 <script lang="ts">
 	import { Button, Container, Heading, Paragraph } from '@uraniadev/emailer';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { Locale } from '$lib/paraglide/runtime';
 
 	interface Props {
+		locale?: Locale;
 		username: string;
 		athleteURL: string;
 		accountURL: string;
 	}
-	const { username, athleteURL, accountURL }: Props = $props();
+	const { locale, username, athleteURL, accountURL }: Props = $props();
 </script>
 
 <Container>
-	<Heading class="text-center">{m.mail_new_activity_title({ username })}</Heading>
+	<Heading class="text-center">{m.mail_new_activity_title({ username }, { locale })}</Heading>
 	<Button
 		class="m-auto my-4 max-w-max rounded-lg bg-neutral-800 px-6 py-4 !text-white"
 		href={athleteURL}
 	>
-		{m.mail_new_activity_button()}
+		{m.mail_new_activity_button({}, { locale })}
 	</Button>
 	<Container class="mx-auto mt-8 max-w-lg">
 		<Paragraph class="text-center text-sm">
-			{@html m.mail_new_activity_p1({ username, link: accountURL, label: m.pages_account() })}
+			{@html m.mail_new_activity_p1(
+				{ username, link: accountURL, label: m.pages_account({}, { locale }) },
+				{ locale }
+			)}
 		</Paragraph>
 		<Paragraph class="text-center text-sm">
-			{m.mail_trouble_clicking_button({ button: m.mail_new_activity_button() })}
+			{m.mail_trouble_clicking_button(
+				{ button: m.mail_new_activity_button({}, { locale }) },
+				{ locale }
+			)}
 			<a class="wrap-break-word" href={athleteURL}>
 				{athleteURL}
 			</a>

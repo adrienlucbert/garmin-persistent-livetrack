@@ -49,7 +49,7 @@ export async function PUT({ params, request }: RequestEvent) {
 					username: user.name,
 					athleteURL: getAthleteLink(user.name).toString(),
 					accountURL: `${env.PUBLIC_URL ?? 'http://localhost'}/account`,
-				}, follow.followerUser.email)
+				}, follow.followerUser.email, follow.followerUser.preferredLocale)
 
 				sendJobs.push(sendJob)
 			}

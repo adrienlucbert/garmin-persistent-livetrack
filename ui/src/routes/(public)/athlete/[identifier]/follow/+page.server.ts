@@ -13,6 +13,7 @@ import { send } from "$lib/server/email/sender";
 import { NewFollowRequest } from "$lib/server/email/templates";
 import { env } from '$env/dynamic/public';
 import { APP_NAME } from "$env/static/private";
+import type { Locale } from "$lib/paraglide/runtime";
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!locals.user) {
@@ -56,7 +57,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 					denyURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/ban`,
 					manageAccessURL: `${env.PUBLIC_URL ?? 'http://localhost'}/manage-access`,
 					appName: APP_NAME
-				}, user.email)
+				}, user.email, user.preferredLocale)
 			}
 		}
 	} catch (e) {

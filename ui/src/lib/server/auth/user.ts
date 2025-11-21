@@ -4,6 +4,7 @@ import type { UUID } from 'crypto';
 import { hashPassword } from '$lib/server/auth/password';
 import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema';
 import { m } from '$lib/paraglide/messages.js';
+import { type Locale } from '$lib/paraglide/runtime';
 
 export enum AuthMethod {
 	Password = 'password',
@@ -178,6 +179,12 @@ export async function getUser(method: AuthMethod, ...args: any): Promise<Users &
 export async function setUserEmailVerified(userUUID: UUID): Promise<void> {
 	await db().update(users)
 		.set({ isEmailVerified: true })
+		.where(eq(users.uuid, userUUID))
+}
+
+export async function setUserPreferredLocale(userUUID: UUID, locale: Locale): Promise<void> {
+	await db().update(users)
+		.set({ preferredLocale: locale })
 		.where(eq(users.uuid, userUUID))
 }
 
