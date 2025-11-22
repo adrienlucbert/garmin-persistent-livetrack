@@ -2,7 +2,7 @@ import { db } from '$lib/server/db';
 import { eq, getTableColumns } from "drizzle-orm";
 import type { UUID } from 'crypto';
 import { hashPassword } from '$lib/server/auth/password';
-import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits } from '$lib/server/db/schema';
+import { users, type Users, githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits, type Traits, trackingLinks } from '$lib/server/db/schema';
 import { m } from '$lib/paraglide/messages.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime';
 
@@ -56,6 +56,9 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<User
 						userUUID: userUUID,
 						passwordHash: await hashPassword(password),
 					})
+					await tx.insert(trackingLinks).values({
+						userUUID: userUUID,
+					})
 					return user
 				}
 				case AuthMethod.Github: {
@@ -73,6 +76,9 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<User
 						userId: userId,
 						username: username,
 					})
+					await tx.insert(trackingLinks).values({
+						userUUID: userUUID,
+					})
 					return user
 				}
 				case AuthMethod.Google: {
@@ -89,6 +95,9 @@ export async function createUser(method: AuthMethod, ...args: any): Promise<User
 						userUUID: userUUID,
 						userId: userId,
 						username: username,
+					})
+					await tx.insert(trackingLinks).values({
+						userUUID: userUUID,
 					})
 					return user
 				}

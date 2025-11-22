@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
-import { createOrUpdateTrackingLink } from '$lib/server/link/trackingLink'
+import { updateTrackingLink } from '$lib/server/link/trackingLink'
 import type { UUID } from 'crypto'
 import { broadcast } from '$lib/server/sse'
 import { m } from '$lib/paraglide/messages.js';
@@ -29,9 +29,9 @@ export async function PUT({ params, request }: RequestEvent) {
 	}
 
 	try {
-		const updatedTrackingLink = await createOrUpdateTrackingLink(params.session_uuid as UUID, body.link)
+		const updatedTrackingLink = await updateTrackingLink(params.link_uuid as UUID, body.link)
 		try {
-			broadcast(`update-link-${params.session_uuid}`, updatedTrackingLink)
+			broadcast(`update-link-${params.link_uuid}`, updatedTrackingLink)
 
 			const user = await getUserByUUID(updatedTrackingLink.userUUID as UUID)
 			if (!user) {

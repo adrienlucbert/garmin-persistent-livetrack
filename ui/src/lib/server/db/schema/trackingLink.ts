@@ -3,7 +3,8 @@ import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './auth/users';
 
 export const trackingLinks = pgTable('tracking_links', {
-	userUUID: uuid('user_uuid').primaryKey().unique().references(() => users.uuid, { onDelete: 'cascade' }),
+	uuid: uuid('uuid').primaryKey().unique().defaultRandom(),
+	userUUID: uuid('user_uuid').unique().references(() => users.uuid, { onDelete: 'cascade' }),
 	link: text('link'),
 	isPublic: boolean().default(true),
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()

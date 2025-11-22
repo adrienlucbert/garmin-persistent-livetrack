@@ -1,5 +1,5 @@
 {
-  "id": "a35de5c3-c970-4a97-ace0-eaae92e9c75c",
+  "id": "2e388d41-481b-4a19-9cfe-1912073c17ac",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -360,11 +360,18 @@
       "name": "tracking_links",
       "schema": "",
       "columns": {
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "user_uuid": {
           "name": "user_uuid",
           "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
         },
         "link": {
           "name": "link",
@@ -405,6 +412,13 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "tracking_links_uuid_unique": {
+          "name": "tracking_links_uuid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "uuid"
+          ]
+        },
         "tracking_links_user_uuid_unique": {
           "name": "tracking_links_user_uuid_unique",
           "nullsNotDistinct": false,

@@ -3,17 +3,11 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { DotLoader } from '$lib/components/ui/dot-loader';
 	import Sse from '$lib/components/sse.svelte';
-	import type { PublicUserWithTraits, TrackingLinks } from '$lib/server/db/schema';
+	import type { TrackingLinks } from '$lib/server/db/schema';
 	import { pages } from '$lib/pages.svelte';
 	import { m } from '$lib/paraglide/messages.js';
 
-	let {
-		user,
-		link
-	}: {
-		user: PublicUserWithTraits;
-		link?: TrackingLinks;
-	} = $props();
+	let { link }: { link: TrackingLinks } = $props();
 </script>
 
 {#snippet setupSuccessMessage()}
@@ -35,10 +29,10 @@
 {/snippet}
 
 <div class="mt-6">
-	{#if link && link.link !== null}
+	{#if link.link}
 		{@render setupSuccessMessage()}
 	{:else}
-		<Sse channel={`update-link-${user?.uuid}`}>
+		<Sse channel={`update-link-${link.uuid}`}>
 			{#snippet content(message: { link: string } | null)}
 				{#if message === null}
 					<Alert.Root variant="warning" class="mt-6">

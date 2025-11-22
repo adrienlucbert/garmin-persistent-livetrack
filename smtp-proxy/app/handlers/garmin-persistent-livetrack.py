@@ -25,13 +25,13 @@ def extract_livetrack_session(content: str) -> str:
     return session_link
 
 
-@route("garmin-persistent-livetrack-(session_uuid)@(host)", session_uuid=".+")
+@route("garmin-persistent-livetrack-(link_uuid)@(host)", link_uuid=".+")
 @stateless
-def NEW_ACTIVITY(message, session_uuid: str, host: str) -> None:
+def NEW_ACTIVITY(message, link_uuid: str, host: str) -> None:
     try:
         session_link = extract_livetrack_session(message.body())
         requests.put(
-            url=f"{API_HOST}/api/sessions/{session_uuid}",
+            url=f"{API_HOST}/api/link/{link_uuid}",
             headers={
                 "Authorization": f"Basic {base64.b64encode(SMTP_PROXY_BASIC_AUTH.encode('utf-8')).decode('utf-8')}"
             },

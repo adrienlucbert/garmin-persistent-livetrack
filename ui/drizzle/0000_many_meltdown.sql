@@ -48,10 +48,12 @@ CREATE TABLE "google_traits" (
 );
 --> statement-breakpoint
 CREATE TABLE "tracking_links" (
-	"user_uuid" uuid PRIMARY KEY NOT NULL,
+	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_uuid" uuid,
 	"link" text,
 	"isPublic" boolean DEFAULT true,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "tracking_links_uuid_unique" UNIQUE("uuid"),
 	CONSTRAINT "tracking_links_user_uuid_unique" UNIQUE("user_uuid")
 );
 --> statement-breakpoint

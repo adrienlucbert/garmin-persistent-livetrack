@@ -1,30 +1,19 @@
 import { db } from '$lib/server/db';
-import { trackingLinks, users, type TrackingLinks } from '$lib/server/db/schema';
+import { trackingLinks, type TrackingLinks } from '$lib/server/db/schema';
 import { type UUID } from 'crypto';
 import { eq } from 'drizzle-orm';
 import { m } from '$lib/paraglide/messages.js';
 
-export async function createOrUpdateTrackingLink(userUUID: UUID, link: string): Promise<TrackingLinks> {
-	const user = await db().query.users.findFirst({
-		where: eq(users.uuid, userUUID)
-	})
-	if (!user) {
-		return Promise.reject(m.invalid_user_uuid())
-	}
-
+export async function updateTrackingLink(linkUUID: UUID, link: string): Promise<TrackingLinks> {
 	const updatedRows = await db()
-		.insert(trackingLinks)
-		.values({
-			userUUID: userUUID,
+		.update(trackingLinks)
+		.set({
 			link: link,
+			updatedAt: new Date(),
 		})
-		.onConflictDoUpdate({
-			target: trackingLinks.userUUID,
-			set: {
-				link: link,
-				updatedAt: new Date(),
-			},
-		})
+		.where(
+			eq(trackingLinks.uuid, linkUUID)
+		)
 		.returning()
 
 	if (updatedRows.length === 0) {
@@ -42,7 +31,7 @@ export async function setTrackingLinkVisibility(userUUID: UUID, isPublic: boolea
 
 export type TrackingLinkWithUser = TrackingLinks & { user: { uuid: string, name: string } }
 
-export async function getTrackingLink(userUUID: UUID): Promise<TrackingLinkWithUser> {
+export async function getTrackingLinkByUserUUID(userUUID: UUID): Promise<TrackingLinkWithUser> {
 	const trackingLink = await db().query.trackingLinks.findFirst({
 		with: {
 			user: { columns: { uuid: true, name: true } }
@@ -50,10 +39,10 @@ export async function getTrackingLink(userUUID: UUID): Promise<TrackingLinkWithU
 		where: eq(trackingLinks.userUUID, userUUID),
 	})
 
-	if (!trackingLink) {
+	if (!trackingLink || !trackingLink.user) {
 		return Promise.reject(m.invalid_livetrack_session())
 	}
 
-	return trackingLink
+	return trackingLink as TrackingLinkWithUser
 }
 

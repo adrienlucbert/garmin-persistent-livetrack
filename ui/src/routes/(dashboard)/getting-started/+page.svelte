@@ -24,12 +24,12 @@
 	let linkURL = $derived(user && getAthleteLink(user.name));
 
 	let vcard = $derived(
-		user &&
+		link &&
 			generateVCard({
 				firstName: data.appName,
 				lastName: 'Webhook',
-				uid: user.uuid,
-				email: `garmin-persistent-livetrack-${user.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
+				uid: link.uuid,
+				email: `garmin-persistent-livetrack-${link.uuid}@${env.PUBLIC_SMTP_PROXY_HOSTNAME}`,
 				...(linkURL ? { url: linkURL.href } : {})
 			})
 	);
@@ -40,7 +40,7 @@
 
 <div class="p-2">
 	<NarrowSection class="mb-14">
-		<p class="mt-6 text-xl text-muted-foreground">
+		<p class="text-muted-foreground mt-6 text-xl">
 			{m.gs_follow_those_steps()}
 		</p>
 		<ul>
@@ -104,8 +104,8 @@
 					<SquareCheckBigIcon class="mr-4 inline size-6 align-middle" />
 					{m.gs_try_it_out_title()}
 				</h3>
-				{#if user}
-					<LinkSetupAlert {user} {link} />
+				{#if link}
+					<LinkSetupAlert {link} />
 				{/if}
 			</li>
 			<li>
@@ -117,7 +117,7 @@
 					{m.hiw_share_once_done_forever_text()}
 				</p>
 
-				{#if link}
+				{#if link && link.link}
 					<div class="my-6 flex items-center gap-2">
 						<Label for="link" class="sr-only">Link</Label>
 						<Input id="link" value={linkURL?.href} readonly class="h-8" />
