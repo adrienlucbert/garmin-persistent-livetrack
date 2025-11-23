@@ -11,8 +11,7 @@
 	<FullPage class="grid place-items-center">
 		<div class="text-center">
 			<h2
-				class="flex flex-col items-center gap-5 border-none px-2 py-8 font-bold md:flex-row"
-				style="line-height: 1.2;"
+				class="flex flex-col items-center gap-5 border-none px-2 py-8 font-bold leading-[1.2] md:flex-row"
 			>
 				<TriangleAlertIcon size="1.5em" />
 				<span>{page.error?.message}</span>

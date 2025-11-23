@@ -114,6 +114,7 @@
 	"invalid_athlete_identifier": "L'identifiant d'athlète n'est pas valide.",
 	"tracking_link_does_not_exist": "Ce lien de suivi n'existe pas.",
 	"tracking_link_is_not_public": "Ce lien de suivi n'est pas public.",
+	"livetrack_session_not_started": "Cette session LiveTrack n'a pas encore commencé.",
 	"access_request_pending_approval": "Votre demande d'accès est en attente d'approbation.",
 	"invalid_email_address": "Adresse email invalide",
 	"invalid_password": "Mot de passe invalide (min 8 caractères)",
