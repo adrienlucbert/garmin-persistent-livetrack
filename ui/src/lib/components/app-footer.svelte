@@ -10,13 +10,20 @@
 		<a class="mb-1 underline-offset-4 hover:underline" href="/#how-it-works">
 			{m.app_footer_how_it_works()}
 		</a>
-		<a class="mb-1 underline-offset-4 hover:underline" href="#self-host"
-			>{m.app_footer_self_host()}</a
-		>
 		<a
 			class="mb-1 underline-offset-4 hover:underline"
-			href="https://github.com/adrienlucbert/garmin-persistent-livetrack/">Github</a
+			href="https://github.com/adrienlucbert/garmin-persistent-livetrack#self-hosting"
+			target="_blank"
 		>
+			{m.app_footer_self_host()}
+		</a>
+		<a
+			class="mb-1 underline-offset-4 hover:underline"
+			href="https://github.com/adrienlucbert/garmin-persistent-livetrack/"
+			target="_blank"
+		>
+			Github
+		</a>
 	</nav>
 	<aside class="grid place-items-start gap-2">
 		<span class="mb-2 font-bold uppercase opacity-80">{m.app_footer_notice()}</span>
