@@ -117,26 +117,24 @@
 					{m.hiw_share_once_done_forever_text()}
 				</p>
 
-				{#if link && link.link}
-					<div class="my-6 flex items-center gap-2">
-						<Label for="link" class="sr-only">Link</Label>
-						<Input id="link" value={linkURL?.href} readonly class="h-8" />
-						<Button
-							class="shadow-none"
-							onclick={() => {
-								navigator.clipboard.writeText(linkURL?.href || '');
-								toast.success(m.link_copied(), { duration: 3000 });
-							}}
-						>
-							{m.copy_link()}
-						</Button>
-					</div>
-					<div class="mt-6 flex justify-center gap-4 md:mt-4">
-						<Button variant="outline" href={pages().manageAccess.url}
-							>{pages().manageAccess.title}</Button
-						>
-					</div>
-				{/if}
+				<div class="my-6 flex items-center gap-2">
+					<Label for="link" class="sr-only">Link</Label>
+					<Input id="link" value={linkURL?.href} readonly class="h-8" />
+					<Button
+						class="shadow-none"
+						onclick={() => {
+							navigator.clipboard.writeText(linkURL?.href || '');
+							toast.success(m.link_copied(), { duration: 3000 });
+						}}
+					>
+						{m.copy_link()}
+					</Button>
+				</div>
+				<div class="mt-6 flex justify-center gap-4 md:mt-4">
+					<Button variant="outline" href={pages().manageAccess.url}
+						>{pages().manageAccess.title}</Button
+					>
+				</div>
 			</li>
 		</ul>
 	</NarrowSection>

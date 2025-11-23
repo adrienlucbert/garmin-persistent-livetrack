@@ -5,12 +5,12 @@ import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { recordVisit } from "$lib/server/visits/visits";
 import { FollowStatus } from "$lib/types/followers";
 import { m } from '$lib/paraglide/messages.js';
-import type { TrackingLinkWithUser } from '$lib/server/link/trackingLink';
+import type { PublicTrackingLinkWithUser } from '$lib/server/link/trackingLink';
 import type { Followers } from '$lib/server/db/schema';
 
 export const load: LayoutServerLoad = async ({ locals, parent, getClientAddress }) => {
 	const { trackingLink, follow } = await parent() as Awaited<ReturnType<typeof parent>> & {
-		trackingLink: TrackingLinkWithUser | undefined;
+		trackingLink: PublicTrackingLinkWithUser | undefined;
 		follow: Followers | undefined
 	};
 

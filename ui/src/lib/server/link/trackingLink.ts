@@ -30,8 +30,9 @@ export async function setTrackingLinkVisibility(userUUID: UUID, isPublic: boolea
 }
 
 export type TrackingLinkWithUser = TrackingLinks & { user: { uuid: string, name: string } }
+export type PublicTrackingLinkWithUser = Omit<TrackingLinks, 'uuid'> & { user: { uuid: string, name: string } }
 
-export async function getTrackingLinkByUserUUID(userUUID: UUID): Promise<TrackingLinkWithUser> {
+export async function getTrackingLinkForUser(userUUID: UUID): Promise<TrackingLinkWithUser> {
 	const trackingLink = await db().query.trackingLinks.findFirst({
 		with: {
 			user: { columns: { uuid: true, name: true } }
@@ -45,4 +46,3 @@ export async function getTrackingLinkByUserUUID(userUUID: UUID): Promise<Trackin
 
 	return trackingLink as TrackingLinkWithUser
 }
-

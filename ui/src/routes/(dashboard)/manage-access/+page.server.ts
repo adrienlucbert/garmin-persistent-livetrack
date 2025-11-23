@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import { type TrackingLinks } from '$lib/server/db/schema';
-import { getTrackingLinkByUserUUID } from '$lib/server/link/trackingLink';
+import { getTrackingLinkForUser } from '$lib/server/link/trackingLink';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from "./$types";
 import { m } from '$lib/paraglide/messages.js';
@@ -56,7 +56,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	let link: TrackingLinks | null = null
 
 	try {
-		const trackingLink = await getTrackingLinkByUserUUID(locals.user.uuid as UUID)
+		const trackingLink = await getTrackingLinkForUser(locals.user.uuid as UUID)
 		return { link: trackingLink }
 	} catch { }
 

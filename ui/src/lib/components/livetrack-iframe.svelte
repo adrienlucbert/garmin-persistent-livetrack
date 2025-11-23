@@ -1,8 +1,15 @@
 <script lang="ts">
-	import type { TrackingLinks } from '$lib/server/db/schema';
+	import type { PublicTrackingLinkWithUser } from '$lib/server/link/trackingLink';
 	import { cn } from '$lib/utils';
 
-	let { link, class: className, ...restProps }: { link: TrackingLinks; class?: string } = $props();
+	let {
+		link,
+		class: className,
+		...restProps
+	}: {
+		link: PublicTrackingLinkWithUser;
+		class?: string;
+	} = $props();
 </script>
 
 <iframe

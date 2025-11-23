@@ -1,6 +1,6 @@
-import type { TrackingLinkWithUser } from '$lib/server/link/trackingLink.js';
+import type { PublicTrackingLinkWithUser } from '$lib/server/link/trackingLink.js';
 
-function pickPublicTrackingLink(trackingLink: TrackingLinkWithUser | undefined): Omit<TrackingLinkWithUser, 'link'> | undefined {
+function pickPublicTrackingLink(trackingLink: PublicTrackingLinkWithUser | undefined): Omit<PublicTrackingLinkWithUser, 'link'> | undefined {
 	if (trackingLink === undefined) {
 		return undefined
 	}
