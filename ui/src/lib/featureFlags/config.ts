@@ -9,4 +9,3 @@ export const FeatureFlagsConfig: FeatureFlags = {
 	[FeatureFlagsEnum.ENABLE_OAUTH_GOOGLE]: parseEnv<boolean>(env.ENABLE_OAUTH_GOOGLE) ?? false,
 	[FeatureFlagsEnum.ENABLE_VISITS_STATISTICS]: parseEnv<boolean>(env.ENABLE_VISITS_STATISTICS) ?? true,
 }
-

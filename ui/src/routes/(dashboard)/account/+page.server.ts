@@ -1,3 +1,4 @@
+import { FeatureFlagsConfig as flags } from "$lib/featureFlags/config";
 import { fail, redirect } from '@sveltejs/kit';
 import { validateEmail, validatePassword } from "$lib/validators";
 import type { Actions } from "./$types";
@@ -36,7 +37,9 @@ export const actions: Actions = {
 		if (email !== locals.user.email) {
 			try {
 				await updateUserEmail(locals.user.uuid as UUID, email)
-				await askVerifyEmail(locals.user.uuid, email)
+				if (flags.ENABLE_VERIFY_EMAIL) {
+					await askVerifyEmail(locals.user.uuid, email)
+				}
 				changes.add('email')
 			} catch (err) {
 				return fail(400, { message: err })

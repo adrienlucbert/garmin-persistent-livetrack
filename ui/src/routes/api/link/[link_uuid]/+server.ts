@@ -1,3 +1,4 @@
+import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { error } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
 import { updateTrackingLink } from '$lib/server/link/trackingLink'
@@ -12,6 +13,7 @@ import { getAthleteLink } from "$lib/link";
 import { env } from '$env/dynamic/public';
 import { env as privEnv } from '$env/dynamic/private';
 import { FollowStatus } from "$lib/types/followers";
+import { userCanReceiveEmail } from '$lib/server/email/helpers';
 
 export async function PUT({ params, request }: RequestEvent) {
 	const auth = request.headers.get("Authorization");
@@ -41,7 +43,7 @@ export async function PUT({ params, request }: RequestEvent) {
 			const sendJobs: Promise<any>[] = []
 
 			for (const follow of followers) {
-				if (follow.status !== FollowStatus.APPROVED || !follow.enabledNotifications || !follow.followerUser.email || !follow.followerUser.isEmailVerified) {
+				if (follow.status !== FollowStatus.APPROVED || !follow.enabledNotifications || !userCanReceiveEmail(follow.followerUser)) {
 					continue
 				}
 

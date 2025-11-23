@@ -1,3 +1,4 @@
+import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { createFollow } from "$lib/server/followers/followers";
@@ -14,6 +15,7 @@ import { NewFollowRequest } from "$lib/server/email/templates";
 import { env } from '$env/dynamic/public';
 import { APP_NAME } from "$env/static/private";
 import type { Locale } from "$lib/paraglide/runtime";
+import { userCanReceiveEmail } from '$lib/server/email/helpers';
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!locals.user) {
@@ -50,7 +52,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 		} else {
 			// No follow token -> request follow
 			await createFollow(user.uuid as UUID, locals.user.uuid as UUID, FollowStatus.PENDING)
-			if (user.email && user.isEmailVerified) {
+			if (userCanReceiveEmail(user)) {
 				await send(NewFollowRequest(locals.user.name), {
 					username: locals.user.name,
 					approveURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/approve`,
