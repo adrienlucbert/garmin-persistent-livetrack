@@ -44,7 +44,7 @@
 	<FullPage class="flex flex-col">
 		<AppHeader {data} actions={Object.values(headerActions)} />
 
-		<GrowContainer>
+		<GrowContainer class="px-4 md:px-0">
 			{@render children?.()}
 		</GrowContainer>
 
