@@ -38,9 +38,9 @@
 	);
 </script>
 
-<div class="p-2">
+<div class="p-2 text-justify">
 	<NarrowSection class="mb-14">
-		<p class="text-muted-foreground mt-6 text-xl">
+		<p class="mt-6 text-xl text-muted-foreground">
 			{m.gs_follow_those_steps()}
 		</p>
 		<ul>

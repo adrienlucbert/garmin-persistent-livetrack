@@ -29,7 +29,7 @@
 			</div>
 		</div>
 	</FullPage>
-	<div id="how-it-works" class="my-14 scroll-m-20">
+	<div id="how-it-works" class="my-14 scroll-m-20 text-justify">
 		<h1>{m.app_footer_how_it_works()}</h1>
 		<ul>
 			<li>
