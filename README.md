@@ -8,6 +8,8 @@ See [how it works!](https://staytracked.app/#how-it-works)
 
 > This service is in no way related to Garmin® but extends and simplifies the use of its LiveTrack feature.
 
+![website landing page](https://github.com/user-attachments/assets/7fbd7db7-dd83-4670-995c-b2a3dcccb19b)
+
 ## Table of Contents
 
 - [Preamble](#preamble)
