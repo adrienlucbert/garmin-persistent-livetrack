@@ -16,7 +16,7 @@
 
 	let { data } = $props();
 	let { user, link, flags } = data;
-	let linkIsPublic = $derived(link?.isPublic);
+	let trackingLink = $state(link);
 	let linkURL = $derived(user && getAthleteLink(user.name));
 
 	let updatingLinkVisibility = $state(false);
@@ -28,8 +28,8 @@
 				method: 'PUT',
 				body: JSON.stringify({ is_public: isPublic })
 			});
-			if (res.ok) {
-				linkIsPublic = isPublic;
+			if (res.ok && trackingLink) {
+				trackingLink.isPublic = isPublic;
 			} else {
 				const { message } = await res.json().catch(() => {
 					throw m.unexpected_server_error({ code: res.status });
@@ -48,13 +48,13 @@
 </script>
 
 <div class="p-2">
-	{#if link && link.link}
+	{#if trackingLink && trackingLink.link}
 		<h3>{m.ma_general_access()}</h3>
 
 		<div class="mt-6">
 			<div class="mb-4 flex gap-2 align-middle">
 				<div class="flex items-center">
-					{#if linkIsPublic}
+					{#if trackingLink.isPublic}
 						<GlobeIcon class="flex items-center align-middle" />
 					{:else}
 						<LockKeyHoleIcon class="flex items-center align-middle" />
@@ -66,12 +66,12 @@
 							disabled={updatingLinkVisibility}
 							type="single"
 							bind:value={
-								() => (linkIsPublic ? 'public' : 'private'),
+								() => (trackingLink?.isPublic ? 'public' : 'private'),
 								async (v) => await updateLinkVisibility(v === 'public')
 							}
 						>
 							<Select.Trigger class="cursor-pointer" aria-label="Edit" variant="ghost">
-								{linkIsPublic ? m.ma_anyone_with_the_link() : m.ma_restricted()}
+								{trackingLink.isPublic ? m.ma_anyone_with_the_link() : m.ma_restricted()}
 							</Select.Trigger>
 							<Select.Content>
 								<Select.Item value={'public'}>{m.ma_anyone_with_the_link()}</Select.Item>
@@ -82,7 +82,7 @@
 					<span
 						class="text-muted-foreground col-start-2 grid justify-items-start gap-1 pl-2 text-sm [&_p]:leading-relaxed"
 					>
-						{#if linkIsPublic}
+						{#if trackingLink.isPublic}
 							{m.ma_anyone_with_the_link_description()}
 						{:else}
 							{m.ma_restricted_description()}
@@ -131,8 +131,18 @@
 		<div class="mt-6 flex justify-center gap-4">
 			<Button size="lg" href={pages().gettingStarted.url}>{pages().gettingStarted.title}</Button>
 		</div>
-		{#if link}
-			<LinkSetupAlert {link} />
+		{#if trackingLink}
+			<LinkSetupAlert
+				link={trackingLink}
+				onupdate={(v) => {
+					if (v) {
+						toast.success(m.link_setup_youre_all_set(), {
+							description: m.link_setup_we_received_notice()
+						});
+						trackingLink = v;
+					}
+				}}
+			/>
 		{/if}
 	{/if}
 </div>

@@ -3,11 +3,17 @@
 	import * as Alert from '$lib/components/ui/alert';
 	import { DotLoader } from '$lib/components/ui/dot-loader';
 	import Sse from '$lib/components/sse.svelte';
-	import type { TrackingLinks } from '$lib/server/db/schema';
 	import { pages } from '$lib/pages.svelte';
 	import { m } from '$lib/paraglide/messages.js';
+	import { type TrackingLinkWithUser } from '$lib/server/link/trackingLink';
 
-	let { link }: { link: TrackingLinks } = $props();
+	let {
+		link,
+		onupdate
+	}: {
+		link: TrackingLinkWithUser;
+		onupdate?: (value: TrackingLinkWithUser | null) => void;
+	} = $props();
 </script>
 
 {#snippet setupSuccessMessage()}
@@ -32,8 +38,8 @@
 	{#if link.link}
 		{@render setupSuccessMessage()}
 	{:else}
-		<Sse channel={`update-link-${link.uuid}`}>
-			{#snippet content(message: { link: string } | null)}
+		<Sse channel={`update-link-${link.uuid}`} {onupdate}>
+			{#snippet content(message: TrackingLinkWithUser | null)}
 				{#if message === null}
 					<Alert.Root variant="warning" class="mt-6">
 						<CircleAlertIcon />

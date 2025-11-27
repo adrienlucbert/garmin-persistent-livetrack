@@ -1,4 +1,3 @@
-import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { error } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
 import { updateTrackingLink } from '$lib/server/link/trackingLink'
