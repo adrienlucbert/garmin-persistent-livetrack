@@ -4,7 +4,9 @@
 	import {
 		EditUserForm,
 		ChangePasswordForm,
-		DeleteAccountForm
+		DeleteAccountForm,
+		NotificationsForm,
+		SetupWebPushForm
 	} from '$lib/components/forms/account';
 	import { Separator } from '$lib/components/ui/separator';
 	import { SvelteURL } from 'svelte/reactivity';
@@ -13,7 +15,7 @@
 	import { m } from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
-	let { user, flags } = data;
+	let { user, flags, vapid_public_key } = data;
 
 	const url = new SvelteURL(page.url);
 	let active = $derived(url.hash || '#profile');
@@ -48,6 +50,19 @@
 					</p>
 					<div class="mt-2">
 						<FollowingTable />
+					</div>
+				{/if}
+
+				{#if active === '#notifications'}
+					<h3 class="mt-0">{m.notifications_title()}</h3>
+					<p class="text-justify text-sm text-muted-foreground">
+						{m.notifications_text()}
+					</p>
+					<div class="mt-2">
+						<SetupWebPushForm pubkey={vapid_public_key} />
+						{#if user}
+							<NotificationsForm {user} />
+						{/if}
 					</div>
 				{/if}
 			</div>

@@ -2,9 +2,10 @@
 	import type { SvelteURL } from 'svelte/reactivity';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
-
 	import { Button } from '../ui/button';
 	import Separator from '../ui/separator/separator.svelte';
+	import { m } from '$lib/paraglide/messages.js';
+
 	let {
 		active,
 		url
@@ -18,12 +19,17 @@
 	const items = $derived([
 		{
 			id: '#profile',
-			label: 'User profile',
+			label: m.user_profile_title(),
 			visible: true
 		},
 		{
 			id: '#following',
-			label: 'Following',
+			label: m.following_title(),
+			visible: true
+		},
+		{
+			id: '#notifications',
+			label: m.notifications_title(),
 			visible: true
 		}
 	]);
@@ -42,11 +48,7 @@
 			>
 				<div class="flex w-full items-center p-4">
 					<Select.Trigger class="w-full font-semibold">
-						{#if active === '#profile'}
-							Profile
-						{:else if active === '#following'}
-							Following
-						{/if}
+						{items.find((i) => active === i.id)?.label}
 					</Select.Trigger>
 					<Select.Content>
 						{#each items as item (item.id)}

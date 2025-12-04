@@ -1,6 +1,17 @@
 import { relations, sql } from 'drizzle-orm'
-import { boolean, check, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { boolean, check, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 import { githubTraits, googleTraits, passwordTraits, type GithubTraits, type GoogleTraits, type PasswordTraits } from './traits';
+import { webpushSubscriptions } from '../notifications/webpush';
+import { enumToPgEnum } from '../../utils';
+import { Notification } from '../../../../types/notifications';
+
+export const notification = pgEnum('notification', enumToPgEnum(Notification))
+
+export type PreferencePerNotification = Record<Notification, { email: boolean, push: boolean }>
+
+const defaultPreferencePerNotification = Object.fromEntries(
+	Object.values(Notification).map((v) => [v, { email: false, push: false }])
+) as PreferencePerNotification
 
 export const users = pgTable('users', {
 	uuid: uuid('uuid').primaryKey().defaultRandom().unique(),
@@ -8,6 +19,7 @@ export const users = pgTable('users', {
 	email: text('email'),
 	isEmailVerified: boolean('is_email_verified').notNull().default(false),
 	preferredLocale: text('preferred_locale').default('en'),
+	notificationPreferences: jsonb('notification_preferences').$type<PreferencePerNotification>().notNull().default(defaultPreferencePerNotification),
 }, (table) => ({
 	nameFormatCheck: check(
 		"name_format_check",
@@ -34,6 +46,10 @@ export const usersRelations = relations(users, ({ one }) => ({
 	googleTrait: one(googleTraits, {
 		fields: [users.uuid],
 		references: [googleTraits.userUUID],
+	}),
+	webpushSubscriptions: one(webpushSubscriptions, {
+		fields: [users.uuid],
+		references: [webpushSubscriptions.userUUID],
 	}),
 }))
 

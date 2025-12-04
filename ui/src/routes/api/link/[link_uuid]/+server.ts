@@ -5,14 +5,11 @@ import type { UUID } from 'crypto'
 import { broadcast } from '$lib/server/sse'
 import { m } from '$lib/paraglide/messages.js';
 import { listFollowers } from "$lib/server/followers/followers";
-import { send } from "$lib/server/email/sender";
-import { NewActivity } from "$lib/server/email/templates";
 import { getUserByUUID } from "$lib/server/auth/user";
-import { getAthleteLink } from "$lib/link";
-import { env } from '$env/dynamic/public';
 import { env as privEnv } from '$env/dynamic/private';
 import { FollowStatus } from "$lib/types/followers";
-import { userCanReceiveEmail } from '$lib/server/email/helpers';
+import { notify } from '$lib/server/notifications/notify'
+import { Notification } from "$lib/types/notifications";
 
 export async function PUT({ params, request }: RequestEvent) {
 	const auth = request.headers.get("Authorization");
@@ -39,20 +36,13 @@ export async function PUT({ params, request }: RequestEvent) {
 				throw m.invalid_user_uuid()
 			}
 			const followers = await listFollowers(updatedTrackingLink.userUUID as UUID)
-			const sendJobs: Promise<any>[] = []
+			const sendJobs: Promise<void>[] = []
 
 			for (const follow of followers) {
-				if (follow.status !== FollowStatus.APPROVED || !follow.enabledNotifications || !userCanReceiveEmail(follow.followerUser)) {
+				if (follow.status !== FollowStatus.APPROVED || !follow.enabledNotifications) {
 					continue
 				}
-
-				const sendJob = send(NewActivity(user.name), {
-					username: user.name,
-					athleteURL: getAthleteLink(user.name).toString(),
-					accountURL: `${env.PUBLIC_URL ?? 'http://localhost'}/account`,
-				}, follow.followerUser.email, follow.followerUser.preferredLocale)
-
-				sendJobs.push(sendJob)
+				sendJobs.push(notify(Notification.NEW_LIVETRACK, follow.followerUser, user))
 			}
 
 			await Promise.all(sendJobs)

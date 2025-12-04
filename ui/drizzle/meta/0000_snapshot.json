@@ -1,5 +1,5 @@
 {
-  "id": "3a64cb79-2d90-43cc-b11b-395a725c36a2",
+  "id": "094632f7-8829-413e-80a8-b2659b214415",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -40,6 +40,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'en'"
+        },
+        "notification_preferences": {
+          "name": "notification_preferences",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{\"follow_request\":{\"email\":false,\"push\":false},\"new_livetrack\":{\"email\":false,\"push\":false}}'::jsonb"
         }
       },
       "indexes": {
@@ -571,9 +578,72 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.webpush_subscriptions": {
+      "name": "webpush_subscriptions",
+      "schema": "",
+      "columns": {
+        "user_uuid": {
+          "name": "user_uuid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subscription": {
+          "name": "subscription",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "unique_endpoint_index": {
+          "name": "unique_endpoint_index",
+          "columns": [
+            {
+              "expression": "(\"subscription\"->>'endpoint')",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "webpush_subscriptions_user_uuid_users_uuid_fk": {
+          "name": "webpush_subscriptions_user_uuid_users_uuid_fk",
+          "tableFrom": "webpush_subscriptions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_uuid"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
+    "public.notification": {
+      "name": "notification",
+      "schema": "public",
+      "values": [
+        "follow_request",
+        "new_livetrack"
+      ]
+    },
     "public.action": {
       "name": "action",
       "schema": "public",
