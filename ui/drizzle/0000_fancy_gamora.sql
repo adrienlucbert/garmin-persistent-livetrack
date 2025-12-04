@@ -1,3 +1,4 @@
+CREATE TYPE "public"."notification" AS ENUM('follow_request', 'new_livetrack');--> statement-breakpoint
 CREATE TYPE "public"."action" AS ENUM('reset_password', 'verify_email', 'follow_user');--> statement-breakpoint
 CREATE TYPE "public"."follow_status" AS ENUM('pending', 'approved', 'denied');--> statement-breakpoint
 CREATE TABLE "users" (
@@ -6,6 +7,7 @@ CREATE TABLE "users" (
 	"email" text,
 	"is_email_verified" boolean DEFAULT false NOT NULL,
 	"preferred_locale" text DEFAULT 'en',
+	"notification_preferences" jsonb DEFAULT '{"follow_request":{"email":false,"push":false},"new_livetrack":{"email":false,"push":false}}'::jsonb NOT NULL,
 	CONSTRAINT "users_uuid_unique" UNIQUE("uuid"),
 	CONSTRAINT "users_name_unique" UNIQUE("name"),
 	CONSTRAINT "name_format_check" CHECK ("users"."name" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
@@ -72,6 +74,11 @@ CREATE TABLE "followers" (
 	CONSTRAINT "followers_user_uuid_follower_user_uuid_unique" UNIQUE("user_uuid","follower_user_uuid")
 );
 --> statement-breakpoint
+CREATE TABLE "webpush_subscriptions" (
+	"user_uuid" uuid NOT NULL,
+	"subscription" json
+);
+--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "action_tokens" ADD CONSTRAINT "action_tokens_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "password_traits" ADD CONSTRAINT "password_traits_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -82,4 +89,6 @@ ALTER TABLE "visits" ADD CONSTRAINT "visits_link_user_uuid_users_uuid_fk" FOREIG
 ALTER TABLE "visits" ADD CONSTRAINT "visits_visitor_user_uuid_users_uuid_fk" FOREIGN KEY ("visitor_user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "followers" ADD CONSTRAINT "followers_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "followers" ADD CONSTRAINT "followers_follower_user_uuid_users_uuid_fk" FOREIGN KEY ("follower_user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "email_unique_index" ON "users" USING btree (lower("email")) WHERE "users"."email" IS NOT NULL;
+ALTER TABLE "webpush_subscriptions" ADD CONSTRAINT "webpush_subscriptions_user_uuid_users_uuid_fk" FOREIGN KEY ("user_uuid") REFERENCES "public"."users"("uuid") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "email_unique_index" ON "users" USING btree (lower("email")) WHERE "users"."email" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "unique_endpoint_index" ON "webpush_subscriptions" USING btree (("subscription"->>'endpoint'));

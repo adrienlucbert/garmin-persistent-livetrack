@@ -1,4 +1,3 @@
-import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { createFollow } from "$lib/server/followers/followers";
@@ -10,12 +9,8 @@ import { m } from '$lib/paraglide/messages.js';
 import { FollowStatus } from "$lib/types/followers";
 import { invalidateActionToken, validateActionToken } from "$lib/server/auth/token";
 import { decodeJWT } from "$lib/server/auth/jwt";
-import { send } from "$lib/server/email/sender";
-import { NewFollowRequest } from "$lib/server/email/templates";
-import { env } from '$env/dynamic/public';
-import { APP_NAME } from "$env/static/private";
-import type { Locale } from "$lib/paraglide/runtime";
-import { userCanReceiveEmail } from '$lib/server/email/helpers';
+import { notify } from "$lib/server/notifications/notify";
+import { Notification } from "$lib/types/notifications";
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!locals.user) {
@@ -52,15 +47,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 		} else {
 			// No follow token -> request follow
 			await createFollow(user.uuid as UUID, locals.user.uuid as UUID, FollowStatus.PENDING)
-			if (userCanReceiveEmail(user)) {
-				await send(NewFollowRequest(locals.user.name), {
-					username: locals.user.name,
-					approveURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/approve`,
-					denyURL: `${env.PUBLIC_URL ?? 'http://localhost'}/api/followers/${locals.user.uuid}/ban`,
-					manageAccessURL: `${env.PUBLIC_URL ?? 'http://localhost'}/manage-access`,
-					appName: APP_NAME
-				}, user.email, user.preferredLocale)
-			}
+			await notify(Notification.FOLLOW_REQUEST, user, locals.user)
 		}
 	} catch (e) {
 		throw error(400, { message: String(e) })

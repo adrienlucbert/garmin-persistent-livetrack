@@ -81,6 +81,7 @@
 		"qrcode": "^1.5.4",
 		"svelte-youtube-embed": "^0.4.6",
 		"sveltekit-sse": "^0.14.3",
-		"vcards-js": "^2.10.0"
+		"vcards-js": "^2.10.0",
+		"web-push": "^3.6.7"
 	}
 }

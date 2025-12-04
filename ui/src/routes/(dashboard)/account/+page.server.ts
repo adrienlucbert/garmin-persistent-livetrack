@@ -1,12 +1,14 @@
+import { VAPID_PUBLIC_KEY } from '$env/static/private';
+import type { PageServerLoad } from "./$types";
 import { FeatureFlagsConfig as flags } from "$lib/featureFlags/config";
 import { fail, redirect } from '@sveltejs/kit';
 import { validateEmail, validatePassword } from "$lib/validators";
 import type { Actions } from "./$types";
-import { m } from '$lib/paraglide/messages.js';
-import { AuthMethod, deleteUser, getUser, getUserByUUID, updateUserEmail, updateUserName, updateUserPassword, validateSlug } from '$lib/server/auth/user';
+import { AuthMethod, deleteUser, getUser, updateUserEmail, updateUserName, updateUserPassword, validateSlug } from '$lib/server/auth/user';
 import type { UUID } from 'crypto';
 import { askVerifyEmail } from '$lib/server/auth/flows';
 import { verifyPasswordHash } from '$lib/server/auth/password';
+import { m } from '$lib/paraglide/messages.js';
 
 export const actions: Actions = {
 	editUser: async ({ request, locals }) => {
@@ -95,3 +97,7 @@ export const actions: Actions = {
 		return redirect(303, '/')
 	}
 }
+
+export const load: PageServerLoad = async ({ url, locals }) => {
+	return { vapid_public_key: VAPID_PUBLIC_KEY }
+};
