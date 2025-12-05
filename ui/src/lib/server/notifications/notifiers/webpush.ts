@@ -11,7 +11,10 @@ export const WebPushNotifier = {
 	async follow_request(target: Users, follower: Users): Promise<void> {
 		const locale = isLocale(target.preferredLocale) ? target.preferredLocale : getLocale()
 		notifyUser(target.uuid as UUID, {
-			title: m.mail_new_follow_request_subject({ username: follower.name }, { locale }),
+			title: m.notif_new_follow_request_title({ username: follower.name }, { locale }),
+			body: m.notif_new_follow_request_body({}, { locale }),
+			icon: "https://img.icons8.com/color/96/cycling-road--v1.png",
+			badge: "https://img.icons8.com/color/96/cycling-road--v1.png",
 			data: {
 				open: `${env.PUBLIC_URL ?? 'http://localhost'}/manage-access`
 			}
@@ -21,7 +24,9 @@ export const WebPushNotifier = {
 	async new_livetrack(target: Users, athlete: Users): Promise<void> {
 		const locale = isLocale(target.preferredLocale) ? target.preferredLocale : getLocale()
 		notifyUser(target.uuid as UUID, {
-			title: m.mail_new_activity_subject({ username: athlete.name }, { locale }),
+			title: m.notif_new_activity_title({ username: athlete.name }, { locale }),
+			icon: "https://img.icons8.com/color/96/cycling-road--v1.png",
+			badge: "https://img.icons8.com/color/96/cycling-road--v1.png",
 			data: {
 				open: getAthleteLink(athlete.name).toString()
 			}
