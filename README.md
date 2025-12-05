@@ -2,7 +2,7 @@
 
 Self-hostable Garmin LiveTrack session persister with built-in access management and notifications.
 
-This project allows you to capture and persist Garmin LiveTrack sessions (live GPS data shared from your Garmin device) and optionally send notifications (e.g., via email) your followers when you start a new session.
+This project allows you to capture and persist Garmin LiveTrack sessions (live GPS data shared from your Garmin device) and optionally send notifications (e.g., via email or browser push notifications) your followers when you start a new session.
 
 See [how it works!](https://staytracked.app/#how-it-works)
 
@@ -38,6 +38,7 @@ This project is designed with open-source and self-hosting in mind, it's meant t
 - Followers can choose to get notified when you start a session
 - Graph of visits history per user
 - Account creation via email, Google or Github
+- WebPush and email notifications
 
 ## Self-hosting
 
