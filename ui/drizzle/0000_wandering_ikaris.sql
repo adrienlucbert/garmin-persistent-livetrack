@@ -7,7 +7,7 @@ CREATE TABLE "users" (
 	"email" text,
 	"is_email_verified" boolean DEFAULT false NOT NULL,
 	"preferred_locale" text DEFAULT 'en',
-	"notification_preferences" jsonb DEFAULT '{"follow_request":{"email":false,"push":false},"new_livetrack":{"email":false,"push":false}}'::jsonb NOT NULL,
+	"notification_preferences" jsonb DEFAULT '{"follow_request":{"email":true,"push":true},"new_livetrack":{"email":true,"push":true}}'::jsonb NOT NULL,
 	CONSTRAINT "users_uuid_unique" UNIQUE("uuid"),
 	CONSTRAINT "users_name_unique" UNIQUE("name"),
 	CONSTRAINT "name_format_check" CHECK ("users"."name" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),

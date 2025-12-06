@@ -10,7 +10,7 @@ export const notification = pgEnum('notification', enumToPgEnum(Notification))
 export type PreferencePerNotification = Record<Notification, { email: boolean, push: boolean }>
 
 const defaultPreferencePerNotification = Object.fromEntries(
-	Object.values(Notification).map((v) => [v, { email: false, push: false }])
+	Object.values(Notification).map((v) => [v, { email: true, push: true }])
 ) as PreferencePerNotification
 
 export const users = pgTable('users', {
