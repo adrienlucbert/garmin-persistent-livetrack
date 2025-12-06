@@ -1,5 +1,5 @@
 {
-  "id": "094632f7-8829-413e-80a8-b2659b214415",
+  "id": "9f518b00-664e-421f-b5da-1ed1a9ed39a9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -46,7 +46,7 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true,
-          "default": "'{\"follow_request\":{\"email\":false,\"push\":false},\"new_livetrack\":{\"email\":false,\"push\":false}}'::jsonb"
+          "default": "'{\"follow_request\":{\"email\":true,\"push\":true},\"new_livetrack\":{\"email\":true,\"push\":true}}'::jsonb"
         }
       },
       "indexes": {
