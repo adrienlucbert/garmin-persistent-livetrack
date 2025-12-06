@@ -19,6 +19,10 @@
 	});
 </script>
 
+<pre>
+	permission: {Notification.permission}
+	granted: {granted}
+</pre>
 {#if nsm.isAvailable()}
 	{#if granted === false}
 		<Alert.Root variant="warning" class="mb-4">
