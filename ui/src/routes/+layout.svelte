@@ -11,8 +11,9 @@
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import { FullPage, GrowContainer } from '$lib/components/ui/layout';
-	import { setContext, type Snippet } from 'svelte';
+	import { onMount, setContext, type Snippet } from 'svelte';
 	import { type HeaderContext } from '$lib/types/contexts/header.js';
+	import { ensureNotificationSubscription } from '$lib/webpush.svelte';
 
 	let { data, children } = $props();
 
@@ -25,6 +26,10 @@
 		deleteAction: (name: string) => {
 			delete headerActions[name];
 		}
+	});
+
+	onMount(() => {
+		ensureNotificationSubscription(data.vapidPublicKey);
 	});
 </script>
 
