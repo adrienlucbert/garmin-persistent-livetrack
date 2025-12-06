@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Container, Heading, Paragraph } from '@uraniadev/emailer';
+	import { Button, Container, Heading, inline, Paragraph } from '@uraniadev/emailer';
 	import { m } from '$lib/paraglide/messages.js';
 	import type { Locale } from '$lib/paraglide/runtime';
 
@@ -32,7 +32,7 @@
 				{ button: m.mail_new_activity_button({}, { locale }) },
 				{ locale }
 			)}
-			<a class="wrap-break-word" href={athleteURL}>
+			<a style="overflow-wrap: break-word;" href={athleteURL}>
 				{athleteURL}
 			</a>
 		</Paragraph>

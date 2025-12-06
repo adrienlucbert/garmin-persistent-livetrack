@@ -39,7 +39,7 @@
 				{ button: m.mail_reset_password_button({}, { locale }) },
 				{ locale }
 			)}
-			<a class="wrap-break-word" href={resetURL}>
+			<a style="overflow-wrap: break-word;" href={resetURL}>
 				{resetURL}
 			</a>
 		</Paragraph>
