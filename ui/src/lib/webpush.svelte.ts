@@ -1,5 +1,5 @@
 export const NotificationSubscriptionManager = {
-	isAvailable: () => 'serviceWorker' in navigator,
+	isAvailable: () => 'Notification' in window && 'serviceWorker' in navigator,
 
 	isGranted: () => Notification.permission === 'granted',
 
