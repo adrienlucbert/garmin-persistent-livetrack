@@ -38,7 +38,7 @@
 		</Paragraph>
 		<Paragraph class="text-center text-sm">
 			{m.mail_trouble_clicking_button({ button: m.mail_verify_email_button() }, { locale })}
-			<a class="wrap-break-word" href={callbackURL}>
+			<a style="overflow-wrap: break-word;" href={callbackURL}>
 				{callbackURL}
 			</a>
 		</Paragraph>
