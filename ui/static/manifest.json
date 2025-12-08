@@ -1,0 +1,19 @@
+{
+	"name": "Garmin Persistent LiveTrack",
+	"short_name": "LiveTrack",
+	"id": "garmin-persistent-livetrack",
+	"start_url": "/",
+	"display": "standalone",
+	"icons": [
+		{
+			"src": "/icons/icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/icons/icon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}
