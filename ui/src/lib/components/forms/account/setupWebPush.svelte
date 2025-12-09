@@ -9,8 +9,10 @@
 		NotificationSubscriptionManager as nsm
 	} from '$lib/webpush.svelte';
 	import { toast } from 'svelte-sonner';
+	import { isInstalled, isIOS } from '$lib/platform';
+	import InstallPWA from '$lib/components/forms/account/installPWA.svelte';
 
-	const { pubkey }: { pubkey: string } = $props();
+	const { pubkey, appName }: { pubkey: string; appName: string } = $props();
 
 	let granted = $state<boolean | null>(null);
 
@@ -19,7 +21,17 @@
 	});
 </script>
 
-{#if nsm.isAvailable()}
+{#if 'Notification' in window && isIOS() && !isInstalled()}
+	<Alert.Root variant="warning" class="mb-4">
+		<CircleAlertIcon />
+		<Alert.Description class="flex">
+			<div class="flex w-full flex-col gap-4 md:flex-row">
+				<p class="grow">{@html m.webpush_ios_warning()}</p>
+				<InstallPWA {appName} />
+			</div>
+		</Alert.Description>
+	</Alert.Root>
+{:else if nsm.isAvailable()}
 	{#if granted === false}
 		<Alert.Root variant="warning" class="mb-4">
 			<CircleAlertIcon />
@@ -27,8 +39,8 @@
 				{m.enable_notifications_title()}
 			</Alert.Title>
 			<Alert.Description>
-				<div class="flex flex-col gap-4 md:flex-row">
-					<p>
+				<div class="flex w-full flex-col gap-4 md:flex-row">
+					<p class="grow">
 						{m.enable_notifications_text()}
 					</p>
 					<Button

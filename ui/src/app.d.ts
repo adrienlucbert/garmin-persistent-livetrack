@@ -2,6 +2,7 @@
 
 import type { PublicUserWithTraits, Sessions } from '$lib/server/db/schema';
 import type { TrackingLinkWithUser } from '$lib/server/link/trackingLink';
+import '@poppanator/sveltekit-svg/dist/svg.d.ts'
 
 // for information about these interfaces
 declare global {

@@ -13,8 +13,8 @@
 		<CircleAlertIcon />
 		<Alert.Title class="line-clamp-none tracking-normal">{m.verify_email_title()}</Alert.Title>
 		<Alert.Description>
-			<div class="flex flex-col gap-4 md:flex-row">
-				<p>
+			<div class="flex w-full flex-col gap-4 md:flex-row">
+				<p class="grow">
 					{@html m.verify_email_text({ email: user.email })}
 				</p>
 				<ResendEmailButton variant="warning-outline" />

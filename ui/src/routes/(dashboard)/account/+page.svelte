@@ -13,9 +13,8 @@
 	import { VerifyEmailForm } from '$lib/components/forms/account';
 	import { page } from '$app/state';
 	import { m } from '$lib/paraglide/messages.js';
-
 	let { data } = $props();
-	let { user, flags, vapid_public_key } = data;
+	let { user, flags, vapid_public_key, appName } = data;
 
 	const url = new SvelteURL(page.url);
 	let active = $derived(url.hash || '#profile');
@@ -59,7 +58,7 @@
 						{m.notifications_text()}
 					</p>
 					<div class="mt-2">
-						<SetupWebPushForm pubkey={vapid_public_key} />
+						<SetupWebPushForm pubkey={vapid_public_key} {appName} />
 						{#if user}
 							<NotificationsForm {user} />
 						{/if}

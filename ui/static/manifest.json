@@ -1,6 +1,7 @@
 {
 	"name": "Garmin Persistent LiveTrack",
 	"short_name": "LiveTrack",
+	"description": "Get notified when your friends and family start an activity and follow their journey.\n\nTransform your ever-changing Garmin Live-Tracking link into a persistent URL and ensure continuous updates with built-in activity start notifications for your friends and family.",
 	"id": "garmin-persistent-livetrack",
 	"start_url": "/",
 	"display": "standalone",
@@ -14,6 +15,20 @@
 			"src": "/icons/icon-512x512.png",
 			"sizes": "512x512",
 			"type": "image/png"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "/screenshots/home-mobile.png",
+			"sizes": "1080x2135",
+			"type": "image/png",
+			"form_factor": "narrow"
+		},
+		{
+			"src": "/screenshots/home-desktop.png",
+			"sizes": "1178x818",
+			"type": "image/png",
+			"form_factor": "wide"
 		}
 	]
 }
