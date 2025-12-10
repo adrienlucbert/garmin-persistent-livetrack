@@ -142,6 +142,11 @@ Here is the list of environment variables you can use to configure the app:
 - **`SMTP_FROM`**: the email address you will be sending emails from
 - **`PUBLIC_SMTP_PROXY_HOSTNAME`**: the hostname where your SMTP proxy (Salmon) will be listening. Likely your app's hostname if you're hosting them side-by-side.
 
+> The following Vapid keys can be generated using `npx web-push generate-vapid-keys`
+
+- **`VAPID_PUBLIC_KEY`**: the Vapid public key for web push notifications
+- **`VAPID_PRIVATE_KEY`**: the Vapid private key for web push notifications
+
 **Feature flags**:
 
 - **`ENABLE_RECOVER_PASSWORD`** *(default: `true`)*: Enable the "Recover password" feature. If set to false, users will not be able to request a password reset.
