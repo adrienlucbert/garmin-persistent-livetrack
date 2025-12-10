@@ -38,7 +38,7 @@ This project is designed with open-source and self-hosting in mind, it's meant t
 - Followers can choose to get notified when you start a session
 - Graph of visits history per user
 - Account creation via email, Google or Github
-- WebPush and email notifications
+- WebPush and email notifications with support for installing as a PWA
 
 ## Self-hosting
 
