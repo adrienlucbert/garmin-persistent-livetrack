@@ -236,6 +236,7 @@
 	"install_android_edge_2": "Swipe left and tap Add to Phone",
 	"install_button": "Install",
 	"webpush_ios_warning": "Web push notifications on iOS are only available on installed web apps. To receive web push notifications on this device, you need to install this web app (add it to your home screen).<br />Or you can ignore this and use email notifications as a fallback.",
+	"webpush_pwa_warning": "Web push notifications work as long as your browser is open, even in the background. If you close it, you'll only receive pending notifications when you will next open it.<br />If you want to be able to receive notifications even when your browser is closed, you can add this site to your home screen (install as a web app).",
 	"username_slug_already_taken": "Username already taken.",
 	"invalid_username_slug": "Invalid username. Suggested: \"{slug}\"",
 	"app_footer_explore": "Explore",

@@ -25,7 +25,9 @@
 	<Separator class="mx-0 hidden md:block" orientation="vertical" />
 	<div class="flex w-full flex-col">
 		{#key active}
-			<div class="mx-auto flex w-full max-w-2xl flex-col content-start gap-4 p-4 py-5 pb-9">
+			<div
+				class="mx-auto flex w-full max-w-2xl flex-col content-start gap-4 p-4 py-5 pb-9 [&_p]:m-0"
+			>
 				{#if active === '#profile'}
 					<h3 class="mt-0">{m.user_profile_title()}</h3>
 					{#if user}
@@ -57,12 +59,10 @@
 					<p class="text-justify text-sm text-muted-foreground">
 						{m.notifications_text()}
 					</p>
-					<div class="mt-2">
-						<SetupWebPushForm pubkey={vapid_public_key} {appName} />
-						{#if user}
-							<NotificationsForm {user} />
-						{/if}
-					</div>
+					<SetupWebPushForm pubkey={vapid_public_key} {appName} />
+					{#if user}
+						<NotificationsForm {user} />
+					{/if}
 				{/if}
 			</div>
 		{/key}

@@ -14,13 +14,15 @@
 	import type { Component } from 'svelte';
 	import { installPWA, supportsInstallPrompt } from '$lib/pwa.svelte';
 	import { m } from '$lib/paraglide/messages';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button';
 
 	let {
 		appName,
+		variant = 'outline',
 		open = $bindable(false)
 	}: {
 		appName: string;
+		variant?: ButtonVariant;
 		open?: boolean;
 	} = $props();
 
@@ -51,12 +53,12 @@
 </script>
 
 {#if supportsInstallPrompt}
-	<Button variant="warning-outline" onclick={installPWA}>
+	<Button {variant} onclick={installPWA}>
 		{m.install_button()}
 	</Button>
 {:else}
 	<Drawer.Root bind:open>
-		<Drawer.Trigger class={buttonVariants({ variant: 'warning-outline' })}>
+		<Drawer.Trigger class={buttonVariants({ variant })}>
 			{m.install_button()}
 		</Drawer.Trigger>
 		<Drawer.Content>

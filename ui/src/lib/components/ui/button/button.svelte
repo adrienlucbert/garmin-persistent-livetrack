@@ -23,6 +23,8 @@
 					'bg-success shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60 text-white',
 				'success-outline':
 					'shadow-xs text-success bg-background border border-success hover:bg-success hover:text-white',
+				'card-outline':
+					'shadow-xs text-card-foreground bg-card border border-card-foreground hover:bg-card-foreground hover:text-background',
 				outline:
 					'shadow-xs text-primary bg-background border border-primary hover:bg-primary hover:text-primary-foreground',
 				secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',

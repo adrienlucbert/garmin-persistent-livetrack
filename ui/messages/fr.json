@@ -238,6 +238,7 @@
 	"install_android_edge_2": "Faites défiler les options et appuyez sur Ajouter au téléphone",
 	"install_button": "Installer",
 	"webpush_ios_warning": "Les notifications push sur iOS sont uniquement autorisées sur les applications web installées. Pour recevoir des notifcations push sur cet appareil, vous devez installer cette application web (l'ajouter à votre écran d'accueil).<br />Vous pouvez aussi ignorer ce message et utiliser les notifications email à la place.",
+	"webpush_pwa_warning": "Les notifications sur votre navigateur fonctionnent tant que votre navigateur est ouvert, même en tâche de fond. Si vous le fermez, vous recevrez les notifications lors de sa prochaine ouverture.<br />Si vous voulez recevoir les notifications même quand votre navigateur est fermé, vous pouvez ajouter ce site à votre écran d'accueil (installer en tant qu'application web).",
 	"username_slug_already_taken": "Ce nom d'utilisateur est déjà pris.",
 	"invalid_username_slug": "Nom d'utilisateur invalide. Suggestion: \"{slug}\"",
 	"app_footer_explore": "Explorer",

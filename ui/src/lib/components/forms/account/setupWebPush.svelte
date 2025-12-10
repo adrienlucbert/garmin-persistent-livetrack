@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Alert from '$lib/components/ui/alert';
 	import CircleAlertIcon from '@lucide/svelte/icons/circle-alert';
+	import InfoIcon from '@lucide/svelte/icons/info';
 	import { Button } from '$lib/components/ui/button';
 	import { onMount } from 'svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -22,18 +23,32 @@
 </script>
 
 {#if 'Notification' in window && isIOS() && !isInstalled()}
-	<Alert.Root variant="warning" class="mb-4">
+	<Alert.Root variant="warning">
 		<CircleAlertIcon />
 		<Alert.Description class="flex">
 			<div class="flex w-full flex-col gap-4 md:flex-row">
 				<p class="grow">{@html m.webpush_ios_warning()}</p>
-				<InstallPWA {appName} />
+				<InstallPWA {appName} variant="warning-outline" />
 			</div>
 		</Alert.Description>
 	</Alert.Root>
 {:else if nsm.isAvailable()}
+	{#if !isInstalled()}
+		<Alert.Root variant="default">
+			<InfoIcon />
+			<Alert.Description class="flex">
+				<div class="flex w-full flex-col gap-4 md:flex-row">
+					<p class="grow">
+						{@html m.webpush_pwa_warning()}
+					</p>
+					<InstallPWA {appName} variant="card-outline" />
+				</div>
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
+
 	{#if granted === false}
-		<Alert.Root variant="warning" class="mb-4">
+		<Alert.Root variant="warning">
 			<CircleAlertIcon />
 			<Alert.Title class="line-clamp-none tracking-normal">
 				{m.enable_notifications_title()}
@@ -62,7 +77,7 @@
 		</Alert.Root>
 	{/if}
 {:else}
-	<Alert.Root variant="warning" class="mb-4">
+	<Alert.Root variant="warning">
 		<CircleAlertIcon />
 		<Alert.Title class="line-clamp-none tracking-normal">
 			{m.notifications_not_supported_title()}
