@@ -10,8 +10,9 @@
 		NotificationSubscriptionManager as nsm
 	} from '$lib/webpush.svelte';
 	import { toast } from 'svelte-sonner';
-	import { isInstalled, isIOS } from '$lib/platform';
+	import { isStandalone, isIOS } from '$lib/platform';
 	import InstallPWA from '$lib/components/forms/account/installPWA.svelte';
+	import { deferredInstall } from '$lib/pwa.svelte';
 
 	const { pubkey, appName }: { pubkey: string; appName: string } = $props();
 
@@ -22,7 +23,7 @@
 	});
 </script>
 
-{#if 'Notification' in window && isIOS() && !isInstalled()}
+{#if 'Notification' in window && isIOS() && deferredInstall.available && !isStandalone()}
 	<Alert.Root variant="warning">
 		<CircleAlertIcon />
 		<Alert.Description class="flex">
@@ -33,7 +34,7 @@
 		</Alert.Description>
 	</Alert.Root>
 {:else if nsm.isAvailable()}
-	{#if !isInstalled()}
+	{#if deferredInstall.available && !isStandalone()}
 		<Alert.Root variant="default">
 			<InfoIcon />
 			<Alert.Description class="flex">

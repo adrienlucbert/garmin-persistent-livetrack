@@ -44,4 +44,4 @@ export const getIOSVersion = () => {
 	};
 };
 
-export const isInstalled = () => window.matchMedia('(display-mode: standalone)').matches;
+export const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;

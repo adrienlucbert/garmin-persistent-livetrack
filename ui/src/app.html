@@ -10,7 +10,8 @@
 		  // Defer PWA installation prompt
 			window.addEventListener('beforeinstallprompt', event => {
 				event.preventDefault()
-				window.deferredInstallPrompt = event
+				window.__deferredInstallPrompt = event
+				window.dispatchEvent(new CustomEvent("pwa-install-available", { detail: event }));
 			})
 		</script>
 
