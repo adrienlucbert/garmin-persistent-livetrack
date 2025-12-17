@@ -13,8 +13,12 @@ export type NotificationPayload = { title: string } & NotificationOptions
 export async function sendNotification(subscription: PushSubscription, payload: NotificationPayload): Promise<void> {
 	try {
 		await webpush.sendNotification(subscription, JSON.stringify(payload));
-	} catch {
-		await deleteWebpushSubscription(subscription)
+	} catch (e: any) {
+		if (e.statusCode === 410) { // Gone: Unsubscribed or expired
+			await deleteWebpushSubscription(subscription)
+		} else {
+			console.error(e)
+		}
 	}
 }
 
