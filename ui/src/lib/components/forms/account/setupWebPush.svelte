@@ -12,17 +12,22 @@
 	import { toast } from 'svelte-sonner';
 	import { isStandalone } from '$lib/platform';
 	import InstallPWA from '$lib/components/forms/account/installPWA.svelte';
+	import { supportsInstallPrompt, deferredInstall } from '$lib/pwa.svelte';
 
 	const { pubkey, appName }: { pubkey: string; appName: string } = $props();
 
 	let granted = $state<boolean | null>(null);
+
+	let isInstalled = $derived(
+		isStandalone() || (supportsInstallPrompt && !deferredInstall.available)
+	);
 
 	onMount(async () => {
 		granted = nsm.isGranted();
 	});
 </script>
 
-{#if !isStandalone()}
+{#if !isInstalled}
 	{#if nsm.isAvailable()}
 		<Alert.Root variant="default">
 			<InfoIcon />
