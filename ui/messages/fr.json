@@ -68,6 +68,7 @@
 	"no_livetrack_link_setup_yet": "Tu n'as pas encore configuré ton lien de LiveTrack.",
 	"visits_detail_per_user": "Détails par utilisateur",
 	"visits_issue_loading": "Il y a eu un problème lors du chargement des visites.",
+	"visits_label": "Visites",
 	"visitor": "Visiteur",
 	"following_title": "Abonnements",
 	"following_text": "Liste des utilisateurs auxquels vous êtes abonné ou avez envoyé une demande d'abonnement. Si leur lien est en accès <i>limité</i>, votre demande d'abonnement devra être approuvée pour pouvoir accéder à leur lien de LiveTrack.",

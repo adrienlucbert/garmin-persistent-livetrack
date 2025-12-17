@@ -5,6 +5,7 @@
 	import { utcDay } from 'd3-time';
 	import BaseChart from './base.svelte';
 	import { mergeSum } from '$lib/utils';
+	import { m } from '$lib/paraglide/messages.js';
 	import type { VisitsWithName } from '$lib/server/visits/visits';
 
 	let { visits }: { visits: VisitsWithName[] } = $props();
@@ -20,7 +21,7 @@
 	);
 
 	const chartConfig = {
-		count: { label: 'Visits', color: 'var(--chart-1)' }
+		count: { label: m.visits_label(), color: 'var(--chart-1)' }
 	} satisfies Chart.ChartConfig;
 </script>
 
@@ -30,7 +31,7 @@
 	series={[
 		{
 			key: 'count',
-			label: 'Visits',
+			label: m.visits_label(),
 			color: 'var(--chart-1)'
 		}
 	]}

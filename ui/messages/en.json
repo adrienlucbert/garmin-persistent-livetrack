@@ -68,6 +68,7 @@
 	"no_livetrack_link_setup_yet": "You don't have a LiveTrack link setup yet.",
 	"visits_detail_per_user": "Detail per user",
 	"visits_issue_loading": "There was an issue loading visits.",
+	"visits_label": "Visits",
 	"visitor": "Visitor",
 	"following_title": "Following",
 	"following_text": "The list of users you are following or sent a follow request to. If their link access is <i>restricted</i>, your follow request will need to be approved in order to access their LiveTrack.",
