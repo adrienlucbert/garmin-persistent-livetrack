@@ -6,6 +6,7 @@ import type { Actions } from "./$types";
 import { m } from '$lib/paraglide/messages.js';
 import { createFollowLink } from '$lib/server/followers/followers';
 import type { UUID } from 'crypto';
+import { StatusCodes } from 'http-status-codes';
 
 const expiresInMap: Record<string, number | null> = {
 	'never': null,
@@ -22,27 +23,27 @@ const expiresInMap: Record<string, number | null> = {
 export const actions: Actions = {
 	invitePeople: async ({ request, locals }) => {
 		if (!locals.user) {
-			return fail(401, { message: m.user_not_logged_in() })
+			return fail(StatusCodes.UNAUTHORIZED, { message: m.user_not_logged_in() })
 		}
 
 		const formData = await request.formData()
 		const uses = formData.get('uses') as 'single' | 'multi' | null
 
 		if (!uses || !['single', 'multi'].includes(uses)) {
-			return fail(400, { message: m.missing_field_in_body({ field: 'uses' }) })
+			return fail(StatusCodes.BAD_REQUEST, { message: m.missing_field_in_body({ field: 'uses' }) })
 		}
 
 		const expiresIn = formData.get('expires_in') as string | null
 
 		if (!expiresIn || !Object.keys(expiresInMap).includes(expiresIn)) {
-			return fail(400, { message: m.missing_field_in_body({ field: 'expires_in' }) })
+			return fail(StatusCodes.BAD_REQUEST, { message: m.missing_field_in_body({ field: 'expires_in' }) })
 		}
 
 		try {
 			const link = await createFollowLink(locals.user.uuid as UUID, uses, expiresInMap[expiresIn])
 			return { link }
 		} catch (message) {
-			return fail(500, { message: String(message) })
+			return fail(StatusCodes.INTERNAL_SERVER_ERROR, { message: String(message) })
 		}
 	},
 }
@@ -50,7 +51,7 @@ export const actions: Actions = {
 
 export const load: PageServerLoad = async ({ url, locals }) => {
 	if (!locals.user || !locals.session) {
-		redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
+		redirect(StatusCodes.MOVED_TEMPORARILY, `/auth?follow=${encodeURIComponent(url.toString())}`)
 	}
 
 	let link: TrackingLinks | null = null

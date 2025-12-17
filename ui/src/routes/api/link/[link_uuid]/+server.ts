@@ -10,20 +10,21 @@ import { env as privEnv } from '$env/dynamic/private';
 import { FollowStatus } from "$lib/types/followers";
 import { notify } from '$lib/server/notifications/notify'
 import { Notification } from "$lib/types/notifications";
+import { StatusCodes } from 'http-status-codes';
 
 export async function PUT({ params, request }: RequestEvent) {
 	const auth = request.headers.get("Authorization");
 	if (!auth) {
-		error(400, { message: m.missing_header({ header: "Authorization" }) })
+		error(StatusCodes.UNAUTHORIZED, { message: m.missing_header({ header: "Authorization" }) })
 	}
 
 	if (auth !== `Basic ${btoa(privEnv.SMTP_PROXY_BASIC_AUTH)}`) {
-		error(401, { message: m.invalid_header({ header: "Authorization" }) })
+		error(StatusCodes.UNAUTHORIZED, { message: m.invalid_header({ header: "Authorization" }) })
 	}
 
 	const body = await request.json()
 	if (!body.link) {
-		error(400, { message: m.missing_field_in_body({ field: "link" }) })
+		error(StatusCodes.BAD_REQUEST, { message: m.missing_field_in_body({ field: "link" }) })
 	}
 
 	try {
@@ -49,9 +50,9 @@ export async function PUT({ params, request }: RequestEvent) {
 		} catch (e) { console.error(e) }
 	} catch (e) {
 		if (e === m.invalid_user_uuid()) {
-			error(404)
+			error(StatusCodes.NOT_FOUND)
 		} else {
-			error(500, { message: String(e) })
+			error(StatusCodes.INTERNAL_SERVER_ERROR, { message: String(e) })
 		}
 	}
 

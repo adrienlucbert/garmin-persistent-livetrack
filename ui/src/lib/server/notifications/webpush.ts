@@ -5,6 +5,7 @@ import { webpushSubscriptions } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import type { UUID } from "crypto";
 import { eq, sql } from "drizzle-orm";
+import { StatusCodes } from "http-status-codes";
 
 webpush.setVapidDetails(env.PUBLIC_URL, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
@@ -14,7 +15,7 @@ export async function sendNotification(subscription: PushSubscription, payload: 
 	try {
 		await webpush.sendNotification(subscription, JSON.stringify(payload));
 	} catch (e: any) {
-		if (e.statusCode === 410) { // Gone: Unsubscribed or expired
+		if (e.statusCode === StatusCodes.GONE) { // Unsubscribed or expired
 			await deleteWebpushSubscription(subscription)
 		} else {
 			console.error(e)

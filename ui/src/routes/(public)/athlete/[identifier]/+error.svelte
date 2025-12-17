@@ -5,18 +5,19 @@
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
 	import { pages } from '$lib/pages.svelte';
 	import { m } from '$lib/paraglide/messages.js';
+	import { StatusCodes } from 'http-status-codes';
 </script>
 
 <NarrowSection>
 	<FullPage class="grid place-items-center">
 		<div class="text-center">
 			<h2
-				class="flex flex-col items-center gap-5 border-none px-2 py-8 font-bold leading-[1.2] md:flex-row"
+				class="flex flex-col items-center gap-5 border-none px-2 py-8 leading-[1.2] font-bold md:flex-row"
 			>
 				<TriangleAlertIcon size="1.5em" />
 				<span>{page.error?.message}</span>
 			</h2>
-			{#if [401, 403].includes(page.status) && page.error?.message === m.tracking_link_is_not_public()}
+			{#if [StatusCodes.UNAUTHORIZED, StatusCodes.FORBIDDEN].includes(page.status) && page.error?.message === m.tracking_link_is_not_public()}
 				<div class="flex justify-center gap-4">
 					<Button
 						size="lg"

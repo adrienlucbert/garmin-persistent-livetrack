@@ -5,6 +5,7 @@ import { error, type Handle } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { FeatureFlagsConfig as flags } from '$lib/featureFlags/config';
 import { env } from '$env/dynamic/private';
+import { StatusCodes } from 'http-status-codes';
 
 const handleLocals: Handle = async ({ event, resolve }) => {
 	event.locals.appName = env.APP_NAME
@@ -14,10 +15,10 @@ const handleLocals: Handle = async ({ event, resolve }) => {
 
 const handleFeatureFlags: Handle = ({ event, resolve }) => {
 	if (!flags.ENABLE_OAUTH_GITHUB && event.url.pathname.startsWith('/auth/oauth/github')) {
-		throw error(404)
+		throw error(StatusCodes.NOT_FOUND)
 	}
 	if (!flags.ENABLE_OAUTH_GOOGLE && event.url.pathname.startsWith('/auth/oauth/google')) {
-		throw error(404)
+		throw error(StatusCodes.NOT_FOUND)
 	}
 
 	return resolve(event)

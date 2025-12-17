@@ -7,6 +7,7 @@ import { FollowStatus } from "$lib/types/followers";
 import { m } from '$lib/paraglide/messages.js';
 import type { PublicTrackingLinkWithUser } from '$lib/server/link/trackingLink';
 import type { Followers } from '$lib/server/db/schema';
+import { StatusCodes } from 'http-status-codes';
 
 export const load: LayoutServerLoad = async ({ locals, parent, getClientAddress }) => {
 	const { trackingLink, follow } = await parent() as Awaited<ReturnType<typeof parent>> & {
@@ -15,20 +16,20 @@ export const load: LayoutServerLoad = async ({ locals, parent, getClientAddress 
 	};
 
 	if (!trackingLink) {
-		throw error(404, m.tracking_link_does_not_exist())
+		throw error(StatusCodes.NOT_FOUND, m.tracking_link_does_not_exist())
 	}
 
 	if (trackingLink.userUUID !== locals.user?.uuid && !trackingLink.isPublic) {
 		if (!locals.user) {
-			throw error(401, m.tracking_link_is_not_public())
+			throw error(StatusCodes.UNAUTHORIZED, m.tracking_link_is_not_public())
 		}
 
 		if (follow === undefined) {
-			throw error(403, m.tracking_link_is_not_public())
+			throw error(StatusCodes.FORBIDDEN, m.tracking_link_is_not_public())
 		}
 
 		if (follow.status !== FollowStatus.APPROVED) {
-			throw error(403, m.access_request_pending_approval())
+			throw error(StatusCodes.FORBIDDEN, m.access_request_pending_approval())
 		}
 	}
 

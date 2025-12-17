@@ -1,10 +1,11 @@
 import { createStream } from '$lib/server/sse';
 import { error } from '@sveltejs/kit';
+import { StatusCodes } from 'http-status-codes';
 import { m } from '$lib/paraglide/messages.js';
 
 export const GET = async ({ locals, url }) => {
 	if (!locals.user) {
-		throw error(401, m.user_not_logged_in())
+		throw error(StatusCodes.UNAUTHORIZED, m.user_not_logged_in())
 	}
 	const channel = url.searchParams.get('channel') || 'default';
 

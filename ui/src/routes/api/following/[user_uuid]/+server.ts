@@ -2,11 +2,12 @@ import { removeFollower } from '$lib/server/followers/followers';
 import type { UUID } from 'crypto';
 import type { RequestHandler } from './$types';
 import { error, json } from '@sveltejs/kit';
+import { StatusCodes } from 'http-status-codes';
 import { m } from '$lib/paraglide/messages.js';
 
 export const DELETE: RequestHandler = async ({ locals, params }) => {
 	if (!locals.user) {
-		error(401, m.user_not_logged_in());
+		error(StatusCodes.UNAUTHORIZED, m.user_not_logged_in());
 	}
 
 	const userUUID = params.user_uuid
@@ -16,6 +17,6 @@ export const DELETE: RequestHandler = async ({ locals, params }) => {
 		await removeFollower(userUUID as UUID, followerUserUUID as UUID)
 		return json({ success: true })
 	} catch (err) {
-		error(500, m.failed_to_unfollow());
+		error(StatusCodes.INTERNAL_SERVER_ERROR, m.failed_to_unfollow());
 	}
 };

@@ -3,11 +3,12 @@ import { FollowStatus } from '$lib/types/followers';
 import type { UUID } from 'crypto';
 import type { RequestHandler, RouteParams } from './$types';
 import { error, isHttpError, json, redirect } from '@sveltejs/kit';
+import { StatusCodes } from 'http-status-codes';
 import { m } from '$lib/paraglide/messages.js';
 
 async function updateFollowerStatus(locals: App.Locals, params: RouteParams): Promise<Response> {
 	if (!locals.user) {
-		error(401, m.user_not_logged_in());
+		error(StatusCodes.UNAUTHORIZED, m.user_not_logged_in());
 	}
 
 	const userUUID = locals.user.uuid
@@ -25,29 +26,29 @@ async function updateFollowerStatus(locals: App.Locals, params: RouteParams): Pr
 				await removeFollower(userUUID as UUID, followerUserUUID as UUID)
 				break
 			default:
-				error(404)
+				error(StatusCodes.NOT_FOUND)
 		}
 		return json({ success: true })
 	} catch (err) {
-		error(500, m.failed_to_answer_follow_request({ action: m.approve().toLowerCase() }));
+		error(StatusCodes.INTERNAL_SERVER_ERROR, m.failed_to_answer_follow_request({ action: m.approve().toLowerCase() }));
 	}
 }
 
 export const GET: RequestHandler = async ({ request, locals, params, url }) => {
 	// Allow GET only if user is navigating to this route, otherwise PUT
 	if (request.headers.get('Sec-Fetch-Mode') !== 'navigate') {
-		error(405)
+		error(StatusCodes.METHOD_NOT_ALLOWED)
 	}
 
 	try {
 		await updateFollowerStatus(locals, params)
 	} catch (e) {
-		if (isHttpError(e) && e.status === 401) {
-			redirect(302, `/auth?follow=${encodeURIComponent(url.toString())}`)
+		if (isHttpError(e) && e.status === StatusCodes.UNAUTHORIZED) {
+			redirect(StatusCodes.MOVED_TEMPORARILY, `/auth?follow=${encodeURIComponent(url.toString())}`)
 		}
 		throw e
 	}
-	redirect(303, url.searchParams.get('follow') ?? '/manage-access')
+	redirect(StatusCodes.SEE_OTHER, url.searchParams.get('follow') ?? '/manage-access')
 }
 
 export const PUT: RequestHandler = async ({ locals, params }) => {

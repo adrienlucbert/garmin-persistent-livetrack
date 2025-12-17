@@ -8,6 +8,7 @@ import { AuthMethod, deleteUser, getUser, updateUserEmail, updateUserName, updat
 import type { UUID } from 'crypto';
 import { askVerifyEmail } from '$lib/server/auth/flows';
 import { verifyPasswordHash } from '$lib/server/auth/password';
+import { StatusCodes } from 'http-status-codes';
 import { m } from '$lib/paraglide/messages.js';
 
 export const actions: Actions = {
@@ -15,7 +16,7 @@ export const actions: Actions = {
 		const changes = new Set<'email' | 'username'>()
 
 		if (!locals.user) {
-			return fail(401, { message: m.user_not_logged_in() })
+			return fail(StatusCodes.UNAUTHORIZED, { message: m.user_not_logged_in() })
 		}
 
 		const formData = await request.formData()
@@ -23,7 +24,7 @@ export const actions: Actions = {
 		const email = formData.get('email')
 
 		if (!validateEmail(email)) {
-			return fail(400, { message: m.invalid_email_address() });
+			return fail(StatusCodes.BAD_REQUEST, { message: m.invalid_email_address() });
 		}
 
 		if (username && username !== locals.user.name) {
@@ -32,7 +33,7 @@ export const actions: Actions = {
 				await updateUserName(locals.user.uuid as UUID, username)
 				changes.add('username')
 			} catch (err) {
-				return fail(400, { message: err })
+				return fail(StatusCodes.BAD_REQUEST, { message: err })
 			}
 		}
 
@@ -44,7 +45,7 @@ export const actions: Actions = {
 				}
 				changes.add('email')
 			} catch (err) {
-				return fail(400, { message: err })
+				return fail(StatusCodes.BAD_REQUEST, { message: err })
 			}
 		}
 		return {
@@ -55,7 +56,7 @@ export const actions: Actions = {
 
 	changePassword: async ({ request, locals }) => {
 		if (!locals.user || !locals.user.email) {
-			return fail(401, { message: m.user_not_logged_in() })
+			return fail(StatusCodes.UNAUTHORIZED, { message: m.user_not_logged_in() })
 		}
 
 		const formData = await request.formData()
@@ -63,38 +64,38 @@ export const actions: Actions = {
 		const newPassword = formData.get('new_password')
 
 		if (!validatePassword(oldPassword) || !validatePassword(newPassword)) {
-			return fail(400, { message: m.invalid_password() })
+			return fail(StatusCodes.BAD_REQUEST, { message: m.invalid_password() })
 		}
 
 		try {
 			const user = await getUser(AuthMethod.Password, locals.user.email)
 			if (!user) {
-				return fail(401, { message: m.user_not_logged_in() })
+				return fail(StatusCodes.UNAUTHORIZED, { message: m.user_not_logged_in() })
 			}
 
 			const isPasswordVerified = await verifyPasswordHash(user.traits.passwordHash, oldPassword)
 			if (!isPasswordVerified) {
-				return fail(400, { message: m.incorrect_old_password() })
+				return fail(StatusCodes.BAD_REQUEST, { message: m.incorrect_old_password() })
 			}
 			await updateUserPassword(locals.user.uuid as UUID, newPassword)
 			return { message: m.change_password_success_text() }
 		} catch (message) {
-			return fail(400, { message: String(message) })
+			return fail(StatusCodes.BAD_REQUEST, { message: String(message) })
 		}
 	},
 
 	deleteAccount: async ({ locals }) => {
 		if (!locals.user) {
-			return fail(401, { message: m.user_not_logged_in() })
+			return fail(StatusCodes.UNAUTHORIZED, { message: m.user_not_logged_in() })
 		}
 
 		try {
 			await deleteUser(locals.user.uuid as UUID)
 		} catch {
-			return fail(500, m.failed_to_delete_account())
+			return fail(StatusCodes.INTERNAL_SERVER_ERROR, m.failed_to_delete_account())
 		}
 
-		return redirect(303, '/')
+		return redirect(StatusCodes.SEE_OTHER, '/')
 	}
 }
 
