@@ -12,7 +12,7 @@
 	import Unknown from './install/unknown.svelte';
 	import { getBrowser, getIOSVersion, getPlatform, isIOS } from '$lib/platform';
 	import type { Component } from 'svelte';
-	import { installPWA, supportsInstallPrompt } from '$lib/pwa.svelte';
+	import { installPWA, supportsInstallPrompt, deferredInstall } from '$lib/pwa.svelte';
 	import { m } from '$lib/paraglide/messages';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button';
 
@@ -52,7 +52,7 @@
 	const InstallInstructions = getInstallInstructions();
 </script>
 
-{#if supportsInstallPrompt}
+{#if supportsInstallPrompt && deferredInstall.available}
 	<Button {variant} onclick={installPWA}>
 		{m.install_button()}
 	</Button>
