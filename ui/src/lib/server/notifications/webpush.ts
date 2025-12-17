@@ -6,7 +6,7 @@ import { db } from '$lib/server/db';
 import type { UUID } from "crypto";
 import { eq, sql } from "drizzle-orm";
 
-webpush.setVapidDetails(`mailto:webpush@${env.PUBLIC_URL}`, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+webpush.setVapidDetails(env.PUBLIC_URL, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
 export type NotificationPayload = { title: string } & NotificationOptions
 
