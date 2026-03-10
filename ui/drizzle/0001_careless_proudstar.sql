@@ -1,0 +1,1 @@
+ALTER TABLE "tracking_links" RENAME COLUMN "isPublic" TO "is_public";
