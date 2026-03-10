@@ -21,7 +21,7 @@ export async function createSession(uuid: UUID): Promise<SessionWithToken> {
 	const sess: Sessions = {
 		id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
 		userUUID: uuid,
-		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 120),
 	};
 
 	await db().insert(sessions).values(sess);
