@@ -5,7 +5,7 @@ import { createActionToken } from "$lib/server/auth/token";
 import { generateJWT } from '$lib/server/auth/jwt';
 import { FollowStatus } from '$lib/types/followers';
 import { type UUID } from 'crypto';
-import { and, count, eq, getTableColumns, max } from 'drizzle-orm';
+import { and, count, eq, getTableColumns, max, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 
 export async function createFollow(userUUID: UUID, followerUserUUID: UUID, status: FollowStatus): Promise<void> {
@@ -20,7 +20,8 @@ export async function createFollow(userUUID: UUID, followerUserUUID: UUID, statu
 			target: [followers.userUUID, followers.followerUserUUID],
 			set: {
 				status: status
-			}
+			},
+			setWhere: sql`${followers.status} != ${FollowStatus.APPROVED}`
 		})
 }
 
